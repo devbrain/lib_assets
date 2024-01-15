@@ -44,7 +44,9 @@ namespace neutrino::assets::datastore {
 	}
 
 	directory_iterator::~directory_iterator () {
-		if (m_pimpl) { m_pimpl->release (); }
+		if (m_pimpl) {
+			m_pimpl->release ();
+		}
 	}
 
 	directory_iterator& directory_iterator::operator= (const directory_iterator& it) {

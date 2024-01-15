@@ -21,10 +21,10 @@ namespace neutrino::assets::datastore {
 		typedef uint64_t FileSizeImpl;
 
 		FileImpl ();
-		explicit FileImpl (std::string path);
+		explicit FileImpl (std::string pth);
 		virtual ~FileImpl ();
 		void swapImpl (FileImpl &file);
-		void setPathImpl (const std::string &path);
+		void setPathImpl (const std::string &pth);
 		[[nodiscard]] const std::string &get_path_impl () const;
 		[[nodiscard]] bool existsImpl () const;
 		[[nodiscard]] bool canReadImpl () const;

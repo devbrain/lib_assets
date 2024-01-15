@@ -21,6 +21,20 @@ add_library(assets
         ${PROJECT_INCLUDE}/assets/datastore/directory_iterator_unix.hh
         datastore/directory_iterator.cc
         ${PROJECT_INCLUDE}/assets/datastore/directory_iterator.hh
+        datastore/file_operations.cc
+        ${PROJECT_INCLUDE}/assets/datastore/file_operations.hh
+        datastore/filesystem.cc
+        ${PROJECT_INCLUDE}/assets/datastore/filesystem.hh
+        datastore/directory_iterator_operations.cc
+        ${PROJECT_INCLUDE}/assets/datastore/directory_iterator_operations.hh
+        datastore/physical_fs/physical_file_ops.cc
+        datastore/physical_fs/physical_file_ops.hh
+        datastore/physical_fs/unix_file_ops.hh
+        datastore/physical_fs/win32_file_ops.hh
+        datastore/physical_fs/physical_dir_iterator_ops.cc
+        datastore/physical_fs/physical_dir_iterator_ops.hh
+        datastore/physical_fs/physical_fs.cc
+        datastore/physical_fs/physical_fs.hh
     )
 
 add_library(neutrino::assets ALIAS assets)
