@@ -1,5 +1,5 @@
 set(BUILD_SHARED_LIBS TRUE CACHE INTERNAL "")
-
+set(sdlpp_ENABLE_TESTING FALSE CACHE INTERNAL "")
 fetchcontent_declare(
         SDLPP_EXT
         GIT_REPOSITORY https://github.com/devbrain/lib_sdlpp.git

@@ -9,33 +9,22 @@ if (DEFINED assets_SHARED_LIBS)
 endif ()
 
 add_library(assets
-        datastore/path.cc
-        ${PROJECT_INCLUDE}/assets/datastore/path.hh
-        datastore/uri.cc
-        ${PROJECT_INCLUDE}/assets/datastore/uri.hh
-        datastore/file.cc
-        ${PROJECT_INCLUDE}/assets/datastore/file.hh
-        datastore/file_unix.cc
-        ${PROJECT_INCLUDE}/assets/datastore/file_unix.hh
-        datastore/directory_iterator_unix.cc
-        ${PROJECT_INCLUDE}/assets/datastore/directory_iterator_unix.hh
-        datastore/directory_iterator.cc
-        ${PROJECT_INCLUDE}/assets/datastore/directory_iterator.hh
-        datastore/file_operations.cc
-        ${PROJECT_INCLUDE}/assets/datastore/file_operations.hh
-        datastore/filesystem.cc
-        ${PROJECT_INCLUDE}/assets/datastore/filesystem.hh
-        datastore/directory_iterator_operations.cc
-        ${PROJECT_INCLUDE}/assets/datastore/directory_iterator_operations.hh
-        datastore/physical_fs/physical_file_ops.cc
-        datastore/physical_fs/physical_file_ops.hh
-        datastore/physical_fs/unix_file_ops.hh
-        datastore/physical_fs/win32_file_ops.hh
-        datastore/physical_fs/physical_dir_iterator_ops.cc
-        datastore/physical_fs/physical_dir_iterator_ops.hh
-        datastore/physical_fs/physical_fs.cc
-        datastore/physical_fs/physical_fs.hh
-    )
+        ${PROJECT_INCLUDE}/assets/mz/explode_exe_file.hh
+        explode/mz/exe_file.cc
+        explode/mz/exe_file.hh
+        explode/mz/io.cc
+        explode/mz/io.hh
+        explode/mz/knowledge_dynamics.cc
+        explode/mz/knowledge_dynamics.hh
+        explode/mz/struct_reader.hh
+        explode/mz/unexepack.cc
+        explode/mz/unexepack.hh
+        explode/mz/unlzexe.cc
+        explode/mz/unlzexe.hh
+        explode/mz/unpklite.cc
+        explode/mz/unpklite.hh
+        explode/explode_exe_file.cc
+)
 
 add_library(neutrino::assets ALIAS assets)
 
@@ -43,7 +32,11 @@ set_target_properties(assets PROPERTIES
         VERSION ${assets_VERSION}
         SOVERSION ${assets_VERSION_MAJOR})
 
-target_include_directories(assets PUBLIC ${PROJECT_INCLUDE} ${PROJECT_CONFIG_INCLUDE})
+target_include_directories(assets
+        PUBLIC ${PROJECT_INCLUDE} ${PROJECT_CONFIG_INCLUDE}
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 target_compile_features(assets PUBLIC cxx_std_17)
 
 include(GenerateExportHeader)
