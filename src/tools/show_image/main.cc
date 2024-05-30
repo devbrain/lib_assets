@@ -4,11 +4,13 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <filesystem>
 
 #include <sdlpp/system.hh>
 #include <sdlpp/window.hh>
 #include <sdlpp/render.hh>
 #include <sdlpp/events/events.hh>
+#include <bsw/digest/md5.hh>
 #include <assets/assets.hh>
 
 
@@ -17,6 +19,11 @@ int main(int argc, char* argv[]) {
 		std::cerr << "USAGE: " << argv[0] << " <path to image file" << std::endl;
 		return 1;
 	}
+
+	std::filesystem::path f(argv[1]);
+	auto fname = f.filename().u8string();
+	std::replace (fname.begin(), fname.end(), '.', '_');
+
 
 	std::ifstream ifs(argv[1], std::ios::in | std::ios::binary);
 	if (!ifs) {
@@ -32,6 +39,11 @@ int main(int argc, char* argv[]) {
 		assets::image_data_manager dm;
 		auto info = dm.meta_data (ifs);
 		auto image = dm.load (ifs);
+
+		bsw::md5_engine md5;
+		md5.update (image->pixels, image->pitch*image->h);
+		std::cout << "static constexpr auto digest_" << fname << " = \""
+		<< bsw::md5_engine::digest_to_hex(md5.digest()) << "\";" << std::endl;
 
 		sdl::window window(info.width, info.height, sdl::window::flags_t::SHOWN);
 		sdl::renderer renderer(window, sdl::renderer::flags::ACCELERATED);
