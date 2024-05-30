@@ -22,6 +22,9 @@ namespace assets::detail {
 		}
 
 		~istream_pos_keeper () {
+			auto state = stream.rdstate();   // get state
+			state &= ~std::ios_base::failbit;  // remove failbit from it
+			stream.clear(state);
 			rewind ();
 		}
 	};

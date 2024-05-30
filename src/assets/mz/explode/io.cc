@@ -15,33 +15,18 @@ namespace assets::mz::io
     // -------------------------------------------------------------
     input::~input() = default;
     // =============================================================
-    file_input::file_input(const char* path)
-            : m_owner(true)
-    {
-        m_file = fopen(path, "rb");
-        if (!m_file)
-        {
-            RAISE_EX("Input error");
-        }
-    }
-    // -------------------------------------------------------------
-    file_input::file_input(FILE* file)
-            : m_owner(false),
-              m_file(file)
+    file_input::file_input(std::istream& is)
+            : m_file(is)
     {
     }
     // -------------------------------------------------------------
     file_input::~file_input()
-    {
-        if (m_owner)
-        {
-            fclose(m_file);
-        }
-    }
+    = default;
     // -------------------------------------------------------------
     void file_input::read_buff(char* buffer, std::size_t size)
     {
-        if (fread(buffer, size, 1, m_file) != 1)
+		m_file.read (buffer, size);
+        if (!m_file)
         {
             RAISE_EX("Input error");
         }
@@ -49,21 +34,14 @@ namespace assets::mz::io
     // -------------------------------------------------------------
     offset_type file_input::tell()
     {
-        const long pos = ftell(m_file);
-        if (pos < 0)
-        {
-            RAISE_EX("Input error");
-        }
+        const long pos = m_file.tellg();
         return static_cast <offset_type> (pos);
     }
     // -------------------------------------------------------------
     offset_type file_input::bytes_remains()
     {
         offset_type current = tell();
-        if (fseek(m_file, 0, SEEK_END) != 0)
-        {
-            RAISE_EX("Input error");
-        }
+		m_file.seekg (0, std::ios::end);
         offset_type end = tell();
         seek(current);
         return static_cast <offset_type> (end - current);
@@ -81,10 +59,8 @@ namespace assets::mz::io
 
     void file_input::seek(offset_type offset)
     {
-        if (fseek_offset(m_file, offset, SEEK_SET) != 0)
-        {
-            RAISE_EX("Input error");
-        }
+		m_file.seekg(offset, std::ios::beg);
+
     }
     // ==============================================================
     inmem_input::inmem_input(const unsigned char* data, std::size_t size)

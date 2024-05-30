@@ -15,19 +15,19 @@ namespace assets::mz
 
     void unpack (output_exe_file& oexe);
     
-    uint32_t header_length () const;
-    uint32_t decomp_size () const;
-    uint32_t compressed_size () const;
-    uint32_t decompressor_size () const;
-    uint32_t data_offset () const;
-    bool     uncompressed_region () const;
-    bool     has_checksum () const;
+    [[nodiscard]] uint32_t header_length () const;
+    [[nodiscard]] uint32_t decomp_size () const;
+    [[nodiscard]] uint32_t compressed_size () const;
+    [[nodiscard]] uint32_t decompressor_size () const;
+    [[nodiscard]] uint32_t data_offset () const;
+    [[nodiscard]] bool     uncompressed_region () const;
+    [[nodiscard]] bool     has_checksum () const;
     
 
-	uint16_t ver_minor() const;
-	uint16_t ver_major() const;
-	bool     large_exe() const;
-	bool     extended() const;
+	[[nodiscard]] uint16_t ver_minor() const;
+	[[nodiscard]] uint16_t ver_major() const;
+	[[nodiscard]] bool     large_exe() const;
+	[[nodiscard]] bool     extended() const;
   private:
     void _read_parameters ();
   private:

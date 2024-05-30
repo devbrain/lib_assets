@@ -14,7 +14,7 @@ namespace assets::mz
 
         static bool accept(input_exe_file& inp);
 
-        uint32_t decomp_size() const;
+        [[nodiscard]] uint32_t decomp_size() const;
     private:
         enum header_t
         {

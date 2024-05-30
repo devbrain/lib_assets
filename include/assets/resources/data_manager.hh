@@ -5,13 +5,15 @@
 #ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_DATA_MANAGER_HH_
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_DATA_MANAGER_HH_
 
-#include <assets/resources/abstract_resource_loader.hh>
-#include <assets/resources/detail/istream_pos_keeper.hh>
-#include <bsw/exception.hh>
 #include <istream>
 #include <memory>
 #include <string>
 #include <map>
+
+#include <assets/resources/abstract_resource_loader.hh>
+#include <assets/resources/detail/istream_pos_keeper.hh>
+#include <bsw/exception.hh>
+
 
 namespace assets {
 

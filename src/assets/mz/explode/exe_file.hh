@@ -43,7 +43,7 @@ namespace assets::mz
     {
     public:
         explicit input_exe_file(io::input& file);
-        bool is_exepack() const;
+        [[nodiscard]] bool is_exepack() const;
         io::input& file();
     private:
         input_exe_file(const input_exe_file&);
@@ -82,10 +82,10 @@ namespace assets::mz
         uint16_t& operator[](header_t hv);
 
         rellocations_t& rellocations();
-        const rellocations_t& rellocations() const;
+        [[nodiscard]] const rellocations_t& rellocations() const;
 
         std::vector<uint8_t>& extra_header();
-        const std::vector<uint8_t>& extra_header() const;
+        [[nodiscard]] const std::vector<uint8_t>& extra_header() const;
 
         virtual void code_set(uint8_t word, std::size_t length) = 0;
         virtual void code_put(std::size_t position, const uint8_t* code, std::size_t length) = 0;
@@ -122,14 +122,14 @@ namespace assets::mz
 
         explicit full_exe_file(uint32_t code_size);
 
-        virtual void code_set(uint8_t word, std::size_t length);
-        virtual void code_put(std::size_t position, const uint8_t* code, std::size_t length);
-        virtual void code_fill(std::size_t position, uint8_t code, std::size_t length);
-        virtual void code_copy(std::size_t from, std::size_t length, std::size_t to);
+        void code_set(uint8_t word, std::size_t length) override;
+        void code_put(std::size_t position, const uint8_t* code, std::size_t length) override;
+        void code_fill(std::size_t position, uint8_t code, std::size_t length) override;
+        void code_copy(std::size_t from, std::size_t length, std::size_t to) override;
 
-        virtual void eval_structures();
+        void eval_structures() override;
 
-        virtual void write(io::output& out) const;
+        void write(io::output& out) const override;
     private:
 #if defined(_MSC_VER)
 #pragma warning (push)

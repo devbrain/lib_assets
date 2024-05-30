@@ -13,7 +13,7 @@ namespace assets::mz
     static bool accept(input_exe_file& inp);
 
     void unpack(output_exe_file& oexe);
-    uint32_t decomp_size() const;
+    [[nodiscard]] uint32_t decomp_size() const;
   private:
     io::input&          m_file;
 
@@ -21,8 +21,6 @@ namespace assets::mz
     uint32_t m_code_offs;
 		
     uint16_t m_header[exe_file::MAX_HEADER_VAL];
-
-
   };
 } // ns explode
 

@@ -9,9 +9,12 @@ namespace assets::mz
 	{
 	public:
 		explicit unexepack(input_exe_file& inp);
+		static bool accept(input_exe_file& inp) {
+			return inp.is_exepack();
+		}
 
 		void unpack(output_exe_file& oexe);
-		uint32_t decomp_size() const;
+		[[nodiscard]] uint32_t decomp_size() const;
 	private:
 		enum header_t
 		{

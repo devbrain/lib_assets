@@ -11,8 +11,6 @@ endif ()
 add_library(assets
 
         ${PROJECT_INCLUDE}/assets/assets.hh
-        ${PROJECT_INCLUDE}/assets/mz/explode_exe_file.hh
-
 
         mz/explode/exe_file.cc
         mz/explode/exe_file.hh
@@ -27,7 +25,6 @@ add_library(assets
         mz/explode/unlzexe.hh
         mz/explode/unpklite.cc
         mz/explode/unpklite.hh
-        mz/explode_exe_file.cc
 
         mz/pefile/clr_res.hh
         mz/pefile/rs_icon_group.cc
@@ -120,11 +117,15 @@ add_library(assets
 
         ${PROJECT_INCLUDE}/assets/resources/detail/istream_pos_keeper.hh
         ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
-        ${PROJECT_INCLUDE}/assets/resources/image_resource_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/data_manager.hh
-        ${PROJECT_INCLUDE}/assets/resources/image_data_manager.hh
-        image/image_data_manager.cc
 
+        ${PROJECT_INCLUDE}/assets/resources/image/image_info.hh
+        ${PROJECT_INCLUDE}/assets/resources/image/image_data_manager.hh
+
+        ${PROJECT_INCLUDE}/assets/resources/exe/exe_info.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/exe_data_manager.hh
+        image/image_data_manager.cc
+        mz/exe_data_manager.cc
 )
 
 add_library(neutrino::assets ALIAS assets)

@@ -2,7 +2,7 @@
 // Created by igor on 5/29/24.
 //
 
-#include <assets/resources/image_data_manager.hh>
+#include "assets/resources/image/image_data_manager.hh"
 #include "standard_image_resource_loader.hh"
 #include "pcx.hh"
 

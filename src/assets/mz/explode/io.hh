@@ -4,7 +4,8 @@
 #include <cstdio>
 #include <cstddef>
 #include <vector>
-
+#include <istream>
+#include <memory>
 #include <sys/types.h>
 
 namespace assets::mz::io
@@ -73,8 +74,7 @@ namespace assets::mz::io
   class file_input : public input
   {
   public:
-    explicit file_input (const char* path);
-    explicit file_input (FILE* file);
+    explicit file_input (std::istream& is);
 
     ~file_input () override;
 
@@ -84,8 +84,7 @@ namespace assets::mz::io
     void seek (offset_type offset) override;
 
   private:
-    bool m_owner;
-    FILE* m_file;
+    std::istream& m_file;
   };
   // ============================================================
   class inmem_input : public input

@@ -6,7 +6,7 @@
 #define ASSETS_SRC_ASSETS_IMAGE_STB_WRAPPER_HH_
 
 #include <iosfwd>
-#include <assets/resources/image_resource_loader.hh>
+#include "assets/resources/image/image_info.hh"
 
 namespace assets::detail {
 

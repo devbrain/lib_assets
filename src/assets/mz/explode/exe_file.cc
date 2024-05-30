@@ -322,7 +322,7 @@ namespace assets::mz
             r.words = &new_rel[0];
             out.write_buff(r.bytes, relloc_entries * 4);
         }
-        const std::size_t now = static_cast <std::size_t> (out.tell());
+        const auto now = static_cast <std::size_t> (out.tell());
         if (now > para_size * 16)
         {
             RAISE_EX ("bad header size");

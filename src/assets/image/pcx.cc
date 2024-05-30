@@ -163,7 +163,7 @@ namespace assets::detail {
 		pcx_header pcxh{};
 		bsw::io::binary_reader reader (is, bsw::io::binary_reader::LITTLE_ENDIAN_BYTE_ORDER);
 		auto info = pcx_info_internal (reader, pcxh);
-		int sz = is.tellg();
+
 		auto s = neutrino::sdl::surface (info.width, info.height, info.pixel_format);
 		auto src_bits = pcxh.BitsPerPixel * pcxh.NPlanes;
 		std::size_t bpl = pcxh.NPlanes * pcxh.BytesPerLine;

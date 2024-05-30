@@ -5,7 +5,7 @@
 #ifndef ASSETS_SRC_ASSETS_IMAGE_STANDARD_IMAGE_RESOURCE_LOADER_HH_
 #define ASSETS_SRC_ASSETS_IMAGE_STANDARD_IMAGE_RESOURCE_LOADER_HH_
 
-#include <assets/resources/image_resource_loader.hh>
+#include "assets/resources/image/image_info.hh"
 #include "image/stb_wrapper.hh"
 
 namespace assets {

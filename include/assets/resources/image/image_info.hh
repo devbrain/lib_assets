@@ -2,8 +2,8 @@
 // Created by igor on 5/28/24.
 //
 
-#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_RESOURCE_LOADER_HH_
-#define ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_RESOURCE_LOADER_HH_
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_INFO_HH_
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_INFO_HH_
 
 #include <sdlpp/surface.hh>
 #include <assets/resources/abstract_resource_loader.hh>
@@ -17,4 +17,4 @@ namespace assets {
 	};
 }
 
-#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_RESOURCE_LOADER_HH_
+#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_INFO_HH_
