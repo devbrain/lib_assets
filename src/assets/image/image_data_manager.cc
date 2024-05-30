@@ -5,6 +5,7 @@
 #include "assets/resources/image/image_data_manager.hh"
 #include "standard_image_resource_loader.hh"
 #include "pcx.hh"
+#include "bmp.hh"
 
 namespace assets {
 	image_data_manager::image_data_manager () {
@@ -14,5 +15,6 @@ namespace assets {
 		register_loader ("JPG", std::make_unique<jpeg_image_resource_loader>());
 		register_loader ("PSD", std::make_unique<psd_image_resource_loader>());
 		register_loader ("PCX", std::make_unique<pcx_image_resource_loader>());
+		register_loader ("BMP", std::make_unique<bmp_image_resource_loader>());
 	}
 }

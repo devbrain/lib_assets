@@ -6,6 +6,7 @@
 #define ASSETS_SRC_ASSETS_IMAGE_PCX_HH_
 
 #include <iosfwd>
+#include <assets/resources/abstract_resource_loader.hh>
 #include "assets/resources/image/image_info.hh"
 
 namespace assets {
@@ -14,6 +15,7 @@ namespace assets {
 		image_info pcx_info (std::istream& is);
 		neutrino::sdl::surface pcx_load (std::istream& is);
 	}
+
 	class pcx_image_resource_loader : public abstract_resource_loader<neutrino::sdl::surface, image_info> {
 	 private:
 		bool accept (std::istream& is) const override {

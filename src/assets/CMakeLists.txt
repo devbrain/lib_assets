@@ -89,7 +89,7 @@ add_library(assets
         xml/epp/xml_handler_iface.hh
 
 
-        image/bmp.hpp
+        image/bmp.hh
         image/icons/icons_reader.hpp
         image/icons/ne_image.hpp
         image/icons/pe_image.hpp
@@ -104,7 +104,7 @@ add_library(assets
         image/icons/icons_reader.cpp
         image/icons/icons_container.cpp
         image/icons/icons_container.hpp
-        image/bmp.cpp
+        image/bmp.cc
         image/thirdparty/lodepng.cpp
         image/thirdparty/lodepng.h
 
