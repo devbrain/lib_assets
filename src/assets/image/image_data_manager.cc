@@ -76,6 +76,7 @@ namespace assets {
 		std::make_unique<detail::standard_image_resource_loader<detail::std_image_format_t::T>>())
 
 	image_data_manager::image_data_manager () {
+		
 		REGISTER_STD_IMG_LOADER(BMP);
 		REGISTER_STD_IMG_LOADER(ICO);
 		REGISTER_STD_IMG_LOADER(CUR);
@@ -89,7 +90,6 @@ namespace assets {
 		REGISTER_STD_IMG_LOADER(QOI);
 		REGISTER_STD_IMG_LOADER(XPM);
 		REGISTER_STD_IMG_LOADER(XV);
-
 		register_loader ("PSD", std::make_unique<psd_image_resource_loader>());
 		register_loader ("TGA", std::make_unique<tga_image_resource_loader>());
 	}

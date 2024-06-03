@@ -22,7 +22,11 @@ namespace assets {
 	 public:
 		using resource_loader_t = abstract_resource_loader<Resource, MetaData>;
 	 public:
-		void register_loader (std::string key, std::unique_ptr<resource_loader_t> loader);
+		 data_manager() = default;
+		 data_manager& operator = (data_manager&) = delete;
+		 data_manager(const data_manager&) = delete;
+
+		void register_loader (std::string key, std::unique_ptr<resource_loader_t>&& loader);
 
 		Resource load (std::istream& is) const;
 		Resource load (std::string key, std::istream& is) const;
@@ -89,9 +93,9 @@ namespace assets {
 
 	template <typename Resource, typename MetaData>
 	void
-	data_manager<Resource, MetaData>::register_loader (std::string key, std::unique_ptr<resource_loader_t> loader) {
-		ENFORCE(m_loaders.find (key) == m_loaders.end ())
-		m_loaders.emplace(std::make_pair (key, std::move(loader)));
+	data_manager<Resource, MetaData>::register_loader (std::string key, std::unique_ptr<resource_loader_t>&& loader) {
+		ENFORCE(m_loaders.find(key) == m_loaders.end())
+		m_loaders.emplace(std::make_pair(key, std::move(loader)));
 	}
 }
 
