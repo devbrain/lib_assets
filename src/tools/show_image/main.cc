@@ -39,13 +39,13 @@ int main(int argc, char* argv[]) {
 		assets::image_data_manager dm;
 		auto info = dm.meta_data (ifs);
 		auto image = dm.load (ifs);
-
+		auto [pixels, pitch, w, h] = image.pixels_data();
 		bsw::md5_engine md5;
 		md5.update (image->pixels, image->pitch*image->h);
 		std::cout << "static constexpr auto digest_" << fname << " = \""
 		<< bsw::md5_engine::digest_to_hex(md5.digest()) << "\";" << std::endl;
 
-		sdl::window window(info.width, info.height, sdl::window::flags_t::SHOWN);
+		sdl::window window(w, h, sdl::window::flags_t::SHOWN);
 		sdl::renderer renderer(window, sdl::renderer::flags::ACCELERATED);
 
 		sdl::texture texture(renderer, image);

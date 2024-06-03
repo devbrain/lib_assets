@@ -10,6 +10,8 @@ endif ()
 
 add_library(assets
 
+        ${PROJECT_INCLUDE}/assets/init.hh
+        init.cc
         ${PROJECT_INCLUDE}/assets/assets.hh
 
         mz/explode/exe_file.cc
@@ -89,7 +91,6 @@ add_library(assets
         xml/epp/xml_handler_iface.hh
 
 
-        image/bmp.hh
         image/icons/icons_reader.hpp
         image/icons/ne_image.hpp
         image/icons/pe_image.hpp
@@ -104,7 +105,6 @@ add_library(assets
         image/icons/icons_reader.cpp
         image/icons/icons_container.cpp
         image/icons/icons_container.hpp
-        image/bmp.cc
         image/thirdparty/lodepng.cpp
         image/thirdparty/lodepng.h
 
@@ -112,8 +112,7 @@ add_library(assets
         image/stb_wrapper.cc
         image/stb_wrapper.hh
         image/standard_image_resource_loader.hh
-        image/pcx.cc
-        image/pcx.hh
+
 
         ${PROJECT_INCLUDE}/assets/resources/detail/istream_pos_keeper.hh
         ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
@@ -144,4 +143,4 @@ target_compile_features(assets PUBLIC cxx_std_17)
 include(GenerateExportHeader)
 generate_export_header(assets EXPORT_FILE_NAME ${PROJECT_CONFIG_INCLUDE}/assets/assets_export.h)
 target_compile_definitions(assets PUBLIC "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:assets_STATIC_DEFINE>")
-target_link_libraries(assets PUBLIC neutrino::sdlpp)
+target_link_libraries(assets PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image)

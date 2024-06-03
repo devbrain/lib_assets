@@ -2,6 +2,7 @@
 #include <vector>
 #include "istream_wrapper.hh"
 #include <bsw/strings/wchar.hh>
+#include <bsw/exception.hh>
 
 namespace bsw {
 	istream_wrapper_c::istream_wrapper_c (std::istream& is)
@@ -35,7 +36,7 @@ namespace bsw {
 			is.seekg (offs, std::ios::beg);
 		}
 		if (!is || static_cast<std::size_t>(fsize) < len) {
-			throw std::runtime_error ("I/O error");
+			RAISE_EX("I/O error");
 		}
 
 		m_data = new char[len];
@@ -67,11 +68,11 @@ namespace bsw {
 			fsize = stream->tellg () - cur_pos;
 			stream->seekg (cur_pos, std::ios::beg);
 		} else {
-			throw std::runtime_error ("nullptr in stream");
+			RAISE_EX("nullptr in stream");
 		}
 
 		if (!(*stream)) {
-			throw std::runtime_error ("I/O error");
+			RAISE_EX("I/O error");
 		}
 		return fsize;
 	}
@@ -79,13 +80,13 @@ namespace bsw {
 	void istream_wrapper_c::advance (std::streampos delta) {
 		if (m_data) {
 			if (m_data_pos + delta > m_data_len) {
-				throw std::runtime_error ("I/O error");
+				RAISE_EX("I/O error");
 			}
 			m_data_pos += (std::size_t)delta;
 		} else {
 			stream->seekg (delta, std::ios::cur);
 			if (!(*stream)) {
-				throw std::runtime_error ("I/O error");
+				RAISE_EX("I/O error");
 			}
 		}
 	}
@@ -97,7 +98,7 @@ namespace bsw {
 					m_data_pos = m_data_len;
 					return;
 				}
-				throw std::runtime_error ("I/O error");
+				RAISE_EX("I/O error");
 			}
 			m_data_pos = static_cast <std::size_t>(pos);
 		} else {
@@ -107,7 +108,7 @@ namespace bsw {
 					stream->seekg (0, std::ios::end);
 					return;
 				}
-				throw std::runtime_error ("I/O error");
+				RAISE_EX("I/O error");
 			}
 		}
 	}
@@ -122,12 +123,12 @@ namespace bsw {
 				std::memcpy (buff, m_data + m_data_pos, size);
 				m_data_pos += size;
 			} else {
-				throw std::runtime_error ("I/O error");
+				RAISE_EX("I/O error");
 			}
 		} else {
 			stream->read (buff, size);
 			if (!(*stream)) {
-				throw std::runtime_error ("I/O error");
+				RAISE_EX("I/O error");
 			}
 		}
 	}
@@ -136,9 +137,7 @@ namespace bsw {
 		uint16_t w;
 		read ((char*)&w, sizeof (w));
 		if (w != word) {
-			std::ostringstream os;
-			os << __FUNCTION__ << " expected " << word << " actual " << w;
-			throw std::runtime_error (os.str ());
+			RAISE_EX("expected ",word," actual ",w);
 		}
 	}
 
@@ -146,9 +145,7 @@ namespace bsw {
 		uint32_t w;
 		read ((char*)&w, sizeof (w));
 		if (w != word) {
-			std::ostringstream os;
-			os << __FUNCTION__ << " expected " << word << " actual " << w;
-			throw std::runtime_error (os.str ());
+			RAISE_EX("expected ",word," actual ",w);
 		}
 	}
 
@@ -160,10 +157,7 @@ namespace bsw {
 			const auto e = s[i];
 			const auto a = d[i];
 			if (a != e && a != (e ^ 0x20)) {
-				std::ostringstream os;
-				os << __FUNCTION__ << " expected " << bsw::wstring_to_utf8 (s) << " actual "
-				   << bsw::wstring_to_utf8 (d.data ());
-				throw std::runtime_error (os.str ());
+				RAISE_EX("expected ",bsw::wstring_to_utf8 (s)," actual ",bsw::wstring_to_utf8 (d.data ()));
 			}
 		}
 		if (align) {
@@ -201,9 +195,7 @@ namespace bsw {
 	void istream_wrapper_c::assert_space (uint64_t s) const {
 		const uint64_t a = this->size_to_end ();
 		if (s > a) {
-			std::ostringstream os;
-			os << "Not enough space. requested " << s << " actual " << a;
-			throw std::runtime_error (os.str ());
+			RAISE_EX("Not enough space. requested ",s, " actual ", a);
 		}
 	}
 
@@ -223,7 +215,7 @@ namespace bsw {
 			}
 		}
 		if (ensure_null && !has_null) {
-			throw std::runtime_error ("Bad string length");
+			RAISE_EX("Bad string length");
 		}
 	}
 } // ns spy

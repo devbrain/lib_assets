@@ -9,5 +9,8 @@ if (assets_ENABLE_TESTING)
 endif()
 
 add_subdirectory(sdlpp)
+add_subdirectory(sdl_ttf)
+add_subdirectory(sdl_image)
+
 
 

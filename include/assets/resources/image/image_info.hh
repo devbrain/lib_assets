@@ -10,9 +10,7 @@
 
 namespace assets {
 	struct ASSETS_EXPORT image_info {
-		unsigned int width;
-		unsigned int height;
-		neutrino::sdl::pixel_format pixel_format;
+		std::string format;
 	};
 }
 

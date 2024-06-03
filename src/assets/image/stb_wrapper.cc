@@ -52,28 +52,6 @@ namespace {
 		return tester (&s);
 	}
 
-	assets::image_info get_image_info (std::istream& is, header_func_t hdrfunc) {
-		assets::detail::istream_pos_keeper keeper(is);
-		static stbi_io_callbacks io_callbacks = {
-			istream_read,
-			istream_skip,
-			istream_eof
-		};
-
-		stbi__context s;
-		stbi__start_callbacks (&s, &io_callbacks, &is);
-
-		int x;
-		int y;
-		int comp;
-		ENFORCE(hdrfunc (&s, &x, &y, &comp));
-		int bppToUse = (comp == STBI_grey || comp == STBI_rgb) ? STBI_rgb : STBI_rgb_alpha;
-		neutrino::sdl::pixel_format::format format = (bppToUse == STBI_rgb) ?
-													 neutrino::sdl::pixel_format::RGB24 :
-													 neutrino::sdl::pixel_format::RGBA32;
-		return {(unsigned int)x, (unsigned int)y, neutrino::sdl::pixel_format (format)};
-	}
-
 	neutrino::sdl::surface load_image (std::istream& is, header_func_t hdrfunc) {
 		assets::detail::istream_pos_keeper keeper(is);
 		static stbi_io_callbacks io_callbacks = {
@@ -112,8 +90,8 @@ namespace assets::detail {
 		return test_image (is, stbi__gif_test);
 	}
 
-	image_info gif_info (std::istream& is) {
-		return get_image_info (is, stbi__gif_info);
+	image_info gif_info ([[maybe_unused]] std::istream& is) {
+		return {"GIF"};
 	}
 
 	neutrino::sdl::surface gif_load (std::istream& is) {
@@ -124,8 +102,8 @@ namespace assets::detail {
 		return test_image (is, stbi__tga_test);
 	}
 
-	image_info tga_info (std::istream& is) {
-		return get_image_info (is, stbi__tga_info);
+	image_info tga_info ([[maybe_unused]]std::istream& is) {
+		return {"TGA"};
 	}
 
 	neutrino::sdl::surface tga_load (std::istream& is) {
@@ -136,8 +114,8 @@ namespace assets::detail {
 		return test_image (is, stbi__png_test);
 	}
 
-	image_info png_info (std::istream& is) {
-		return get_image_info (is, stbi__png_info);
+	image_info png_info ([[maybe_unused]] std::istream& is) {
+		return {"PNG"};
 	}
 
 	neutrino::sdl::surface png_load (std::istream& is) {
@@ -148,8 +126,8 @@ namespace assets::detail {
 		return test_image (is, stbi__jpeg_test);
 	}
 
-	image_info jpeg_info (std::istream& is) {
-		return get_image_info (is, stbi__jpeg_info);
+	image_info jpeg_info ([[maybe_unused]] std::istream& is) {
+		return {"JPG"};
 	}
 
 	neutrino::sdl::surface jpeg_load (std::istream& is) {
@@ -160,8 +138,8 @@ namespace assets::detail {
 		return test_image (is, stbi__psd_test);
 	}
 
-	image_info psd_info (std::istream& is) {
-		return get_image_info (is, stbi__psd_info);
+	image_info psd_info ([[maybe_unused]] std::istream& is) {
+		return {"PSD"};
 	}
 
 	neutrino::sdl::surface psd_load (std::istream& is) {
