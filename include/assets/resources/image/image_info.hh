@@ -8,7 +8,7 @@
 #include <sdlpp/surface.hh>
 #include <assets/assets_export.h>
 
-namespace assets {
+namespace neutrino::assets {
 	struct ASSETS_EXPORT image_info {
 		std::string format;
 	};

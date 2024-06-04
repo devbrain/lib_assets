@@ -7,7 +7,7 @@
 
 #include <iosfwd>
 
-namespace assets {
+namespace neutrino::assets {
 	template <typename Resource, typename MetaData>
 	class abstract_resource_loader {
 	 public:

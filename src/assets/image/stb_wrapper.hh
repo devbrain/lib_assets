@@ -8,7 +8,7 @@
 #include <iosfwd>
 #include "assets/resources/image/image_info.hh"
 
-namespace assets::detail {
+namespace neutrino::assets::detail {
 
 	bool is_gif(std::istream& is);
 	image_info gif_info(std::istream& is);

@@ -3,10 +3,9 @@
 //
 #include <assets/init.hh>
 #include <sdlpp/system.hh>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
 
-namespace assets {
+
+namespace neutrino::assets {
 	initializer::initializer () {
 		assets_init();
 	}

@@ -15,7 +15,7 @@
 #include <bsw/exception.hh>
 
 
-namespace assets {
+namespace neutrino::assets {
 
 	template <typename Resource, typename MetaData>
 	class data_manager {

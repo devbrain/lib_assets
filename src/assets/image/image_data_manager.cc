@@ -9,7 +9,7 @@
 
 #include <bsw/macros.hh>
 
-namespace assets {
+namespace neutrino::assets {
 	namespace detail {
 		enum std_image_format_t : int {
 			BMP,
@@ -36,14 +36,15 @@ namespace assets {
          public:                                      																		\
          	static constexpr auto NAME = STRINGIZE(T);                                             							\
 		 private:																											\
-			bool accept (std::istream& is) const override {																	\
-				neutrino::sdl::rw_istream rw(is);																			\
+			bool accept (std::istream& is) const override {      															\
+				using namespace neutrino::sdl;                      														\
+				io rw(is);																									\
 				return PPCAT(IMG_is, T) (rw.handle());																		\
 			}																												\
 																															\
 			neutrino::sdl::surface load (std::istream& is) const override {													\
 				using namespace neutrino::sdl;																				\
-				rw_istream rw(is);																							\
+				io rw(is);																									\
 				SDL_Surface* srf = PPCAT(PPCAT(IMG_Load, T), _RW) (rw.handle());											\
 				if (!srf) {																									\
 					RAISE_EX("Failed to load [", STRINGIZE(T), "] image format");											\

@@ -7,7 +7,7 @@
 
 #include <istream>
 
-namespace assets::detail {
+namespace neutrino::assets::detail {
 	struct istream_pos_keeper {
 		std::streampos curr;
 		std::istream& stream;

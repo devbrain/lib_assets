@@ -8,7 +8,7 @@
 #include <string>
 #include <assets/assets_export.h>
 
-namespace assets {
+namespace neutrino::assets {
 	struct ASSETS_EXPORT exe_info {
 		std::string compression_type;
 		std::size_t decompressed_size;

@@ -7,7 +7,7 @@
 #include "mz/explode/unpklite.hh"
 #include "mz/explode/unexepack.hh"
 
-namespace assets {
+namespace neutrino::assets {
 	enum exe_t {
 		KD,
 		LZEXE,

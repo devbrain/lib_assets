@@ -7,7 +7,7 @@
 
 #include <assets/assets_export.h>
 
-namespace assets {
+namespace neutrino::assets {
 	ASSETS_EXPORT void assets_init();
 	ASSETS_EXPORT void assets_done();
 

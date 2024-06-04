@@ -40,7 +40,7 @@ namespace {
 	using tester_func_t = int (*) (stbi__context* s);
 
 	bool test_image (std::istream& is, tester_func_t tester) {
-		assets::detail::istream_pos_keeper keeper(is);
+		neutrino::assets::detail::istream_pos_keeper keeper(is);
 		static stbi_io_callbacks io_callbacks = {
 			istream_read,
 			istream_skip,
@@ -53,7 +53,7 @@ namespace {
 	}
 
 	neutrino::sdl::surface load_image (std::istream& is, header_func_t hdrfunc) {
-		assets::detail::istream_pos_keeper keeper(is);
+		neutrino::assets::detail::istream_pos_keeper keeper(is);
 		static stbi_io_callbacks io_callbacks = {
 			istream_read,
 			istream_skip,
@@ -85,7 +85,7 @@ namespace {
 	}
 }
 
-namespace assets::detail {
+namespace neutrino::assets::detail {
 	bool is_gif (std::istream& is) {
 		return test_image (is, stbi__gif_test);
 	}

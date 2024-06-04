@@ -9,7 +9,7 @@
 #include <assets/resources/abstract_resource_loader.hh>
 #include "image/stb_wrapper.hh"
 
-namespace assets {
+namespace neutrino::assets {
 	namespace detail {
 		enum class stb_image_format_t {
 			TGA,

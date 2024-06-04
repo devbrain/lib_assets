@@ -12,7 +12,7 @@
 #include <assets/assets_export.h>
 
 
-namespace assets {
+namespace neutrino::assets {
  class ASSETS_EXPORT exe_data_manager : public data_manager<std::vector<char>, exe_info> {
 	 public:
 		exe_data_manager();
