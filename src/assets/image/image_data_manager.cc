@@ -38,13 +38,13 @@ namespace neutrino::assets {
 		 private:																											\
 			bool accept (std::istream& is) const override {      															\
 				using namespace neutrino::sdl;                      														\
-				io rw(is);																									\
+				rw_istream rw(is);																							\
 				return PPCAT(IMG_is, T) (rw.handle());																		\
 			}																												\
 																															\
 			neutrino::sdl::surface load (std::istream& is) const override {													\
 				using namespace neutrino::sdl;																				\
-				io rw(is);																									\
+				rw_istream rw(is);																							\
 				SDL_Surface* srf = PPCAT(PPCAT(IMG_Load, T), _RW) (rw.handle());											\
 				if (!srf) {																									\
 					RAISE_EX("Failed to load [", STRINGIZE(T), "] image format");											\

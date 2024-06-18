@@ -7,8 +7,8 @@
 #include <filesystem>
 
 #include <sdlpp/system.hh>
-#include <sdlpp/window.hh>
-#include <sdlpp/render.hh>
+#include <sdlpp/video/window.hh>
+#include <sdlpp/video/render.hh>
 #include <sdlpp/events/events.hh>
 #include <bsw/digest/md5.hh>
 #include <assets/assets.hh>
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 		std::cout << "static constexpr auto digest_" << fname << " = \""
 		<< bsw::md5_engine::digest_to_hex(md5.digest()) << "\";" << std::endl;
 
-		sdl::window window(w, h, sdl::window::flags_t::SHOWN);
+		sdl::window window(w, h, sdl::window::flags::SHOWN);
 		sdl::renderer renderer(window, sdl::renderer::flags::ACCELERATED);
 
 		sdl::texture texture(renderer, image);
