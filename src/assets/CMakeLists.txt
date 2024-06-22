@@ -125,6 +125,49 @@ add_library(assets
         ${PROJECT_INCLUDE}/assets/resources/exe/exe_data_manager.hh
         image/image_data_manager.cc
         mz/exe_data_manager.cc
+
+        tmx/animation.cc
+        tmx/animation.hh
+        tmx/cell.cc
+        tmx/cell.hh
+        tmx/color.hh
+        tmx/component.cc
+        tmx/component.hh
+        tmx/group.cc
+        tmx/group.hh
+        tmx/image.cc
+        tmx/image.hh
+        tmx/image_layer.cc
+        tmx/image_layer.hh
+        tmx/json_reader.cc
+        tmx/json_reader.hh
+        tmx/layer.cc
+        tmx/layer.hh
+        tmx/map.cc
+        tmx/map.hh
+        tmx/object.cc
+        tmx/object.hh
+        tmx/object_layer.cc
+        tmx/object_layer.hh
+        tmx/parse_data.cc
+        tmx/parse_data.hh
+        tmx/reader.cc
+        tmx/reader.hh
+        tmx/terrain.cc
+        tmx/terrain.hh
+        tmx/tile.cc
+        tmx/tile.hh
+        tmx/tile_layer.cc
+        tmx/tile_layer.hh
+        tmx/tile_set.cc
+        tmx/tile_set.hh
+        tmx/tmx.cc
+        tmx/wang_set.cc
+        tmx/wang_set.hh
+        tmx/xml_reader.cc
+        tmx/xml_reader.hh
+        tmx/csv/parser.hpp
+
 )
 
 add_library(neutrino::assets ALIAS assets)

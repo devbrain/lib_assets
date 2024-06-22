@@ -11,7 +11,7 @@
 #include "assets/assets_export.h"
 
 namespace neutrino::assets {
-	class ASSETS_EXPORT image_data_manager : public data_manager<neutrino::sdl::surface, image_info> {
+	class ASSETS_EXPORT image_data_manager : public data_manager<sdl::surface, image_info> {
 	 public:
 		image_data_manager();
 	};

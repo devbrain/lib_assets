@@ -5,7 +5,6 @@
 #ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_INFO_HH_
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_INFO_HH_
 
-#include <sdlpp/video/surface.hh>
 #include <assets/assets_export.h>
 
 namespace neutrino::assets {
