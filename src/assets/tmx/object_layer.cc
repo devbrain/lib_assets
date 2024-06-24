@@ -5,7 +5,7 @@
 #include "object_layer.hh"
 #include "xml_reader.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   object_layer object_layer::parse (const reader& elt, const group* parent) {
     auto[name, offsetx, offsety, opacity, visible, tint, id] = group::parse_content (elt, parent);
 
@@ -27,7 +27,7 @@ namespace neutrino::tiled::tmx {
       });
       return obj;
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse objectgroup [", name, "]");
     }
   }

@@ -11,7 +11,7 @@
 #include "group.hh"
 #include <memory>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
  * @brief An image layer is a layer with a single image.
  */

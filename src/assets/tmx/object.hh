@@ -14,7 +14,7 @@
 #include "color.hh"
 #include <sdlpp/video/geometry.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
  * @brief An object is a geometrical object.
  *

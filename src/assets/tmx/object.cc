@@ -11,7 +11,7 @@
 #include <bsw/strings/string_utils.hh>
 #include <bsw/exception.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   namespace {
     std::pair<float, bool> cnv (const std::string& x) {
       auto v = bsw::trim (x);

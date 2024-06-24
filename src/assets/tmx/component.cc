@@ -8,7 +8,7 @@
 #include <bsw/strings/number_parser.hh>
 #include <bsw/switch_by_string.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   bool component::contains (const std::string& name) const noexcept {
     return m_prop.find (name) != m_prop.end ();
   }

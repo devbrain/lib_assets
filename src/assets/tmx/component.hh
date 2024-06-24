@@ -15,7 +15,7 @@
 #include "reader.hh"
 #include "color.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   namespace detail {
     struct object_id_s;
   }

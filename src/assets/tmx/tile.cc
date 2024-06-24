@@ -4,10 +4,10 @@
 
 #include "tile.hh"
 #include "json_reader.hh"
-#include <neutrino/utils/strings/string_tokenizer.hh>
-#include <neutrino/utils/strings/number_parser.hh>
+#include <bsw/strings/string_tokenizer.hh>
+#include <bsw/strings/number_parser.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   tile tile::parse (const reader& elt) {
     try {
       unsigned id = elt.get_uint_attribute ("id");
@@ -23,10 +23,10 @@ namespace neutrino::tiled::tmx {
       }
       else {
         if (auto attr = elt.get_string_attribute ("terrain", ""); !attr.empty ()) {
-          utils::string_tokenizer tokenizer (attr, ",", utils::string_tokenizer::TOK_TRIM);
+          bsw::string_tokenizer tokenizer (attr, ",", bsw::string_tokenizer::TOK_TRIM);
           unsigned t = 0;
           for (const auto& tok : tokenizer) {
-            terrain.at (t++) = utils::number_parser::parse (tok);
+            terrain.at (t++) = bsw::number_parser::parse (tok);
           }
         }
       }
@@ -54,7 +54,7 @@ namespace neutrino::tiled::tmx {
       });
       return result;
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       auto id = elt.get_string_attribute ("id", "<missing>");
       RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse tile, id [", id, "]");
     }

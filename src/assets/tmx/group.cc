@@ -5,7 +5,7 @@
 #include "group.hh"
 #include "layer.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   group group::parse (const reader& elt, const group* parent) {
     group res;
 
@@ -35,7 +35,7 @@ namespace neutrino::tiled::tmx {
       }
       component::parse (res, elt, parent);
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse group [", name, "]");
     }
     return res;

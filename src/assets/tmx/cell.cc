@@ -4,7 +4,7 @@
 
 #include "cell.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   cell cell::decode_gid (unsigned int gid) {
     static constexpr unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
     static constexpr unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;

@@ -6,10 +6,10 @@
 #include "cell.hh"
 #include "json_reader.hh"
 
-#include <neutrino/utils/strings/string_tokenizer.hh>
-#include <neutrino/utils/strings/number_parser.hh>
+#include <bsw/strings/string_tokenizer.hh>
+#include <bsw/strings/number_parser.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   wang_color wang_color::parse (const reader& elt) {
     try {
       auto name = elt.get_string_attribute ("name");
@@ -21,7 +21,7 @@ namespace neutrino::tiled::tmx {
       component::parse (ret, elt);
       return ret;
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       auto name = elt.get_string_attribute ("name", "<missing>");
       auto id = elt.get_string_attribute ("tile", "<missing>");
 
@@ -42,9 +42,9 @@ namespace neutrino::tiled::tmx {
       }
       else {
         auto data = elt.get_string_attribute ("wangid");
-        utils::string_tokenizer tokenizer (data, ",", utils::string_tokenizer::TOK_TRIM);
+        bsw::string_tokenizer tokenizer (data, ",", bsw::string_tokenizer::TOK_TRIM);
         for (const auto& tok : tokenizer) {
-          res.at (t++) = utils::number_parser::parse (tok);
+          res.at (t++) = bsw::number_parser::parse (tok);
         }
       }
     }
@@ -68,7 +68,7 @@ namespace neutrino::tiled::tmx {
 
       return {parse_corners (elt), tileid, hflip, dflip, vflip};
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       auto id = elt.get_string_attribute ("tileid", "<missing>");
 
       RAISE_EX_WITH_CAUSE(std::move (e), "wangtile id [", id, "]");
@@ -101,7 +101,7 @@ namespace neutrino::tiled::tmx {
 
       return ws;
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       auto name = elt.get_string_attribute ("name", "<missing>");
       auto id = elt.get_string_attribute ("tile", "<missing>");
 

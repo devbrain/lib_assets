@@ -9,7 +9,7 @@
 #include <vector>
 #include <chrono>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   class frame {
     public:
       frame (int tileid, std::chrono::milliseconds duration)

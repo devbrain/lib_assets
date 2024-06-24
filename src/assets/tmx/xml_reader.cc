@@ -4,10 +4,10 @@
 
 #include <iostream>
 #include <pugixml.hpp>
-#include <neutrino/utils/exception.hh>
+#include <bsw/exception.hh>
 #include "xml_reader.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   struct xml_reader::impl {
     explicit impl (pugi::xml_node elt)
         : m_node (elt), m_doc (nullptr) {

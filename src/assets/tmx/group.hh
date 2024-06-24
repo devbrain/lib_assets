@@ -11,7 +11,7 @@
 #include "component.hh"
 #include "color.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
 
   struct group : public component {
     static constexpr int default_offset_x = 0;

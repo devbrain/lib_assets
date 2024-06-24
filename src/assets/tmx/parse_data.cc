@@ -36,7 +36,7 @@ static void decode_csv (const std::string& data, std::vector<int>& out) {
   }
 }
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   parsed_buf_t parse_data (const std::string& encoding, const std::string& compression, const std::string& data) {
     if (encoding == "csv" || encoding.empty ()) {
       if (!compression.empty ()) {

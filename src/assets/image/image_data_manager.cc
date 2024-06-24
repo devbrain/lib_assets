@@ -32,7 +32,7 @@ namespace neutrino::assets {
 
 #define DECLARE_STD_IMG_LOADER(T)																							\
 		template <>																											\
-		class standard_image_resource_loader<T> : public abstract_resource_loader<neutrino::sdl::surface, image_info> { 	\
+		class standard_image_resource_loader<T> : public abstract_resource_loader<neutrino::sdl::surface> { 				\
          public:                                      																		\
          	static constexpr auto NAME = STRINGIZE(T);                                             							\
 		 private:																											\
@@ -42,7 +42,7 @@ namespace neutrino::assets {
 				return PPCAT(IMG_is, T) (rw.handle());																		\
 			}																												\
 																															\
-			neutrino::sdl::surface load (std::istream& is) const override {													\
+			sdl::surface load (std::istream& is) const override {															\
 				using namespace neutrino::sdl;																				\
 				rw_istream rw(is);																							\
 				SDL_Surface* srf = PPCAT(PPCAT(IMG_Load, T), _RW) (rw.handle());											\
@@ -50,10 +50,6 @@ namespace neutrino::assets {
 					RAISE_EX("Failed to load [", STRINGIZE(T), "] image format");											\
 				}																											\
 				return surface(object<SDL_Surface>(srf, true));																\
-			}																												\
-																															\
-			image_info info ([[maybe_unused]] std::istream& is) const override {											\
-				return {NAME};																								\
 			}																												\
 		}
 

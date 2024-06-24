@@ -13,7 +13,7 @@ namespace pugi {
   class xml_node;
 }
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   class xml_reader : public reader {
     public:
       static xml_reader load (const char* xml, std::size_t size, const char* root_elt_name);

@@ -21,7 +21,7 @@
 #include "image_layer.hh"
 #include "group.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
 
   using layer_t = std::variant<image_layer, tile_layer>;
 

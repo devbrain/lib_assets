@@ -5,7 +5,7 @@
 #include "image_layer.hh"
 #include "json_reader.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   image_layer image_layer::parse (const reader& elt, const group* parent) {
     auto[name, offsetx, offsety, opacity, visible, tint, id] = group::parse_content (elt, parent);
     try {
@@ -23,7 +23,7 @@ namespace neutrino::tiled::tmx {
       }
       return res;
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse image layer [", name, "]");
     }
 

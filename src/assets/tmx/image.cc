@@ -6,7 +6,7 @@
 #include "parse_data.hh"
 #include "xml_reader.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   std::unique_ptr<image> image::parse (const reader& elt) {
     std::string format = elt.get_string_attribute ("format", "");
     std::string source = elt.get_string_attribute ("source");

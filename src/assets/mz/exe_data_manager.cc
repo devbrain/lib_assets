@@ -42,7 +42,7 @@ namespace neutrino::assets {
 	};
 
 	template <exe_t T>
-	class exe_resource_loader : public abstract_resource_loader<std::vector<char>, exe_info> {
+	class exe_resource_loader : public abstract_resource_loader<std::vector<char>> {
 	 private:
 		using loader_t = typename exe_traits<T>::loader;
 
@@ -62,13 +62,6 @@ namespace neutrino::assets {
 			assets::mz::io::inmem_output ow(out_buff);
 			fo.write(ow);
 			return out_buff;
-		};
-
-		exe_info info(std::istream & is) const override {
-			mz::io::file_input input(is);
-			mz::input_exe_file iexe(input);
-			loader_t loader(iexe);
-			return {exe_traits<T>::name, static_cast<std::size_t>(loader.decomp_size())};
 		};
 	};
 

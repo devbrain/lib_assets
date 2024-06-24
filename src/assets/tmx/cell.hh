@@ -7,7 +7,7 @@
 
 #include <bitflags/bitflags.hpp>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
    * @brief A cell is a square on a map layer that is filled with a tile.
    */

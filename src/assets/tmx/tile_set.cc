@@ -6,7 +6,7 @@
 #include "xml_reader.hh"
 #include <bsw/exception.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   const tile* tile_set::get_tile (unsigned id) const noexcept {
     for (auto& tile : m_tiles) {
       if (tile.id () == id) {

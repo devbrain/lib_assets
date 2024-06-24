@@ -14,7 +14,7 @@
 #include <memory>
 #include <array>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
 * @brief A tile is a rectangular part of a tileset.
 */

@@ -8,7 +8,7 @@
 #include <bsw/strings/number_parser.hh>
 #include <bsw/exception.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   namespace detail {
     template <typename T>
     struct rgb_hex_extractor {
@@ -103,7 +103,7 @@ namespace neutrino::tiled::tmx {
 // ===============================================================================
 // Implementation
 // ===============================================================================
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   template <typename T>
   color<T>::color (const std::string& color) {
     std::tie (r, g, b, a) = detail::parse_hex_color<T> (color);

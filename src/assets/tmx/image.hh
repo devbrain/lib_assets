@@ -13,7 +13,7 @@
 #include "json_reader.hh"
 #include <memory>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
   * @brief An image is an image file on the system.
   */

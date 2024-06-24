@@ -9,7 +9,7 @@
 #include "reader.hh"
 #include <tuple>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
  * @brief A layer is a layer in the whole map.
  *

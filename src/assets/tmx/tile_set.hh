@@ -18,7 +18,7 @@
 #include <memory>
 #include <optional>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
    * @brief A tileset is a set of tiles in a single file (image or TSX file).
    */

@@ -6,11 +6,19 @@
 #include <cstring>
 #include <bsw/exception.hh>
 #include <assets/resources/detail/istream_pos_keeper.hh>
-
 #include "stb_wrapper.hh"
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_STDIO
+#define STBI_NO_JPEG
+#define STBI_NO_PNG
+#define STBI_NO_BMP
+//        STBI_NO_PSD
+//        STBI_NO_TGA
+#define   STBI_NO_GIF
+#define   STBI_NO_HDR
+#define   STBI_NO_PIC
+#define   STBI_NO_PNM   //(.ppm and .pgm)
 #include "thirdparty/stb_image.h"
 
 namespace {
@@ -86,63 +94,50 @@ namespace {
 }
 
 namespace neutrino::assets::detail {
+#ifndef STBI_NO_GIF
 	bool is_gif (std::istream& is) {
 		return test_image (is, stbi__gif_test);
 	}
 
-	image_info gif_info ([[maybe_unused]] std::istream& is) {
-		return {"GIF"};
-	}
 
-	neutrino::sdl::surface gif_load (std::istream& is) {
+	sdl::surface gif_load (std::istream& is) {
 		return load_image (is, stbi__gif_info);
 	}
-
+#endif
 	bool is_tga (std::istream& is) {
 		return test_image (is, stbi__tga_test);
 	}
 
-	image_info tga_info ([[maybe_unused]]std::istream& is) {
-		return {"TGA"};
-	}
-
-	neutrino::sdl::surface tga_load (std::istream& is) {
+	sdl::surface tga_load (std::istream& is) {
 		return load_image (is, stbi__tga_info);
 	}
-
+#ifndef STBI_NO_PNG
 	bool is_png (std::istream& is) {
 		return test_image (is, stbi__png_test);
 	}
 
-	image_info png_info ([[maybe_unused]] std::istream& is) {
-		return {"PNG"};
-	}
 
-	neutrino::sdl::surface png_load (std::istream& is) {
+	sdl::surface png_load (std::istream& is) {
 		return load_image (is, stbi__png_info);
 	}
+#endif
 
+#ifndef STBI_NO_JPEG
 	bool is_jpeg (std::istream& is) {
 		return test_image (is, stbi__jpeg_test);
 	}
 
-	image_info jpeg_info ([[maybe_unused]] std::istream& is) {
-		return {"JPG"};
-	}
 
-	neutrino::sdl::surface jpeg_load (std::istream& is) {
+	sdl::surface jpeg_load (std::istream& is) {
 		return load_image (is, stbi__jpeg_info);
 	}
+#endif
 
 	bool is_psd (std::istream& is) {
 		return test_image (is, stbi__psd_test);
 	}
 
-	image_info psd_info ([[maybe_unused]] std::istream& is) {
-		return {"PSD"};
-	}
-
-	neutrino::sdl::surface psd_load (std::istream& is) {
+	sdl::surface psd_load (std::istream& is) {
 		return load_image (is, stbi__psd_info);
 	}
 }

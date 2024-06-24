@@ -8,7 +8,7 @@
 #include "component.hh"
 #include "reader.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
  * @brief A terrain describes a kind of terrain on the map.
  */

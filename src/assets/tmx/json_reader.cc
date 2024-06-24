@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 #include <bsw/exception.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   struct json_reader::impl {
     explicit impl (nlohmann::json node)
         : m_node (std::move (node)) {
@@ -134,7 +134,7 @@ namespace neutrino::tiled::tmx {
   }
 
   // -------------------------------------------------------------------------------------------
-  std::vector<math::point2f> json_reader::parse_points (const char* name) const {
+  std::vector<sdl::point2f> json_reader::parse_points (const char* name) const {
     auto j = m_pimpl->m_node.find (name);
     if (j == m_pimpl->m_node.end ()) {
       RAISE_EX("Can not find element", name);
@@ -143,7 +143,7 @@ namespace neutrino::tiled::tmx {
     if (!node.is_array ()) {
       RAISE_EX("points elements is expected to be an array");
     }
-    std::vector<math::point2f> ret;
+    std::vector<sdl::point2f> ret;
     for (const auto& obj : node) {
       if (!obj.is_object ()) {
         RAISE_EX("points should be an array of objects");

@@ -8,7 +8,7 @@
 #include <bsw/exception.hh>
 #include <bsw/switch_by_string.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   map map::parse (const reader& elt, path_resolver_t resolver) {
     try {
       json_reader::assert_type ("map", elt);

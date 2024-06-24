@@ -4,7 +4,7 @@
 
 #include "terrain.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   terrain terrain::parse (const reader& elt) {
     try {
       auto name = elt.get_string_attribute ("name");

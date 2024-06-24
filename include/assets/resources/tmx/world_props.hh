@@ -5,7 +5,7 @@
 #ifndef INCLUDE_NEUTRINO_TILED_WORLD_WORLD_PROPS_HH
 #define INCLUDE_NEUTRINO_TILED_WORLD_WORLD_PROPS_HH
 
-namespace neutrino::tiled {
+namespace neutrino::assets {
   /**
    * @brief the orientation of the map.
    */

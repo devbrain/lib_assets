@@ -6,11 +6,11 @@
 #include "parse_data.hh"
 #include "xml_reader.hh"
 #include "json_reader.hh"
-#include <neutrino/utils/override.hh>
-#include <neutrino/utils/byte_order.hh>
-#include <neutrino/utils/exception.hh>
+#include <bsw/override.hh>
+#include <bsw/byte_order.hh>
+#include <bsw/exception.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   // ==============================================================================
   namespace {
     template <typename T>
@@ -25,7 +25,7 @@ namespace neutrino::tiled::tmx {
       }
       auto data = parse_data (encoding, compression, text);
       std::visit (
-          utils::overload (
+          bsw::overload (
               [&result] (const data_buff_t& buff) {
                 const auto sz = buff.size ();
                 ENFORCE(sz % 4 == 0);
@@ -34,7 +34,7 @@ namespace neutrino::tiled::tmx {
                     uint8_t* bytes;
                     uint32_t* words;
                   } u = {(uint8_t*) buff.data () + i};
-                  unsigned gid = neutrino::utils::byte_order::from_little_endian (*u.words);
+                  unsigned gid = bsw::byte_order::from_little_endian (*u.words);
                   result.add (cell::decode_gid (gid));
                 }
               },
@@ -109,7 +109,7 @@ namespace neutrino::tiled::tmx {
       }
       return result;
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       auto idx = elt.get_string_attribute ("id", "<missing>");
       RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse layer [", name, "], id [", idx, "]");
     }
@@ -143,7 +143,7 @@ namespace neutrino::tiled::tmx {
       }
       return result;
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse chunk #", chunk_id);
     }
   }

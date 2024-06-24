@@ -8,7 +8,7 @@
 #include <bsw/strings/number_parser.hh>
 #include <bsw/strings/ascii.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
 	reader::document_t reader::guess_document_type(const char* txt, std::size_t size) {
 		std::size_t k = 0;
 		for (k = 0; k < size; k++) {

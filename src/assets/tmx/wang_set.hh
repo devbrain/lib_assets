@@ -13,7 +13,7 @@
 #include "reader.hh"
 #include "color.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
 
   class wang_color : public component {
     public:

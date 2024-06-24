@@ -12,7 +12,7 @@
 
 #include <bsw/exception.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   class reader {
     public:
       using visitor_t = std::function<void (const reader&)>;

@@ -12,7 +12,7 @@
 #include <memory>
 #include <utility>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   /**
  * @brief the order in which the objects should be drawn.
  */

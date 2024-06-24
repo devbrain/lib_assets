@@ -4,7 +4,7 @@
 
 #include "layer.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   std::tuple<std::string, double, bool, int> layer::parse (const reader& elt) {
     auto name = elt.get_string_attribute ("name", "");
     auto opacity = elt.get_double_attribute ("opacity", 1.0);

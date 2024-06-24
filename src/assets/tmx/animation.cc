@@ -6,7 +6,7 @@
 #include "json_reader.hh"
 #include <bsw/exception.hh>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   animation animation::parse (const reader& elt) {
     try {
       animation obj;

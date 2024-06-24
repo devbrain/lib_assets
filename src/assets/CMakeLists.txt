@@ -9,7 +9,7 @@ if (DEFINED assets_SHARED_LIBS)
 endif ()
 
 add_library(assets
-
+        ${PROJECT_INCLUDE}/assets/assets_export.h
         ${PROJECT_INCLUDE}/assets/init.hh
         init.cc
         ${PROJECT_INCLUDE}/assets/assets.hh
@@ -118,55 +118,65 @@ add_library(assets
         ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/data_manager.hh
 
-        ${PROJECT_INCLUDE}/assets/resources/image/image_info.hh
         ${PROJECT_INCLUDE}/assets/resources/image/image_data_manager.hh
 
-        ${PROJECT_INCLUDE}/assets/resources/exe/exe_info.hh
         ${PROJECT_INCLUDE}/assets/resources/exe/exe_data_manager.hh
         image/image_data_manager.cc
         mz/exe_data_manager.cc
 
-        tmx/animation.cc
-        tmx/animation.hh
-        tmx/cell.cc
-        tmx/cell.hh
-        tmx/color.hh
-        tmx/component.cc
-        tmx/component.hh
-        tmx/group.cc
-        tmx/group.hh
-        tmx/image.cc
-        tmx/image.hh
-        tmx/image_layer.cc
-        tmx/image_layer.hh
-        tmx/json_reader.cc
-        tmx/json_reader.hh
-        tmx/layer.cc
-        tmx/layer.hh
-        tmx/map.cc
-        tmx/map.hh
-        tmx/object.cc
-        tmx/object.hh
-        tmx/object_layer.cc
-        tmx/object_layer.hh
-        tmx/parse_data.cc
-        tmx/parse_data.hh
-        tmx/reader.cc
-        tmx/reader.hh
-        tmx/terrain.cc
-        tmx/terrain.hh
-        tmx/tile.cc
-        tmx/tile.hh
-        tmx/tile_layer.cc
-        tmx/tile_layer.hh
-        tmx/tile_set.cc
-        tmx/tile_set.hh
-        tmx/tmx.cc
-        tmx/wang_set.cc
-        tmx/wang_set.hh
-        tmx/xml_reader.cc
-        tmx/xml_reader.hh
-        tmx/csv/parser.hpp
+
+        ${PROJECT_INCLUDE}/assets/resources/audio/music_data_manager.hh
+        ${PROJECT_INCLUDE}/assets/resources/audio/sound_effect_data_manager.hh
+        audio/music_data_manager.cc
+        audio/sound_effect_data_manager.cc
+
+        ${PROJECT_INCLUDE}/assets/resources/font/bgi_font.hh
+        ${PROJECT_INCLUDE}/assets/resources/font/bgi_font_data_manager.hh
+        ${PROJECT_INCLUDE}/assets/resources/font/ttf_data_manager.hh
+        font/bgi_font_data_manager.cc
+        font/ttf_data_manager.cc
+
+#        tmx/animation.cc
+#        tmx/animation.hh
+#        tmx/cell.cc
+#        tmx/cell.hh
+#        tmx/color.hh
+#        tmx/component.cc
+#        tmx/component.hh
+#        tmx/group.cc
+#        tmx/group.hh
+#        tmx/image.cc
+#        tmx/image.hh
+#        tmx/image_layer.cc
+#        tmx/image_layer.hh
+#        tmx/json_reader.cc
+#        tmx/json_reader.hh
+#        tmx/layer.cc
+#        tmx/layer.hh
+#        tmx/map.cc
+#        tmx/map.hh
+#        tmx/object.cc
+#        tmx/object.hh
+#        tmx/object_layer.cc
+#        tmx/object_layer.hh
+#        tmx/parse_data.cc
+#        tmx/parse_data.hh
+#        tmx/reader.cc
+#        tmx/reader.hh
+#        tmx/terrain.cc
+#        tmx/terrain.hh
+#        tmx/tile.cc
+#        tmx/tile.hh
+#        tmx/tile_layer.cc
+#        tmx/tile_layer.hh
+#        tmx/tile_set.cc
+#        tmx/tile_set.hh
+#        tmx/tmx.cc
+#        tmx/wang_set.cc
+#        tmx/wang_set.hh
+#        tmx/xml_reader.cc
+#        tmx/xml_reader.hh
+#        tmx/csv/parser.hpp
 
 )
 
@@ -184,6 +194,9 @@ target_include_directories(assets
 target_compile_features(assets PUBLIC cxx_std_17)
 
 include(GenerateExportHeader)
-generate_export_header(assets EXPORT_FILE_NAME ${PROJECT_CONFIG_INCLUDE}/assets/assets_export.h)
+generate_export_header(assets EXPORT_FILE_NAME ${PROJECT_CONFIG_INCLUDE}/assets/assets_export_def.h)
 target_compile_definitions(assets PUBLIC "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:assets_STATIC_DEFINE>")
-target_link_libraries(assets PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image)
+target_link_libraries(assets
+        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer
+        PRIVATE thirdparty::json thirdparty::pugixml
+)

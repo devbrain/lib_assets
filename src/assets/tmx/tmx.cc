@@ -5,16 +5,16 @@
 #include <fstream>
 #include <algorithm>
 
-#include <neutrino/tiled/loader/tmx.hh>
-#include <neutrino/tiled/world/world.hh>
+#include <assets/resources/tmx/tmx.hh>
+#include <assets/resources/tmx/world.hh>
 
-#include <neutrino/tiled/world/builder/texture_atlas_builder.hh>
-#include <neutrino/tiled/world/builder/layers_builder.hh>
-#include <neutrino/tiled/world/builder/world_builder.hh>
+#include <assets/resources/tmx/texture_atlas_builder.hh>
+#include <assets/resources/tmx/layers_builder.hh>
+#include <assets/resources/tmx/world_builder.hh>
 
 
-#include <neutrino/utils/override.hh>
-#include <neutrino/utils/exception.hh>
+#include <bsw/override.hh>
+#include <bsw/exception.hh>
 #include <utility>
 
 #include "xml_reader.hh"
@@ -22,7 +22,7 @@
 #include "color.hh"
 #include "map.hh"
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
   // first_gid -> tileset
   using gid_tileset_t = std::tuple<unsigned int, unsigned int>;
   using gid_map_t = std::vector<gid_tileset_t>;
@@ -77,10 +77,10 @@ namespace neutrino::tiled::tmx {
       if (!img) {
         RAISE_EX("tileset (\"", ts.name (), "\" : first_gid = ", ts.first_gid (), ") does not have attached image");
       }
-      std::optional<hal::color> transparent_color;
+      std::optional<sdl::color> transparent_color;
       if (img->transparent ()) {
         colori tcl{*img->transparent ()};
-        transparent_color = hal::color{tcl.r, tcl.g, tcl.b, tcl.a};
+        transparent_color = sdl::color{tcl.r, tcl.g, tcl.b, tcl.a};
       }
       if (!img->source ().empty ()) {
         tiles_builder_info.emplace_back (
@@ -171,7 +171,7 @@ namespace neutrino::tiled::tmx {
     try {
       return load (ifs, std::move (resolver));
     }
-    catch (exception& e) {
+    catch (bsw::exception& e) {
       RAISE_EX_WITH_CAUSE(std::move (e), "Failed to load map file", path);
     }
   }
@@ -211,7 +211,7 @@ namespace neutrino::tiled::tmx {
 
     for (const auto& wl : raw.layers()) {
       std::visit(
-          utils::overload ([&wb, &gid_map](const tile_layer& tl){
+          bsw::overload ([&wb, &gid_map](const tile_layer& tl){
               wb.add (transform_layer (tl, gid_map));
             },
           [](const auto&) {

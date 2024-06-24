@@ -11,7 +11,7 @@
 #include "reader.hh"
 #include <vector>
 
-namespace neutrino::tiled::tmx {
+namespace neutrino::assets::tmx {
 
   class chunk {
     public:

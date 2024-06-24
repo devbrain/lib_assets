@@ -6,15 +6,14 @@
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_RESOURCE_HH_
 
 #include <iosfwd>
-
 namespace neutrino::assets {
-	template <typename Resource, typename MetaData>
+
+	template<typename Resource>
 	class abstract_resource_loader {
-	 public:
-		virtual ~abstract_resource_loader() = default;
-		virtual bool accept(std::istream& is) const = 0;
-		virtual Resource load(std::istream& is) const = 0;
-		virtual MetaData info(std::istream & is) const = 0;
+		public:
+			virtual ~abstract_resource_loader() = default;
+			virtual bool accept(std::istream& is) const = 0;
+			virtual Resource load(std::istream& is) const = 0;
 	};
 }
 
