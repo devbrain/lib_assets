@@ -8,7 +8,7 @@
 #include <assets//assets_export.h>
 
 namespace assets::pefile {
-	class ASSETS_EXPORT dialog_c {
+	class ASSETS_EXPORT dialog {
 	 public:
 		static constexpr int resource_id () {
 			return 5;
@@ -40,13 +40,13 @@ namespace assets::pefile {
 			uint16_t m_w;
 			uint16_t m_h;
 			uint32_t m_id;
-			resource_name_c m_ctl_class;
-			resource_name_c m_title;
+			resource_name m_ctl_class;
+			resource_name m_title;
 			std::vector<char> m_extra;
 
 		};
 	 public:
-		dialog_c ()
+		dialog ()
 			: m_extended (false),
 			  m_helpid (0),
 			  m_extstyle (0),
@@ -58,7 +58,7 @@ namespace assets::pefile {
 
 		}
 
-		static void load (const windows_pe_file& file, const resource_c& rn, dialog_c& out);
+		static void load (const windows_pe_file& file, const resource& rn, dialog& out);
 	 public:
 		bool m_extended;
 		uint32_t m_helpid;
@@ -69,9 +69,9 @@ namespace assets::pefile {
 		uint16_t m_w;
 		uint16_t m_h;
 
-		resource_name_c m_menu;
-		resource_name_c m_dlg_class;
-		resource_name_c m_title;
+		resource_name m_menu;
+		resource_name m_dlg_class;
+		resource_name m_title;
 
 		font_s m_font;
 

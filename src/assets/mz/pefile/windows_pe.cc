@@ -27,7 +27,6 @@ namespace assets::pefile {
 		explicit as_int(u1 x)
 			: m_v(x) {
 		}
-
 		u1 m_v;
 	};
 

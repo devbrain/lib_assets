@@ -1,24 +1,24 @@
-#include <assets/resources/exe/rs_message_table.hh>
+#include <assets/resources/exe/winres/rs_message_table.hh>
 #include <bsw/strings/wchar.hh>
 #include "pefile.hh"
 
 namespace assets::pefile {
-	message_table_c::msg_table_t::const_iterator message_table_c::begin () const {
+	message_table::msg_table_t::const_iterator message_table::begin () const {
 		return m_messages.begin ();
 	}
 
 	// ---------------------------------------------------------------------
-	message_table_c::msg_table_t::const_iterator message_table_c::end () const {
+	message_table::msg_table_t::const_iterator message_table::end () const {
 		return m_messages.end ();
 	}
 
 	// ---------------------------------------------------------------------
-	bool message_table_c::exists (uint16_t key) const {
+	bool message_table::exists (uint16_t key) const {
 		return m_messages.find (key) != m_messages.end ();
 	}
 
 	// ---------------------------------------------------------------------
-	std::wstring message_table_c::operator[] (uint16_t key) const {
+	std::wstring message_table::operator[] (uint16_t key) const {
 		auto i = m_messages.find (key);
 		if (i != m_messages.end ()) {
 			return i->second;
@@ -34,8 +34,8 @@ namespace assets::pefile {
 		};
 	}
 
-	void message_table_c::load (const windows_pe_file& file, const resource_c& rn, message_table_c& out) {
-		const char* file_data = file.file_data ();
+	void message_table::load (const windows_pe_file& file, const resource& rn, message_table& out) {
+
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);
 
@@ -43,7 +43,7 @@ namespace assets::pefile {
 			return;
 		}
 
-		bsw::istream_wrapper_c is (file_data + offs, rn.size ());
+		bsw::istream_wrapper is (file.stream(), offs, rn.size ());
 
 		uint32_t num_blocks;
 		is >> num_blocks;

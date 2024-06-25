@@ -38,12 +38,12 @@ namespace assets::pefile {
 
 	class windows_pe_file;
 
-	class ASSETS_EXPORT resource_name_c {
-		friend bool operator< (const resource_name_c& a, const resource_name_c& b);
+	class ASSETS_EXPORT resource_name {
+		friend bool operator< (const resource_name& a, const resource_name& b);
 	 public:
-		resource_name_c () = default;
-		explicit resource_name_c (int id);
-		explicit resource_name_c (const std::wstring& name);
+		resource_name () = default;
+		explicit resource_name (int id);
+		explicit resource_name (const std::wstring& name);
 
 		[[nodiscard]] bool is_id () const;
 		[[nodiscard]] int id () const;
@@ -59,14 +59,13 @@ namespace assets::pefile {
 	};
 
 	// =============================================================================
-	bool operator< (const resource_name_c& a, const resource_name_c& b);
-	std::wostream& operator<< (std::wostream& os, const resource_name_c& a);
-	std::ostream& operator<< (std::ostream& os, const resource_name_c& a);
+	ASSETS_EXPORT bool operator< (const resource_name& a, const resource_name& b);
+	ASSETS_EXPORT std::ostream& operator<< (std::ostream& os, const resource_name& a);
 
 	// =============================================================================
-	class ASSETS_EXPORT  resource_c {
+	class ASSETS_EXPORT  resource {
 	 public:
-		resource_c ();
+		resource ();
 
 		[[nodiscard]] int language_code () const;
 		void language_code (int x);
@@ -77,8 +76,8 @@ namespace assets::pefile {
 		[[nodiscard]] uint32_t size () const;
 		void size (uint32_t x);
 
-		[[nodiscard]] const resource_name_c& name () const;
-		void name (resource_name_c& rn);
+		[[nodiscard]] const resource_name& name () const;
+		void name (resource_name& rn);
 
 		[[nodiscard]] std::size_t offset_in_file (const windows_pe_file& f) const;
 
@@ -86,44 +85,45 @@ namespace assets::pefile {
 		int m_language_code;
 		uint32_t m_offset;
 		uint32_t m_size;
-		resource_name_c m_rn;
+		resource_name m_rn;
 	};
 	// =============================================================================
 	namespace detail {
-		class resource_dir_builder_c;
+		class resource_dir_builder;
 	}
-	class ASSETS_EXPORT resource_dir_c {
-		friend class detail::resource_dir_builder_c;
+
+	class ASSETS_EXPORT resource_dir {
+		friend class detail::resource_dir_builder;
 
 	 public:
-		using second_level_t = std::multimap<resource_name_c, resource_c>;
-		using first_level_t = std::map<resource_name_c, second_level_t>;
+		using second_level_t = std::multimap<resource_name, resource>;
+		using first_level_t = std::map<resource_name, second_level_t>;
 		using iterator = second_level_t::const_iterator;
 	 public:
-		class names_iterator_c {
-			friend class resource_dir_c;
+		class names_iterator {
+			friend class resource_dir;
 
 		 public:
-			names_iterator_c& operator++ ();
-			bool operator== (const names_iterator_c& a);
-			bool operator!= (const names_iterator_c& a);
-			const resource_name_c* operator-> () const;
-			const resource_name_c& operator* () const;
+			names_iterator& operator++ ();
+			bool operator== (const names_iterator& a);
+			bool operator!= (const names_iterator& a);
+			const resource_name* operator-> () const;
+			const resource_name& operator* () const;
 		 private:
-			using itr_t = resource_dir_c::first_level_t::const_iterator;
+			using itr_t = first_level_t::const_iterator;
 		 private:
-			explicit names_iterator_c (itr_t i);
+			explicit names_iterator (itr_t i);
 		 private:
 			itr_t m_itr;
 		};
 
 	 public:
-		[[nodiscard]] iterator begin (const resource_name_c& rn) const;
-		[[nodiscard]] iterator end (const resource_name_c& rn) const;
+		[[nodiscard]] iterator begin (const resource_name& rn) const;
+		[[nodiscard]] iterator end (const resource_name& rn) const;
 		[[nodiscard]] bool exists (int id) const;
 
-		[[nodiscard]] names_iterator_c names_begin () const;
-		[[nodiscard]] names_iterator_c names_end () const;
+		[[nodiscard]] names_iterator names_begin () const;
+		[[nodiscard]] names_iterator names_end () const;
 	 protected:
 		first_level_t m_dir;
 	};

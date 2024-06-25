@@ -1,17 +1,17 @@
-#include "../../../../include/assets/resources/exe/rs_dialog.hh"
+#include <assets/resources/exe/winres/rs_dialog.hh>
 #include <stdexcept>
 
 namespace assets::pefile {
-	static resource_name_c load_resource_name_dlg (bsw::istream_wrapper_c& is, std::size_t maxlen) {
+	static resource_name load_resource_name_dlg (bsw::istream_wrapper& is, std::size_t maxlen) {
 		uint16_t descr;
 		is >> descr;
 		if (descr == 0) {
-			return resource_name_c ();
+			return resource_name ();
 		} else {
 			if (descr == 0xFFFF) {
 				uint16_t id;
 				is >> id;
-				return resource_name_c (id);
+				return resource_name (id);
 			} else {
 				wchar_t ch = static_cast <wchar_t> (descr);
 				std::wstring nm;
@@ -30,14 +30,13 @@ namespace assets::pefile {
 				if (!term) {
 					throw std::runtime_error ("String should be null terminated");
 				}
-				return resource_name_c (nm);
+				return resource_name (nm);
 			}
 		}
 	}
 
 	// ---------------------------------------------------------------------------------
-	void dialog_c::load (const windows_pe_file& file, const resource_c& rn, dialog_c& out) {
-		const char* file_data = file.file_data ();
+	void dialog::load (const windows_pe_file& file, const resource& rn, dialog& out) {
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);
 
@@ -45,7 +44,7 @@ namespace assets::pefile {
 			return;
 		}
 
-		bsw::istream_wrapper_c is (file_data + offs, rn.size ());
+		bsw::istream_wrapper is (file.stream(), offs, rn.size ());
 
 		union {
 			uint16_t w[2];
@@ -84,7 +83,7 @@ namespace assets::pefile {
 		}
 		is.align4 ();
 		for (uint16_t i = 0; i < num; i++) {
-			dialog_c::control_s ctl;
+			dialog::control_s ctl;
 			if (out.m_extended) {
 				is >> ctl.m_helpid >> ctl.m_extstyle >> ctl.m_style;
 			} else {

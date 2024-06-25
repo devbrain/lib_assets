@@ -3,52 +3,52 @@
 #include <stdexcept>
 
 #include "pefile.hh"
-#include "../../../../include/assets/resources/exe/resource_directory.hh"
+#include <assets/resources/exe/winres/resource_directory.hh>
 #include "bsw/strings/wchar.hh"
 
 namespace assets::pefile {
 
 	// ====================================================================
-	resource_name_c::resource_name_c (int id)
+	resource_name::resource_name (int id)
 		: m_value (std::make_pair (id, L"")) {
 
 	}
 
 	// --------------------------------------------------------------------
-	resource_name_c::resource_name_c (const std::wstring& name)
+	resource_name::resource_name (const std::wstring& name)
 		: m_value (std::make_pair (-1, name)) {
 
 	}
 
 	// --------------------------------------------------------------------
-	bool resource_name_c::is_id () const {
+	bool resource_name::is_id () const {
 		return m_value.second.empty ();
 	}
 
 	// --------------------------------------------------------------------
-	int resource_name_c::id () const {
+	int resource_name::id () const {
 		return m_value.first;
 	}
 
 	// --------------------------------------------------------------------
-	void resource_name_c::id (int x) {
+	void resource_name::id (int x) {
 		m_value.first = x;
 		m_value.second = L"";
 	}
 
 	// --------------------------------------------------------------------
-	std::wstring resource_name_c::name () const {
+	std::wstring resource_name::name () const {
 		return m_value.second;
 	}
 
 	// --------------------------------------------------------------------
-	void resource_name_c::name (const std::wstring& x) {
+	void resource_name::name (const std::wstring& x) {
 		m_value.first = -1;
 		m_value.second = x;
 	}
 
 	// --------------------------------------------------------------------
-	bool resource_name_c::is_special () const {
+	bool resource_name::is_special () const {
 		if (is_id ()) {
 			if (m_value.first >= CURSOR && m_value.first <= MANIFEST && m_value.first != 18) {
 				return true;
@@ -64,12 +64,12 @@ namespace assets::pefile {
 	}
 
 	// --------------------------------------------------------------------
-	bool operator< (const resource_name_c& a, const resource_name_c& b) {
+	bool operator< (const resource_name& a, const resource_name& b) {
 		return a.m_value < b.m_value;
 	}
 
 	// --------------------------------------------------------------------
-	std::wostream& operator<< (std::wostream& os, const resource_name_c& a) {
+	std::wostream& operator<< (std::wostream& os, const resource_name& a) {
 		if (a.is_id ()) {
 			os << a.id ();
 		} else {
@@ -79,7 +79,7 @@ namespace assets::pefile {
 	}
 
 	// --------------------------------------------------------------------
-	std::ostream& operator<< (std::ostream& os, const resource_name_c& a) {
+	std::ostream& operator<< (std::ostream& os, const resource_name& a) {
 		if (a.is_id ()) {
 			os << a.id ();
 		} else {
@@ -89,7 +89,7 @@ namespace assets::pefile {
 	}
 
 	// ============================================================================
-	resource_c::resource_c ()
+	resource::resource ()
 		: m_language_code (0),
 		  m_offset (0),
 		  m_size (0) {
@@ -97,65 +97,61 @@ namespace assets::pefile {
 	}
 
 	// -------------------------------------------------------------------------
-	int resource_c::language_code () const {
+	int resource::language_code () const {
 		return m_language_code;
 	}
 
 	// -------------------------------------------------------------------------
-	void resource_c::language_code (int x) {
+	void resource::language_code (int x) {
 		m_language_code = x;
 	}
 
 	// -------------------------------------------------------------------------
-	uint32_t resource_c::offset () const {
+	uint32_t resource::offset () const {
 		return m_offset;
 	}
 
 	// -------------------------------------------------------------------------
-	void resource_c::offset (uint32_t x) {
+	void resource::offset (uint32_t x) {
 		m_offset = x;
 	}
 
 	// -------------------------------------------------------------------------
-	uint32_t resource_c::size () const {
+	uint32_t resource::size () const {
 		return m_size;
 	}
 
 	// -------------------------------------------------------------------------
-	void resource_c::size (uint32_t x) {
+	void resource::size (uint32_t x) {
 		m_size = x;
 	}
 
-	const resource_name_c& resource_c::name () const {
+	const resource_name& resource::name () const {
 		return m_rn;
 	}
 
 	// -------------------------------------------------------------------------
-	void resource_c::name (resource_name_c& rn) {
+	void resource::name (resource_name& rn) {
 		m_rn = rn;
 	}
 
 	// -------------------------------------------------------------------------
-	std::size_t resource_c::offset_in_file (const windows_pe_file& file) const {
-		const char* file_data = file.file_data ();
+	std::size_t resource::offset_in_file (const windows_pe_file& file) const {
 		const std::size_t file_size = file.file_size ();
-		const auto& entry = file.optional_header ().DataDirectory[(int)DataDirectory::Resource];
-		//	const uint32_t rc_offs = file.translate_rva(entry.VirtualAddress);
+		const auto& entry = file.optional_header ().DataDirectory[static_cast <int>(DataDirectory::Resource)];
 		const uint32_t rc_offs = file.translate_rva (m_offset);
 
 		uint64_t total = rc_offs;
-//		total += m_offset;
 		total += m_size;
 
 		if (total >= file_size) {
 			return file_size;
 		}
-		//return rc_offs + m_offset;
 		return rc_offs;
 	}
 
 	// =======================================================================
-	resource_dir_c::iterator resource_dir_c::begin (const resource_name_c& rn) const {
+	resource_dir::iterator resource_dir::begin (const resource_name& rn) const {
 		auto i = m_dir.find (rn);
 		if (i == m_dir.end ()) {
 			std::ostringstream os;
@@ -166,7 +162,7 @@ namespace assets::pefile {
 	}
 
 	// -------------------------------------------------------------------------
-	resource_dir_c::iterator resource_dir_c::end (const resource_name_c& rn) const {
+	resource_dir::iterator resource_dir::end (const resource_name& rn) const {
 		auto i = m_dir.find (rn);
 		if (i == m_dir.end ()) {
 			std::ostringstream os;
@@ -177,49 +173,49 @@ namespace assets::pefile {
 	}
 
 	// -----------------------------------------------------------------------
-	bool resource_dir_c::exists (int id) const {
-		resource_name_c rn (id);
+	bool resource_dir::exists (int id) const {
+		resource_name rn (id);
 		return m_dir.find (rn) != m_dir.end ();
 	}
 
 	// -----------------------------------------------------------------------
-	resource_dir_c::names_iterator_c resource_dir_c::names_begin () const {
-		return names_iterator_c (m_dir.begin ());
+	resource_dir::names_iterator resource_dir::names_begin () const {
+		return names_iterator (m_dir.begin ());
 	}
 
 	// -----------------------------------------------------------------------
-	resource_dir_c::names_iterator_c resource_dir_c::names_end () const {
-		return names_iterator_c (m_dir.end ());
+	resource_dir::names_iterator resource_dir::names_end () const {
+		return names_iterator (m_dir.end ());
 	}
 
 	// =======================================================================
-	resource_dir_c::names_iterator_c& resource_dir_c::names_iterator_c::operator++ () {
+	resource_dir::names_iterator& resource_dir::names_iterator::operator++ () {
 		m_itr++;
 		return *this;
 	}
 
 	// -----------------------------------------------------------------------
-	bool resource_dir_c::names_iterator_c::operator== (const names_iterator_c& a) {
+	bool resource_dir::names_iterator::operator== (const names_iterator& a) {
 		return this->m_itr == a.m_itr;
 	}
 
 	// -----------------------------------------------------------------------
-	bool resource_dir_c::names_iterator_c::operator!= (const names_iterator_c& a) {
+	bool resource_dir::names_iterator::operator!= (const names_iterator& a) {
 		return !(*this == a);
 	}
 
 	// -----------------------------------------------------------------------
-	const resource_name_c* resource_dir_c::names_iterator_c::operator-> () const {
+	const resource_name* resource_dir::names_iterator::operator-> () const {
 		return &m_itr->first;
 	}
 
 	// -----------------------------------------------------------------------
-	const resource_name_c& resource_dir_c::names_iterator_c::operator* () const {
+	const resource_name& resource_dir::names_iterator::operator* () const {
 		return m_itr->first;
 	}
 
 	// -----------------------------------------------------------------------
-	resource_dir_c::names_iterator_c::names_iterator_c (itr_t i)
+	resource_dir::names_iterator::names_iterator (itr_t i)
 		: m_itr (i) {
 
 	}

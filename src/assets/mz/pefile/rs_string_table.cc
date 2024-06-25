@@ -1,34 +1,33 @@
-#include <assets/resources/exe/rs_string_table.hh>
+#include <assets/resources/exe/winres/rs_string_table.hh>
 #include "pefile.hh"
 
 namespace assets::pefile {
-	int string_table_c::number () const {
+	int string_table::number () const {
 		return m_num;
 	}
 
 	// ------------------------------------------------------------------
-	string_table_c::strings_map_t::const_iterator string_table_c::begin () const {
+	string_table::strings_map_t::const_iterator string_table::begin () const {
 		return m_strings.begin ();
 	}
 
 	// ------------------------------------------------------------------
-	string_table_c::strings_map_t::const_iterator string_table_c::end () const {
+	string_table::strings_map_t::const_iterator string_table::end () const {
 		return m_strings.end ();
 	}
 
 	// ------------------------------------------------------------------
-	void string_table_c::_number (int x) {
+	void string_table::_number (int x) {
 		m_num = x;
 	}
 
 	// ------------------------------------------------------------------
-	void string_table_c::_bind (int id, const std::wstring& s) {
+	void string_table::_bind (int id, const std::wstring& s) {
 		m_strings[id] = s;
 	}
 
 	// ------------------------------------------------------------------
-	void string_table_c::load (const windows_pe_file& file, const resource_c& rn, string_table_c& out) {
-		const char* file_data = file.file_data ();
+	void string_table::load (const windows_pe_file& file, const resource& rn, string_table& out) {
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);
 
@@ -36,7 +35,7 @@ namespace assets::pefile {
 			return;
 		}
 
-		bsw::istream_wrapper_c stream (file_data + offs, rn.size ());
+		bsw::istream_wrapper stream (file.stream(), offs, rn.size ());
 
 		const auto id = static_cast<uint16_t>(rn.name ().id ());
 

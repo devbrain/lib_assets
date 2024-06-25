@@ -1,5 +1,5 @@
-#include <assets/resources/exe/rs_version.hh>
-#include <assets/resources/exe/resource_directory.hh>
+#include <assets/resources/exe/winres/rs_version.hh>
+#include <assets/resources/exe/winres/resource_directory.hh>
 #include <bsw/strings/wchar.hh>
 
 #include "istream_wrapper.hh"
@@ -7,17 +7,17 @@
 
 namespace assets::pefile {
 	// ------------------------------------------------------------------
-	void version_c::_bind (const std::wstring& k, const std::wstring& b) {
+	void version::_bind (const std::wstring& k, const std::wstring& b) {
 		m_kv_map[bsw::wstring_to_utf8 (k)] = bsw::wstring_to_utf8 (b);
 	}
 
 	// ------------------------------------------------------------------
-	uint32_t version_c::operator[] (fields_t f) const {
+	uint32_t version::operator[] (fields_t f) const {
 		return m_fields[f];
 	}
 
 	// ------------------------------------------------------------------
-	std::string version_c::operator[] (const std::string& v) const {
+	std::string version::operator[] (const std::string& v) const {
 		auto i = m_kv_map.find (v);
 		if (i == m_kv_map.end ()) {
 			return "";
@@ -26,43 +26,43 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	version_c::kv_map_t::const_iterator version_c::begin () const {
+	version::kv_map_t::const_iterator version::begin () const {
 		return m_kv_map.begin ();
 	}
 
 	// ------------------------------------------------------------------
-	version_c::kv_map_t::const_iterator version_c::end () const {
+	version::kv_map_t::const_iterator version::end () const {
 		return m_kv_map.end ();
 	}
 
 	// ------------------------------------------------------------------
-	std::size_t version_c::size () const {
+	std::size_t version::size () const {
 		return m_kv_map.size ();
 	}
 
 	// ------------------------------------------------------------------
-	version_c::translations_t::const_iterator version_c::translations_begin () const {
+	version::translations_t::const_iterator version::translations_begin () const {
 		return m_translations.begin ();
 	}
 
 	// ------------------------------------------------------------------
-	version_c::translations_t::const_iterator version_c::translations_end () const {
+	version::translations_t::const_iterator version::translations_end () const {
 		return m_translations.end ();
 	}
 
 	// ------------------------------------------------------------------
-	std::size_t version_c::translations_size () const {
+	std::size_t version::translations_size () const {
 		return m_translations.size ();
 	}
 
 	// ------------------------------------------------------------------
-	void version_c::_add_translation (uint16_t x) {
+	void version::_add_translation (uint16_t x) {
 		m_translations.push_back (x);
 	}
 	// ====================================================================
 	namespace {
 		struct node_s {
-			node_s (bsw::istream_wrapper_c& is)
+			node_s (bsw::istream_wrapper& is)
 				: cbNode (0),
 				  cbData (0),
 				  wType (0),
@@ -70,7 +70,7 @@ namespace assets::pefile {
 				pos = is.current_pos ();
 			}
 
-			void unread (bsw::istream_wrapper_c& is) {
+			void unread (bsw::istream_wrapper& is) {
 				is.seek (pos);
 			}
 
@@ -85,7 +85,7 @@ namespace assets::pefile {
 			uint16_t Size;
 			static const uint16_t version_sec_size = 52;
 
-			vs_version_info_s (bsw::istream_wrapper_c& is, uint16_t expected_size)
+			vs_version_info_s (bsw::istream_wrapper& is, uint16_t expected_size)
 				: node_s (is), Size (0) {
 				is >> Size;
 
@@ -100,7 +100,7 @@ namespace assets::pefile {
 		};
 
 		struct named_node_s : public node_s {
-			explicit named_node_s (bsw::istream_wrapper_c& is)
+			explicit named_node_s (bsw::istream_wrapper& is)
 				: node_s (is) {
 				is >> cbNode;
 				is >> cbData;
@@ -117,7 +117,7 @@ namespace assets::pefile {
 		};
 
 		struct text_node_s : public node_s {
-			text_node_s (bsw::istream_wrapper_c& is)
+			text_node_s (bsw::istream_wrapper& is)
 				: node_s (is) {
 				is >> cbNode;
 				is >> cbData;
@@ -127,7 +127,7 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------------
-	static std::vector<uint16_t> parse_ver_translations (bsw::istream_wrapper_c& is, std::size_t& to_skip) {
+	static std::vector<uint16_t> parse_ver_translations (bsw::istream_wrapper& is, std::size_t& to_skip) {
 		std::vector<uint16_t> out;
 		named_node_s tr (is);
 		to_skip = tr.cbNode;
@@ -144,8 +144,8 @@ namespace assets::pefile {
 	}
 
 	// -------------------------------------------------------------------
-	void version_c::load (const windows_pe_file& file, const resource_c& rn, version_c& out) {
-		const char* file_data = file.file_data ();
+	void version::load (const windows_pe_file& file, const resource& rn, version& out) {
+
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);
 
@@ -153,7 +153,7 @@ namespace assets::pefile {
 			return;
 		}
 
-		bsw::istream_wrapper_c stream (file_data + offs, rn.size ());
+		bsw::istream_wrapper stream (file.stream(), offs, rn.size ());
 
 		vs_version_info_s vs_version_info (stream, static_cast<uint16_t>(rn.size ()));
 
@@ -163,13 +163,13 @@ namespace assets::pefile {
 		} u;
 
 		u.w = &out.m_fields[0];
-		stream.read (u.bytes, sizeof (uint32_t) * version_c::MAX_FIELD);
+		stream.read (u.bytes, sizeof (uint32_t) * version::MAX_FIELD);
 
-		if (out.m_fields[version_c::dwSignature] != 0xfeef04bd) {
+		if (out.m_fields[version::dwSignature] != 0xfeef04bd) {
 			throw std::runtime_error ("Bad VERSION_INFO signature");
 		}
 		//bool zero_ver = (out.m_fields[version_c::dwStrucVersion] == 0);
-		if (out.m_fields[version_c::dwStrucVersion] > 0x00010000) {
+		if (out.m_fields[version::dwStrucVersion] > 0x00010000) {
 			throw std::runtime_error ("Bad VERSION_INFO version");
 		}
 		stream.align4 ();

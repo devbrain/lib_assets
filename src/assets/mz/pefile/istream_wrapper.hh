@@ -4,43 +4,32 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstddef>
+#include <optional>
 #include <cstring>
 #include <cstdint>
 #include <type_traits>
 
 namespace bsw {
-	class istream_wrapper_c;
+	class istream_wrapper;
 
 	template<typename T>
-	istream_wrapper_c& operator>>(istream_wrapper_c& is, T& x);
+	istream_wrapper& operator>>(istream_wrapper& is, T& x);
 
-	class istream_wrapper_c {
+	class istream_wrapper {
 		template<typename T>
-		friend istream_wrapper_c& operator>>(istream_wrapper_c& is, T& x);
+		friend istream_wrapper& operator>>(istream_wrapper& is, T& x);
 
 		public:
-			explicit istream_wrapper_c(std::istream& is);
+			explicit istream_wrapper(std::istream& is);
 
-			istream_wrapper_c(std::istream& is, std::size_t offs, std::size_t len);
+			istream_wrapper(std::istream& is, std::size_t offs, std::size_t len);
 
-			istream_wrapper_c(const char* data, std::size_t len);
-
-			~istream_wrapper_c();
+			~istream_wrapper();
 
 			[[nodiscard]] std::streampos current_pos() const;
 			[[nodiscard]] std::streamsize size_to_end() const;
 
-			[[nodiscard]] std::size_t size() const {
-				return m_data_len;
-			}
-
-			[[nodiscard]] const char* data() const {
-				return m_data;
-			}
-
-			[[nodiscard]] const char* rd_ptr() const {
-				return m_data + m_data_pos;
-			}
+			[[nodiscard]] std::streamsize size() const;
 
 			void advance(std::streampos delta);
 			void seek(std::streampos pos);
@@ -60,52 +49,20 @@ namespace bsw {
 
 		private:
 			void _seek(std::streampos pos, bool truncate);
-
-		private:
 			std::istream* stream;
-
-			const char* m_data;
-			std::size_t m_data_len;
-			std::size_t m_data_pos;
-
-			bool m_is_owner;
+			std::optional <std::streampos> m_old_pos;
+			std::size_t m_size;
+			std::streampos m_start_pos;
 	};
 
 	template<typename T>
 	inline
-	istream_wrapper_c& operator>>(istream_wrapper_c& is, T& x) {
-		if (is.m_data) {
-			if (is.m_data_pos + sizeof(T) <= is.m_data_len) {
-				union {
-					const char* bytes;
-					const T* words;
-				} u;
-				u.bytes = is.m_data + is.m_data_pos;
-				x = *u.words;
-				//std::memcpy(&x, is.m_data + is.m_data_pos, sizeof(T));
-				is.m_data_pos += sizeof(T);
-			} else {
-				throw std::runtime_error("I/O error");
-			}
-		} else {
-			is.stream->read(reinterpret_cast <char*>(&x), sizeof (x));
-			if (!(*is.stream)) {
-				throw std::runtime_error("I/O error");
-			}
+	istream_wrapper& operator>>(istream_wrapper& is, T& x) {
+		is.stream->read(reinterpret_cast <char*>(&x), sizeof (x));
+		if (!(*is.stream)) {
+			throw std::runtime_error("I/O error");
 		}
 		return is;
-	}
-
-	template<typename T>
-	static const T* load_struct(istream_wrapper_c& is) {
-		union {
-			const char* bytes;
-			const T* data;
-		} u;
-
-		u.bytes = is.rd_ptr();
-		is.advance(sizeof(T));
-		return u.data;
 	}
 } // ns bsw
 #endif

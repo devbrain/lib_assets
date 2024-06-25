@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
 #include "mz/pefile/exefile.hh"
 
 
@@ -17,8 +18,9 @@ int main(int argc, char* argv[])
 	try
 	{
 		std::cout << "Parsing " << infile << std::endl;
-		exe_file_c exe(infile);
-		version_c v;
+		std::ifstream ifs(infile, std::ios::in | std::ios::binary);
+		exe_file_c exe(ifs);
+		manifest v;
 		exe.load_resource(v);
 		
 		return 0;

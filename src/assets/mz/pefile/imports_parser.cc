@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "imports_parser.hh"
+#include "pefile.hh"
 
 namespace assets::pefile {
 	struct IMAGE_IMPORT_DESCRIPTOR {
@@ -17,7 +18,10 @@ namespace assets::pefile {
 	static_assert (sizeof (IMAGE_IMPORT_DESCRIPTOR) == 20, "IMAGE_IMPORT_DESCRIPTOR size should be 20 bytes");
 
 	// -----------------------------------------------------------------------------------------
-	static std::string load_name (const char* data, std::size_t size) {
+	static std::string load_name (std::istream& is, std::size_t offset, std::size_t size) {
+		bsw::istream_wrapper stream(is, offset, size);
+		std::vector<char> data(size);
+		stream.read(data.data(), size);
 		auto n = size;
 		if (n > 64) {
 			n = 64;
@@ -29,7 +33,7 @@ namespace assets::pefile {
 				break;
 			}
 		}
-		return std::string (data, data + end);
+		return {data.data(), data.data() + end};
 	}
 
 	// -----------------------------------------------------------------------------------------
@@ -42,7 +46,6 @@ namespace assets::pefile {
 
 	// -----------------------------------------------------------------------------------------
 	std::size_t count_imports (const windows_pe_file& pefile) {
-		const char* file_data = pefile.file_data ();
 		const std::size_t file_size = pefile.file_size ();
 		const auto& entry = pefile.optional_header ().DataDirectory[(int)DataDirectory::Import];
 		const uint32_t iat_offs = pefile.translate_rva (entry.VirtualAddress);
@@ -50,29 +53,33 @@ namespace assets::pefile {
 			return 0;
 		}
 		std::size_t count = 0;
-		bsw::istream_wrapper_c stream (file_data + iat_offs, entry.Size);
+		bsw::istream_wrapper stream (pefile.stream(), iat_offs, entry.Size);
 
 		uint32_t has_bytes = 0;
 		while (true) {
-			auto descriptor = bsw::load_struct<IMAGE_IMPORT_DESCRIPTOR> (stream);
+			IMAGE_IMPORT_DESCRIPTOR descriptor {};
+			stream >> descriptor;
 
-			if ((descriptor->rvaImportLookupTable == 0 && descriptor->rvaImportAddressTable == 0)
-				|| (descriptor->ForwarderChain == 0 &&
-					descriptor->rvaModuleName == 0 && descriptor->TimeDateStamp == 0)) {
+
+			if ((descriptor.rvaImportLookupTable == 0 && descriptor.rvaImportAddressTable == 0)
+				|| (descriptor.ForwarderChain == 0 &&
+					descriptor.rvaModuleName == 0 && descriptor.TimeDateStamp == 0)) {
 				break;
 			}
-			const uint32_t module_name_offset = pefile.translate_rva (descriptor->rvaModuleName);
+			const uint32_t module_name_offset = pefile.translate_rva (descriptor.rvaModuleName);
 			if (module_name_offset < file_size) {
-				uint32_t lookup = pefile.translate_rva (descriptor->rvaImportLookupTable);
+				uint32_t lookup = pefile.translate_rva (descriptor.rvaImportLookupTable);
 				if (lookup >= iat_offs + entry.Size || lookup == 0) {
-					lookup = pefile.translate_rva (descriptor->rvaImportAddressTable);
+					lookup = pefile.translate_rva (descriptor.rvaImportAddressTable);
 				}
 
 				if (lookup < iat_offs + entry.Size && lookup > 0) {
-					bsw::istream_wrapper_c thunk_stream (file_data + lookup, file_size - lookup);
+					bsw::istream_wrapper thunk_stream (pefile.stream(),lookup, file_size - lookup);
 					while (true) {
-						auto thunk = bsw::load_struct<IMAGE_THUNK_DATA> (thunk_stream);
-						if (thunk->u.Ordinal == 0) {
+						IMAGE_THUNK_DATA thunk {};
+						thunk_stream >> thunk;
+
+						if (thunk.u.Ordinal == 0) {
 							break;
 						}
 						count++;
@@ -90,48 +97,50 @@ namespace assets::pefile {
 
 	// -----------------------------------------------------------------------------------------
 	void parse_imports (const windows_pe_file& pefile, imports_table_t& imports) {
-		const char* file_data = pefile.file_data ();
 		const std::size_t file_size = pefile.file_size ();
 		const auto& entry = pefile.optional_header ().DataDirectory[(int)DataDirectory::Import];
 		const uint32_t iat_offs = pefile.translate_rva (entry.VirtualAddress);
 		if (iat_offs == 0 || (iat_offs + entry.Size) > file_size) {
 			return;
 		}
-		bsw::istream_wrapper_c stream (file_data + iat_offs, entry.Size);
+		bsw::istream_wrapper stream (pefile.stream(), iat_offs, entry.Size);
 
 		uint32_t has_bytes = 0;
 		while (true) {
-			auto descriptor = bsw::load_struct<IMAGE_IMPORT_DESCRIPTOR> (stream);
+			IMAGE_IMPORT_DESCRIPTOR descriptor {};
+			stream >> descriptor;
 
-			if ((descriptor->rvaImportLookupTable == 0 && descriptor->rvaImportAddressTable == 0)
-				|| (descriptor->ForwarderChain == 0 &&
-					descriptor->rvaModuleName == 0 && descriptor->TimeDateStamp == 0)) {
+			if ((descriptor.rvaImportLookupTable == 0 && descriptor.rvaImportAddressTable == 0)
+				|| (descriptor.ForwarderChain == 0 &&
+					descriptor.rvaModuleName == 0 && descriptor.TimeDateStamp == 0)) {
 				break;
 			}
-			const uint32_t module_name_offset = pefile.translate_rva (descriptor->rvaModuleName);
+			const uint32_t module_name_offset = pefile.translate_rva (descriptor.rvaModuleName);
 			if (module_name_offset < file_size) {
 
-				std::string name = load_name (file_data + module_name_offset, file_size - module_name_offset);
+				std::string name = load_name (pefile.stream(), module_name_offset, file_size - module_name_offset);
 
-				uint32_t lookup = pefile.translate_rva (descriptor->rvaImportLookupTable);
+				uint32_t lookup = pefile.translate_rva (descriptor.rvaImportLookupTable);
 				if (lookup >= iat_offs + entry.Size || lookup == 0) {
-					lookup = pefile.translate_rva (descriptor->rvaImportAddressTable);
+					lookup = pefile.translate_rva (descriptor.rvaImportAddressTable);
 				}
 
 				if (lookup < iat_offs + entry.Size && lookup > 0) {
-					bsw::istream_wrapper_c thunk_stream (file_data + lookup, file_size - lookup);
+					bsw::istream_wrapper thunk_stream (pefile.stream(),lookup, file_size - lookup);
 					while (true) {
-						auto thunk = bsw::load_struct<IMAGE_THUNK_DATA> (thunk_stream);
-						if (thunk->u.Ordinal == 0) {
+						IMAGE_THUNK_DATA thunk {};
+						thunk_stream >> thunk;
+
+						if (thunk.u.Ordinal == 0) {
 							break;
 						}
-						if (thunk->u.Ordinal & 0x80000000) {
-							imports.insert (imports_table_t::value_type (name, import_entry_s (
-								thunk->u.Ordinal & 0x7FFFFFFF)));
+						if (thunk.u.Ordinal & 0x80000000) {
+							imports.insert (imports_table_t::value_type (name, import_entry (
+								thunk.u.Ordinal & 0x7FFFFFFF)));
 						} else {
-							auto name_offs = 2 + pefile.translate_rva (thunk->u.Ordinal);
+							auto name_offs = 2 + pefile.translate_rva (thunk.u.Ordinal);
 							imports.insert (imports_table_t::value_type (name, load_name (
-								file_data + name_offs, file_size - name_offs)));
+								pefile.stream(), name_offs, file_size - name_offs)));
 						}
 					}
 				}
@@ -145,21 +154,21 @@ namespace assets::pefile {
 	}
 
 	// ============================================================================
-	import_entry_s::import_entry_s (int ord)
+	import_entry::import_entry (int ord)
 		: ordinal (ord),
 		  name ("") {
 
 	}
 
 	// -----------------------------------------------------------------------------
-	import_entry_s::import_entry_s (std::string  nm)
+	import_entry::import_entry (std::string  nm)
 		: ordinal (-1),
 		  name (std::move(nm)) {
 
 	}
 
 	// -----------------------------------------------------------------------------
-	std::ostream& operator<< (std::ostream& os, const import_entry_s& x) {
+	std::ostream& operator<< (std::ostream& os, const import_entry& x) {
 		if (x.ordinal != -1) {
 			os << x.ordinal;
 		} else {

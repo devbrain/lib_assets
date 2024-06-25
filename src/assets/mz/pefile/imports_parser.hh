@@ -3,20 +3,22 @@
 
 #include <map>
 #include <iosfwd>
-#include "pefile.hh"
+
 
 namespace assets::pefile {
-	struct import_entry_s {
-		explicit import_entry_s (int ord);
-		explicit import_entry_s (std::string  nm);
+	class windows_pe_file;
+
+	struct import_entry {
+		explicit import_entry (int ord);
+		explicit import_entry (std::string  nm);
 
 		std::string name;
 		int ordinal;
 	};
 
-	std::ostream& operator<< (std::ostream& os, const import_entry_s& x);
+	std::ostream& operator<< (std::ostream& os, const import_entry& x);
 
-	using imports_table_t = std::multimap<std::string, import_entry_s>;
+	using imports_table_t = std::multimap<std::string, import_entry>;
 	void parse_imports (const windows_pe_file& pefile, imports_table_t& imports);
 	std::size_t count_imports (const windows_pe_file& pefile);
 }

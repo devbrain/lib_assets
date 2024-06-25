@@ -3,11 +3,11 @@
 
 #include <map>
 #include <string>
-#include "resource_directory.hh"
-#include "../../../../src/assets/mz/pefile/pefile.hh"
+#include <assets/resources/exe/winres/resource_directory.hh>
+
 
 namespace assets::pefile {
-	class ASSETS_EXPORT message_table_c {
+	class ASSETS_EXPORT message_table {
 	 public:
 		static constexpr int resource_id () {
 			return 11;
@@ -26,7 +26,7 @@ namespace assets::pefile {
 		[[nodiscard]] bool exists (uint16_t key) const;
 		std::wstring operator[] (uint16_t key) const;
 
-		static void load (const windows_pe_file& file, const resource_c& rn, message_table_c& out);
+		static void load (const windows_pe_file& file, const resource& rn, message_table& out);
 	 private:
 		std::map<uint16_t, std::wstring> m_messages;
 	};

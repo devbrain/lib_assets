@@ -1,28 +1,13 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
-#include <iterator>
-#include <cmath>
 
 #include "pefile.hh"
 #include "abstract_reporter.hh"
 #include <assets/resources/exe/windows_pe.hh>
 
-namespace assets::pefile::detail {
-	// ----------------------------------------------------------------------------
-	file_container_c::file_container_c (std::istream& is) :
-	m_mmf(std::istreambuf_iterator<char>(is), {}) {
-	}
-	// ----------------------------------------------------------------------------
-	std::size_t file_container_c::size () const {
-		return m_mmf.size();
-	}
-
-	// ----------------------------------------------------------------------------
-	const char* file_container_c::data () const {
-		return m_mmf.data();
-	}
-}
+#include "assets/resources/detail/istream_pos_keeper.hh"
+#include "assets/resources/exe/unpacked_exe.hh"
 
 static bool is_power_of_two (unsigned int x) {
 	return (
@@ -37,46 +22,9 @@ static bool is_power_of_two (unsigned int x) {
 		x == 2147483648);
 }
 
-// ------------------------------------------------------------------------------
-uint16_t ChkSum (uint16_t oldChk, const uint16_t* ptr, std::size_t len) {
-	uint32_t c = oldChk;
-	while (len) {
-		std::size_t l = std::min (len, (std::size_t)0x4000);
-		len -= l;
-		for (std::size_t j = 0; j < l; ++j) {
-			c += *ptr++;
-		}
-		c = (c & 0xffff) + (c >> 16);
-	}
-	c = (c & 0xffff) + (c >> 16);
-	return (uint16_t)c;
-}
-
-// ----------------------------------------------------------------------------
-static float calculate_entropy (const char* pData, std::size_t nDataSize) {
-	float fEntropy = 0; // mb fEntropy=1.4426950408889634073599246810023;
-	float bytes[256] = {0.0};
-	float temp;
-	const float ln2 = 1.0f / logf (2.0);
-	for (std::size_t i = 0; i < nDataSize; i++) {
-		bytes[(unsigned char)pData[i]] += 1;
-	}
-
-	for (float byte : bytes) {
-		temp = byte / (float)nDataSize;
-		if (temp != 0) {
-			fEntropy += (-logf (temp)) * byte;
-		}
-	}
-
-	fEntropy = ln2 * fEntropy / (float)nDataSize;
-
-	return fEntropy;
-}
-// ----------------------------------------------------------------------------
 namespace assets::pefile {
 
-	// -------------------------------------------------------------------
+
 	static constexpr uint16_t IMAGE_OPTIONAL_HEADER_PE32 = 0x10B;
 	static constexpr uint16_t IMAGE_OPTIONAL_HEADER_PE32_PLUS = 0x20B;
 
@@ -224,13 +172,13 @@ namespace assets::pefile {
 
 
 	// ===========================================================================
-	void windows_pe_file::_load (abstract_reporter_c& reporter) {
-		if (!m_mmf.data ()) {
+	void windows_pe_file::_load (abstract_reporter& reporter) {
+		if (!m_stream) {
 			throw std::runtime_error ("Failed to open file");
 		}
-		bsw::istream_wrapper_c stream (m_mmf.data (), m_mmf.size ());
+		bsw::istream_wrapper stream (m_stream);
 
-		auto fsize = m_mmf.size ();
+
 		static const uint16_t IMAGE_DOS_SIGNATURE = 0x5A4D;
 		static const uint32_t IMAGE_NT_SIGNATURE = 0x00004550;
 		uint16_t old_dos_magic;
@@ -241,8 +189,9 @@ namespace assets::pefile {
 		stream.advance (26 + 32);
 		int32_t lfanew;
 		stream >> lfanew;
+		const auto fsize = file_size();
 
-		if (lfanew < 0 || lfanew > fsize) {
+		if (lfanew < 0 || lfanew > fsize ) {
 			throw std::runtime_error ("Not a PE file");
 		}
 		// read coff magic
@@ -257,81 +206,39 @@ namespace assets::pefile {
 	}
 
 	// ----------------------------------------------------------------------------
-	windows_pe_file::windows_pe_file (std::istream& is, abstract_reporter_c& reporter)
-		: m_mmf (is),
-		  m_coff_header (nullptr) {
+	windows_pe_file::windows_pe_file (std::istream& is, abstract_reporter& reporter)
+		: m_stream (is),
+		  m_coff_header {} {
 		_load (reporter);
 	}
 	// -------------------------------------------------------------
-	bool windows_pe_file::checksum () const {
-		// eval checksum
-		union {
-			const uint16_t* words;
-			const char* bytes;
-		} u{};
-		u.bytes = m_mmf.data ();
-		auto fsize = m_mmf.size ();
-		auto len = static_cast<std::size_t> (fsize / sizeof (uint16_t));
-		uint32_t chk = ChkSum (0, u.words, len);
-		if (fsize % sizeof (uint16_t)) {
-			chk += u.bytes[fsize - 1];
-			chk = (chk >> 16) + (chk & 0xffff);
-		}
-		uint32_t yy = 0;
-		if (chk - 1 < m_optional_header.CheckSum) {
-			yy = (chk - 1) - m_optional_header.CheckSum;
-		} else {
-			yy = chk - m_optional_header.CheckSum;
-		}
-		yy = (yy & 0xffff) + (yy >> 16);
-		yy = (yy & 0xffff) + (yy >> 16);
-		uint32_t dwSize = static_cast<std::size_t> (fsize);
-		yy += dwSize;
-		return (yy == m_optional_header.CheckSum);
-	}
 
 	// -------------------------------------------------------------
-	float windows_pe_file::entropy (const SECTION& section) const {
-		const uint32_t offs = section.PointerToRawData;
-		if (offs == 0) {
-			return 0;
-		}
-		const uint32_t size = section.SizeOfRawData;
-		if (size == 0) {
-			return 0;
-		}
-
-		return calculate_entropy (m_mmf.data () + offs, size);
-	}
-
-	// -------------------------------------------------------------
-	const char* windows_pe_file::read_section (const SECTION& s) const {
-		const char* file_data = this->file_data ();
-		const std::size_t file_size = this->file_size ();
-		const uint32_t rc_offs = translate_rva (s.VirtualAddress);
-
-		if (rc_offs == 0 || (rc_offs + s.SizeOfRawData) > file_size) {
-			return nullptr;
-		}
-		return file_data + rc_offs;
-	}
-
-	// -------------------------------------------------------------
-	float windows_pe_file::entropy () const {
-		return calculate_entropy (m_mmf.data (), static_cast<std::size_t>(m_mmf.size ()));
-	}
+	// const char* windows_pe_file::read_section (const SECTION& s) const {
+	// 	const char* file_data = this->file_data ();
+	// 	const std::size_t file_size = this->file_size ();
+	// 	const uint32_t rc_offs = translate_rva (s.VirtualAddress);
+	//
+	// 	if (rc_offs == 0 || (rc_offs + s.SizeOfRawData) > file_size) {
+	// 		return nullptr;
+	// 	}
+	// 	return file_data + rc_offs;
+	// }
 
 	// -------------------------------------------------------------
 	windows_pe_file::~windows_pe_file () = default;
 
 	// --------------------------------------------------------------
-	const char* windows_pe_file::file_data () const {
-		return m_mmf.data ();
+	std::istream& windows_pe_file::stream() const {
+		return m_stream;
 	}
 
 	// --------------------------------------------------------------
 	std::size_t windows_pe_file::file_size () const {
-		return static_cast<std::size_t>(m_mmf.size ());
+		neutrino::assets::detail::istream_pos_keeper keeper(m_stream);
+		m_stream.seekg(0, std::ios::end);
+		const auto rc = m_stream.tellg();
+		return rc;
 	}
 
 	// --------------------------------------------------------------
@@ -346,7 +253,7 @@ namespace assets::pefile {
 			u4 aligned_pointer = section.PointerToRawData & ~0x1ff;
 
 			auto endPoint = _get_read_size (section) + aligned_pointer;
-			offset = std::max (offset, (std::size_t)endPoint);
+			offset = std::max (offset, static_cast <std::size_t>(endPoint));
 		}
 		if (offset > file_size ()) {
 			offset = file_size ();
@@ -389,9 +296,9 @@ namespace assets::pefile {
 	}
 
 	// --------------------------------------------------------------
-	void windows_pe_file::_load_headers (bsw::istream_wrapper_c& is, abstract_reporter_c& reporter) {
+	void windows_pe_file::_load_headers (bsw::istream_wrapper& is, abstract_reporter& reporter) {
 
-		m_coff_header = bsw::load_struct<COFF_HEADER> (is);
+		is >> m_coff_header;
 
 		auto optional_header_begin = is.current_pos ();
 
@@ -401,14 +308,18 @@ namespace assets::pefile {
 		is.seek (optional_header_begin);
 
 		if (pe_kind == IMAGE_OPTIONAL_HEADER_PE32) {
-			const auto* header32 = bsw::load_struct<OPTIONAL_HEADER_32> (is);
-			assign (m_optional_header, header32);
+			OPTIONAL_HEADER_32 header32 {};
+			is >> header32;
+
+			assign (m_optional_header, &header32);
 		} else {
 			if (pe_kind == IMAGE_OPTIONAL_HEADER_PE32_PLUS) {
-				const auto* header64 = bsw::load_struct<OPTIONAL_HEADER_64> (is);
-				assign (m_optional_header, header64);
+				OPTIONAL_HEADER_64 header64{};
+				is >> header64;
+
+				assign (m_optional_header, &header64);
 			} else {
-				reporter.invalid_field_value (abstract_reporter_c::OPTIONAL_HEADER_MAGIC, pe_kind);
+				reporter.invalid_field_value (abstract_reporter::OPTIONAL_HEADER_MAGIC, pe_kind);
 				throw std::runtime_error ("Unknown type of the OPTIONAL_HEADER");
 			}
 		}
@@ -420,62 +331,62 @@ namespace assets::pefile {
 		auto optional_header_end = is.current_pos ();
 		auto optional_header_len = optional_header_end - optional_header_begin;
 
-		if (optional_header_len != m_coff_header->SizeOfOptionalHeader) {
-			reporter.invalid_struct_length (abstract_reporter_c::OPTIONAL_HEADER,
-											m_coff_header->SizeOfOptionalHeader,
+		if (optional_header_len != m_coff_header.SizeOfOptionalHeader) {
+			reporter.invalid_struct_length (abstract_reporter::OPTIONAL_HEADER,
+											m_coff_header.SizeOfOptionalHeader,
 											static_cast<uint32_t>(optional_header_len));
 		}
 		_check_coff_header (reporter);
 	}
 
 	// --------------------------------------------------------------------------------
-	void windows_pe_file::_check_coff_header (abstract_reporter_c& reporter) {
-		if (!detail::check_in_enum<COFF_HEADER::IMAGE_FILE_MACHINE> (m_coff_header->Machine)) {
-			reporter.invalid_enum_value (abstract_reporter_c::COFF_HEADER_MACHINE_TYPE, m_coff_header->Machine);
+	void windows_pe_file::_check_coff_header (abstract_reporter& reporter) const {
+		if (!detail::check_in_enum<COFF_HEADER::IMAGE_FILE_MACHINE> (m_coff_header.Machine)) {
+			reporter.invalid_enum_value (abstract_reporter::COFF_HEADER_MACHINE_TYPE, m_coff_header.Machine);
 		}
-		if (!detail::check_in_flags<COFF_HEADER::IMAGE_FILE_CHARACTERISTICS> (m_coff_header->Characteristics)) {
+		if (!detail::check_in_flags<COFF_HEADER::IMAGE_FILE_CHARACTERISTICS> (m_coff_header.Characteristics)) {
 			reporter
-				.unknown_flag_set (abstract_reporter_c::COFF_HEADER_CHARACTERISTICS, m_coff_header->Characteristics);
+				.unknown_flag_set (abstract_reporter::COFF_HEADER_CHARACTERISTICS, m_coff_header.Characteristics);
 		}
 	}
 
 	// --------------------------------------------------------------------------------
-	void windows_pe_file::_check_optional_header (abstract_reporter_c& reporter) const {
+	void windows_pe_file::_check_optional_header (abstract_reporter& reporter) const {
 		if (m_optional_header.ImageBase % 0xFFFF) {
-			reporter.invalid_field_value (abstract_reporter_c::OPTIONAL_HEADER_IMAGE_BASE, m_optional_header.ImageBase);
+			reporter.invalid_field_value (abstract_reporter::OPTIONAL_HEADER_IMAGE_BASE, m_optional_header.ImageBase);
 		}
 		if (!detail::check_in_flags<OPTIONAL_HEADER::IMAGE_SUBSYSTEM> (m_optional_header.Subsystem)) {
-			reporter.unknown_flag_set (abstract_reporter_c::OPTIONAL_HEADER_SUBSYSTEM, m_optional_header.Subsystem);
+			reporter.unknown_flag_set (abstract_reporter::OPTIONAL_HEADER_SUBSYSTEM, m_optional_header.Subsystem);
 		}
 		if (!detail::check_in_flags<OPTIONAL_HEADER::IMAGE_DLLCHARACTERISTICS> (m_optional_header.DllCharacteristics)) {
-			reporter.unknown_flag_set (abstract_reporter_c::OPTIONAL_HEADER_DLL_CHARACTERISITCS, m_optional_header
+			reporter.unknown_flag_set (abstract_reporter::OPTIONAL_HEADER_DLL_CHARACTERISITCS, m_optional_header
 				.DllCharacteristics);
 		}
 		if (m_optional_header.SectionAlignment < m_optional_header.FileAlignment) {
-			reporter.invalid_field_value (abstract_reporter_c::OPTIONAL_HEADER_SECTION_ALIGNMENT, m_optional_header
+			reporter.invalid_field_value (abstract_reporter::OPTIONAL_HEADER_SECTION_ALIGNMENT, m_optional_header
 				.SectionAlignment);
 		}
 		if (m_optional_header.FileAlignment < 512 || m_optional_header.FileAlignment > 65536
 			|| !is_power_of_two (m_optional_header.FileAlignment)) {
-			reporter.invalid_field_value (abstract_reporter_c::OPTIONAL_HEADER_FILE_ALIGNMENT, m_optional_header
+			reporter.invalid_field_value (abstract_reporter::OPTIONAL_HEADER_FILE_ALIGNMENT, m_optional_header
 				.FileAlignment);
 		}
 		if (m_optional_header.Win32VersionValue != 0) {
-			reporter.should_be_zero (abstract_reporter_c::OPTIONAL_HEADER_WIN32VERSIONVALUE, m_optional_header
+			reporter.should_be_zero (abstract_reporter::OPTIONAL_HEADER_WIN32VERSIONVALUE, m_optional_header
 				.Win32VersionValue);
 		}
 		if (m_optional_header.SizeOfImage % m_optional_header.SectionAlignment) {
-			reporter.invalid_field_value (abstract_reporter_c::OPTIONAL_HEADER_SIZE_OF_IMAGE, m_optional_header
+			reporter.invalid_field_value (abstract_reporter::OPTIONAL_HEADER_SIZE_OF_IMAGE, m_optional_header
 				.SizeOfImage);
 		}
 		if (m_optional_header.LoaderFlags != 0) {
-			reporter.should_be_zero (abstract_reporter_c::OPTIONAL_HEADER_LOADER_FLAGS, m_optional_header.LoaderFlags);
+			reporter.should_be_zero (abstract_reporter::OPTIONAL_HEADER_LOADER_FLAGS, m_optional_header.LoaderFlags);
 		}
 	}
 
 	// --------------------------------------------------------------------------------
-	void windows_pe_file::_load_sections (bsw::istream_wrapper_c& stream, abstract_reporter_c& reporter) {
-		for (u2 i = 0; i < m_coff_header->NumberOfSections; i++) {
+	void windows_pe_file::_load_sections (bsw::istream_wrapper& stream, abstract_reporter& reporter) {
+		for (u2 i = 0; i < m_coff_header.NumberOfSections; i++) {
 			SECTION s;
 			stream >> s;
 			m_sections.push_back (s);
@@ -484,7 +395,7 @@ namespace assets::pefile {
 
 	// --------------------------------------------------------------------------------
 	const COFF_HEADER& windows_pe_file::coff_header () const {
-		return *m_coff_header;
+		return m_coff_header;
 	}
 
 	// --------------------------------------------------------------------------------

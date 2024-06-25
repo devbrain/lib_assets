@@ -3,11 +3,11 @@
 #include <iostream>
 #include "exefile.hh"
 #include "abstract_reporter.hh"
-#include "resource_builder.hh"
+#include "pe_resource_builder.hh"
 
 namespace assets::pefile {
 	namespace detail {
-		class reporter_c : public abstract_reporter_c {
+		class reporter_c : public abstract_reporter {
 		 public:
 			void invalid_enum_value (header_field_t f, uint64_t actual_value) override;
 			void invalid_field_value (header_field_t f, uint64_t actual_value) override;
@@ -90,7 +90,7 @@ namespace assets::pefile {
 
 	// ----------------------------------------------------------------------------
 	exe_file_c::exe_file_c (std::istream& is) {
-		static abstract_reporter_c reporter;
+		static abstract_reporter reporter;
 		m_pefile = std::make_unique<windows_pe_file> (is, reporter);
 		_load ();
 	}
@@ -102,8 +102,8 @@ namespace assets::pefile {
 	}
 
 	// ---------------------------------------------------------------------------
-	std::vector<resource_name_c> exe_file_c::resources () const {
-		std::vector<resource_name_c> out;
+	std::vector<resource_name> exe_file_c::resources () const {
+		std::vector<resource_name> out;
 		auto ni = m_resource_directory.names_begin ();
 		auto end = m_resource_directory.names_end ();
 		bool found = false;
@@ -118,31 +118,11 @@ namespace assets::pefile {
 		return m_pefile->sections ();
 	}
 
-	// ---------------------------------------------------------------------------
-	float exe_file_c::entropy (const SECTION& s) const {
-		return m_pefile->entropy (s);
-	}
-
-	// ---------------------------------------------------------------------------
-	const char* exe_file_c::read_section (const SECTION& s) const {
-		return m_pefile->read_section (s);
-	}
 
 	// ---------------------------------------------------------------------------
 	const OPTIONAL_HEADER& exe_file_c::optional_header () const {
 		return m_pefile->optional_header ();
 	}
-
-	// ---------------------------------------------------------------------------
-	bool exe_file_c::compressed () const {
-		auto E = m_pefile->entropy ();
-		if (E < 6.6) {
-			return false;
-		}
-
-		return true;
-	}
-
 	// ---------------------------------------------------------------------------
 	bool exe_file_c::is_64 () const {
 		return m_is_64_bit;
@@ -158,26 +138,7 @@ namespace assets::pefile {
 		return m_pefile->file_size ();
 	}
 
-	// ---------------------------------------------------------------------------
-	const char* exe_file_c::file_data () const {
-		return m_pefile->file_data ();
-	}
 
-	// ---------------------------------------------------------------------------
-	const char* exe_file_c::entry_point (std::size_t sz) const {
-		if (m_entry_point == 0) {
-			return nullptr;
-		}
-		if (m_entry_point + sz < m_pefile->file_size ()) {
-			return m_pefile->file_data () + m_entry_point;
-		}
-		return nullptr;
-	}
-
-	// ---------------------------------------------------------------------------
-	clr_c exe_file_c::load_clr () {
-		return clr_c (*m_pefile.get ());
-	}
 
 	// ---------------------------------------------------------------------------
 	std::size_t exe_file_c::get_overlay_offset () const {
@@ -185,12 +146,12 @@ namespace assets::pefile {
 	}
 
 	// ---------------------------------------------------------------------------
-	const resource_dir_c& exe_file_c::resource_directory () const {
+	const resource_dir& exe_file_c::resource_directory () const {
 		return m_resource_directory;
 	}
 
 	// ---------------------------------------------------------------------------
-	std::size_t exe_file_c::resource_offset (const resource_c& rn) const {
+	std::size_t exe_file_c::resource_offset (const resource& rn) const {
 		return rn.offset_in_file (*m_pefile);
 	}
 } // ns pefile

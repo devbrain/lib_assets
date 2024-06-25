@@ -10,7 +10,7 @@ namespace assets::pefile {
 	ms_exe_file_type get_ms_exe_file_type(std::istream& is) {
 		neutrino::assets::detail::istream_pos_keeper keeper(is);
 
-		bsw::istream_wrapper_c stream (is);
+		bsw::istream_wrapper stream (is);
 
 		uint16_t old_dos_magic;
 		stream >> old_dos_magic;
@@ -20,8 +20,9 @@ namespace assets::pefile {
 		stream.advance (26 + 32);
 		int32_t lfanew;
 		stream >> lfanew;
+		auto fsize = stream.size();
 
-		if (lfanew < 0) {
+		if (lfanew < 0 || lfanew > fsize) {
 			return MSDOS;
 		}
 		// read coff magic

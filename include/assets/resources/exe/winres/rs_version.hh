@@ -12,10 +12,10 @@
 
 namespace assets::pefile {
 
-	class resource_c;
+	class resource;
 	class windows_pe_file;
 
-	class ASSETS_EXPORT version_c {
+	class ASSETS_EXPORT version {
 	 public:
 		typedef std::map<std::string, std::string> kv_map_t;
 		typedef std::vector<uint16_t> translations_t;
@@ -57,7 +57,7 @@ namespace assets::pefile {
 		[[nodiscard]] translations_t::const_iterator translations_end () const;
 		[[nodiscard]] std::size_t translations_size () const;
 
-		static void load (const windows_pe_file& file, const resource_c& rn, version_c& out);
+		static void load (const windows_pe_file& file, const resource& rn, version& out);
 	 private:
 		void _bind (const std::wstring& k, const std::wstring& b);
 		void _add_translation (uint16_t x);

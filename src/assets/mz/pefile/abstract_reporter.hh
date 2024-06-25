@@ -5,7 +5,7 @@
 #include <iosfwd>
 
 namespace assets::pefile {
-	class abstract_reporter_c {
+	class abstract_reporter {
 	 public:
 		enum header_field_t {
 			COFF_HEADER_MACHINE_TYPE,
@@ -28,7 +28,7 @@ namespace assets::pefile {
 			OPTIONAL_HEADER_LOADER_FLAGS
 		};
 	 public:
-		virtual ~abstract_reporter_c ();
+		virtual ~abstract_reporter ();
 
 		virtual void invalid_enum_value (header_field_t f, uint64_t actual_value);
 		virtual void invalid_field_value (header_field_t f, uint64_t actual_value);
@@ -38,9 +38,9 @@ namespace assets::pefile {
 		virtual void bad_checksum ();
 	};
 
-	std::ostream& operator<< (std::ostream& os, abstract_reporter_c::header_field_t f);
-	std::ostream& operator<< (std::ostream& os, abstract_reporter_c::struct_name_t f);
-	std::ostream& operator<< (std::ostream& os, abstract_reporter_c::reserved_field_t f);
+	std::ostream& operator<< (std::ostream& os, abstract_reporter::header_field_t f);
+	std::ostream& operator<< (std::ostream& os, abstract_reporter::struct_name_t f);
+	std::ostream& operator<< (std::ostream& os, abstract_reporter::reserved_field_t f);
 } // ns pefile
 
 #endif

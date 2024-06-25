@@ -19,7 +19,6 @@ namespace assets::pefile {
 		}
 
 		auto clr_off = f.translate_rva (clr_pos.VirtualAddress);
-		const char* file_data = f.file_data ();
 		const std::size_t file_size = f.file_size ();
 		if (clr_off + clr_pos.Size >= file_size) {
 			throw std::logic_error ("CLR section is corrupted");
