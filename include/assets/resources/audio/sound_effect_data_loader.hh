@@ -5,14 +5,14 @@
 #ifndef ASSETS_AUDIO_DATA_MANAGER_HH
 #define ASSETS_AUDIO_DATA_MANAGER_HH
 
-#include <sdlpp/audio/music.hh>
-#include <assets/resources/data_manager.hh>
+#include <sdlpp/audio/sound_effect.hh>
+#include <assets/resources/data_loader.hh>
 #include <assets/assets_export.h>
 
 namespace neutrino::assets {
-	class ASSETS_EXPORT music_data_manager : public data_manager <sdl::music> {
+	class ASSETS_EXPORT sound_effect_data_loader : public data_loader <sdl::sound_effect> {
 		public:
-			music_data_manager();
+			sound_effect_data_loader();
 	};
 }
 

@@ -1,5 +1,6 @@
-#include "rs_message_table.hh"
-#include "bsw/strings/wchar.hh"
+#include <assets/resources/exe/rs_message_table.hh>
+#include <bsw/strings/wchar.hh>
+#include "pefile.hh"
 
 namespace assets::pefile {
 	message_table_c::msg_table_t::const_iterator message_table_c::begin () const {
@@ -33,7 +34,7 @@ namespace assets::pefile {
 		};
 	}
 
-	void message_table_c::load (const file_c& file, const resource_c& rn, message_table_c& out) {
+	void message_table_c::load (const windows_pe_file& file, const resource_c& rn, message_table_c& out) {
 		const char* file_data = file.file_data ();
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);

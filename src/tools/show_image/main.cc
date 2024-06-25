@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 		using namespace neutrino;
 		sdl::system initializer (sdl::init_flags::VIDEO);
 
-		assets::image_data_manager dm;
+		assets::image_data_loader dm;
 
 		auto image = dm.load (ifs);
 		auto [pixels, pitch, w, h] = image.pixels_data();

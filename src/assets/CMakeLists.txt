@@ -33,13 +33,24 @@ add_library(assets
         mz/pefile/rs_dialog.cc
         mz/pefile/resource_builder.hh
         mz/pefile/clr.cc
-        mz/pefile/resource_directory.hh
+
+        ${PROJECT_INCLUDE}/assets/resources/exe/resource_directory.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/rs_manifest.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/rs_icon_group.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/rs_message_table.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/rs_version.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/rs_string_table.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/rs_dialog.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/windows_pe.hh
+
         mz/pefile/pefile.hh
         mz/pefile/pefile.cc
+        mz/pefile/windows_pe.cc
         mz/pefile/exefile.hh
         mz/pefile/clr_tables_helper.hh
-        mz/pefile/rs_manifest.hh
-        mz/pefile/rs_icon_group.hh
+        mz/pefile/ms_exe_file_type.cc
+        mz/pefile/ms_exe_file_type.hh
+
         mz/pefile/resource_builder.cc
         mz/pefile/rs_string_table.cc
         mz/pefile/imports_parser.hh
@@ -48,16 +59,16 @@ add_library(assets
         mz/pefile/imports_parser.cc
         mz/pefile/resource_directory.cc
         mz/pefile/abstract_reporter.hh
-        mz/pefile/rs_message_table.hh
+
         mz/pefile/clr_res.cc
         mz/pefile/abstract_reporter.cc
-        mz/pefile/rs_version.hh
-        mz/pefile/rs_dialog.hh
+
+
         mz/pefile/clr.hh
         mz/pefile/rs_message_table.cc
         mz/pefile/rs_manifest.cc
         mz/pefile/rs_version.cc
-        mz/pefile/rs_string_table.hh
+
         mz/pefile/istream_wrapper.cc
         mz/pefile/istream_wrapper.hh
 
@@ -116,25 +127,26 @@ add_library(assets
 
         ${PROJECT_INCLUDE}/assets/resources/detail/istream_pos_keeper.hh
         ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
-        ${PROJECT_INCLUDE}/assets/resources/data_manager.hh
+        ${PROJECT_INCLUDE}/assets/resources/data_loader.hh
 
-        ${PROJECT_INCLUDE}/assets/resources/image/image_data_manager.hh
+        ${PROJECT_INCLUDE}/assets/resources/image/image_data_loader.hh
 
-        ${PROJECT_INCLUDE}/assets/resources/exe/exe_data_manager.hh
-        image/image_data_manager.cc
-        mz/exe_data_manager.cc
+        ${PROJECT_INCLUDE}/assets/resources/exe/exe_data_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/unpacked_exe.hh
+        image/image_data_loader.cc
+        mz/exe_data_loader.cc
 
 
-        ${PROJECT_INCLUDE}/assets/resources/audio/music_data_manager.hh
-        ${PROJECT_INCLUDE}/assets/resources/audio/sound_effect_data_manager.hh
-        audio/music_data_manager.cc
-        audio/sound_effect_data_manager.cc
+        ${PROJECT_INCLUDE}/assets/resources/audio/music_data_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/audio/sound_effect_data_loader.hh
+        audio/music_data_loader.cc
+        audio/sound_effect_data_loader.cc
 
         ${PROJECT_INCLUDE}/assets/resources/font/bgi_font.hh
-        ${PROJECT_INCLUDE}/assets/resources/font/bgi_font_data_manager.hh
-        ${PROJECT_INCLUDE}/assets/resources/font/ttf_data_manager.hh
-        font/bgi_font_data_manager.cc
-        font/ttf_data_manager.cc
+        ${PROJECT_INCLUDE}/assets/resources/font/bgi_font_data_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/font/ttf_data_loader.hh
+        font/bgi_font_data_loader.cc
+        font/ttf_data_loader.cc
 
 #        tmx/animation.cc
 #        tmx/animation.hh

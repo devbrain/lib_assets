@@ -1,4 +1,6 @@
-#include "rs_icon_group.hh"
+#include <assets/resources/exe/rs_icon_group.hh>
+#include "istream_wrapper.hh"
+#include "pefile.hh"
 
 namespace assets::pefile {
 	void icon_group_c::_add_group (uint32_t group_id, uint16_t ordinal) {
@@ -17,7 +19,7 @@ namespace assets::pefile {
 	// ------------------------------------------------------------------
 	namespace {
 		struct icon_grp_header_s {
-			icon_grp_header_s (bsw::istream_wrapper_c& is)
+			explicit icon_grp_header_s (bsw::istream_wrapper_c& is)
 				: wReserved (0), wType (0), wCount (0) {
 				is >> wReserved;
 				is >> wType;
@@ -31,7 +33,7 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	void icon_group_c::load (const file_c& file, const resource_c& rn, icon_group_c& out) {
+	void icon_group_c::load (const windows_pe_file& file, const resource_c& rn, icon_group_c& out) {
 		const char* file_data = file.file_data ();
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);
@@ -69,8 +71,7 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	void icon_info_s::load (const file_c& file, const resource_c& rn, icon_info_s& out) {
-
+	void icon_info_s::load (const windows_pe_file& file, const resource_c& rn, icon_info_s& out) {
 		out.ordinal = 0xFFFF;
 		if (rn.name ().is_id ()) {
 			out.ordinal = rn.name ().id ();

@@ -13,9 +13,8 @@ namespace spy
         class pe_image_c
         {
         public:
-            pe_image_c (const std::string& path, icons_container_c& container);
-			pe_image_c(const std::wstring& path, icons_container_c& container);
-			pe_image_c (const char* data, std::size_t size, icons_container_c& container);
+            pe_image_c (std::istream& is, icons_container_c& container);
+
             ~pe_image_c () = default;
 
 			pe_image_c(const pe_image_c&) = delete;

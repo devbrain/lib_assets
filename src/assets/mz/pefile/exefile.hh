@@ -5,13 +5,13 @@
 
 #include "pefile.hh"
 #include "imports_parser.hh"
-#include "resource_directory.hh"
-#include "rs_version.hh"
-#include "rs_manifest.hh"
-#include "rs_icon_group.hh"
-#include "rs_string_table.hh"
-#include "rs_dialog.hh"
-#include "rs_message_table.hh"
+#include "assets/resources/exe/resource_directory.hh"
+#include "assets/resources/exe/rs_version.hh"
+#include "assets/resources/exe/rs_manifest.hh"
+#include "assets/resources/exe/rs_icon_group.hh"
+#include "assets/resources/exe/rs_string_table.hh"
+#include "assets/resources/exe/rs_dialog.hh"
+#include "assets/resources/exe/rs_message_table.hh"
 #include "clr.hh"
 
 #include <assets/assets_export.h>
@@ -19,9 +19,7 @@
 namespace assets::pefile {
 	class ASSETS_EXPORT exe_file_c {
 	 public:
-		explicit exe_file_c (const std::string& path);
-		explicit exe_file_c (const std::wstring& path);
-		exe_file_c (const char* data, std::size_t size);
+		explicit exe_file_c (std::istream& is);
 
 		[[nodiscard]] bool compressed () const;
 		[[nodiscard]] const char* entry_point (std::size_t sz) const;
@@ -60,12 +58,12 @@ namespace assets::pefile {
 	 private:
 		void _load ();
 	 private:
-		std::unique_ptr<file_c> m_pefile;
-		bool m_is_gui;
-		bool m_is_64_bit;
+		std::unique_ptr<windows_pe_file> m_pefile;
+		bool m_is_gui{};
+		bool m_is_64_bit{};
 		resource_dir_c m_resource_directory;
 		imports_table_t m_imports;
-		uint32_t m_entry_point;
+		uint32_t m_entry_point{};
 
 	};
 

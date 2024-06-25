@@ -2,8 +2,8 @@
 #define __PEFILE_RS_MANIFEST_HPP__
 
 #include <string>
-#include "resource_directory.hh"
-#include "pefile.hh"
+#include <assets/resources/exe/resource_directory.hh>
+
 
 namespace assets::pefile {
 	class ASSETS_EXPORT manifest_c {
@@ -19,7 +19,7 @@ namespace assets::pefile {
 	 public:
 		[[nodiscard]] const std::string& text () const;
 
-		static void load (const file_c& file, const resource_c& rn, manifest_c& out);
+		static void load (const windows_pe_file& file, const resource_c& rn, manifest_c& out);
 		void parse (std::string& name, std::string& description,
 					std::string& level, std::string& ui) const;
 	 private:

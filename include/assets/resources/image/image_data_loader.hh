@@ -6,13 +6,13 @@
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_IMAGE_DATA_MANAGER_HH_
 
 #include <sdlpp/video/surface.hh>
-#include <assets/resources/data_manager.hh>
+#include <assets/resources/data_loader.hh>
 #include <assets/assets_export.h>
 
 namespace neutrino::assets {
-	class ASSETS_EXPORT image_data_manager : public data_manager<sdl::surface> {
+	class ASSETS_EXPORT image_data_loader : public data_loader<sdl::surface> {
 	 public:
-		image_data_manager();
+		image_data_loader();
 	};
 }
 

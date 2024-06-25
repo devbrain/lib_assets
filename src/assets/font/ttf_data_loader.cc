@@ -1,7 +1,7 @@
 //
 // Created by igor on 6/24/24.
 //
-#include <assets/resources/font/ttf_data_manager.hh>
+#include <assets/resources/font/ttf_data_loader.hh>
 #include <sdlpp/io/rwops_stream.hh>
 namespace neutrino::assets {
 	class ttf_loader : public abstract_resource_loader<sdl::ttf> {
@@ -15,7 +15,7 @@ namespace neutrino::assets {
 		}
 	};
 
-	ttf_data_manager::ttf_data_manager() {
+	ttf_data_loader::ttf_data_loader() {
 		register_loader("ttf", std::make_unique<ttf_loader>());
 	}
 }

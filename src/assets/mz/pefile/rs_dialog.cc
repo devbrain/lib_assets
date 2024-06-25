@@ -1,4 +1,4 @@
-#include "rs_dialog.hh"
+#include "../../../../include/assets/resources/exe/rs_dialog.hh"
 #include <stdexcept>
 
 namespace assets::pefile {
@@ -36,7 +36,7 @@ namespace assets::pefile {
 	}
 
 	// ---------------------------------------------------------------------------------
-	void dialog_c::load (const file_c& file, const resource_c& rn, dialog_c& out) {
+	void dialog_c::load (const windows_pe_file& file, const resource_c& rn, dialog_c& out) {
 		const char* file_data = file.file_data ();
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);

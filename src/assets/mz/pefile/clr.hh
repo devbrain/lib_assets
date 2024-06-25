@@ -78,17 +78,17 @@ namespace assets::pefile {
 	// ----------------------------------------------------------------------
 	class clr_c {
 	 public:
-		clr_c (file_c& file);
+		explicit clr_c (windows_pe_file& file);
 
 		void load_resources (std::vector<clr_resource_descriptor_s>& out);
 		void read_resource (const clr_resource_descriptor_s& rd, std::vector<char>& out) const;
 	 private:
 		void _parse_metadata ();
 		void _parse_metadata_stream ();
-		uint32_t _get_stream_offset (const CLR_STREAM_HEADER& s) const;
+		[[nodiscard]] uint32_t _get_stream_offset (const CLR_STREAM_HEADER& s) const;
 		void _load_internal_resources (uint32_t offset, uint32_t size, std::vector<clr_resource_descriptor_s>& out);
 	 private:
-		file_c& file;
+		windows_pe_file& file;
 		const CLR_HEADER* clr_header;
 		CLR_METADATA metadata;
 		CLR_METADATA_STREAM_HEADER metadata_header{};

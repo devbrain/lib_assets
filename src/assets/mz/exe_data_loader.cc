@@ -1,7 +1,7 @@
 //
 // Created by igor on 5/30/24.
 //
-#include "assets/resources/exe/exe_data_manager.hh"
+#include "assets/resources/exe/exe_data_loader.hh"
 #include "mz/explode/knowledge_dynamics.hh"
 #include "mz/explode/unlzexe.hh"
 #include "mz/explode/unpklite.hh"
@@ -65,7 +65,7 @@ namespace neutrino::assets {
 		};
 	};
 
-	exe_data_manager::exe_data_manager () {
+	exe_data_loader::exe_data_loader () {
 		register_loader (exe_traits<PKLITE>::name, std::make_unique<exe_resource_loader<PKLITE>>());
 		register_loader (exe_traits<LZEXE>::name, std::make_unique<exe_resource_loader<LZEXE>>());
 		register_loader (exe_traits<EXEPACK>::name, std::make_unique<exe_resource_loader<EXEPACK>>());

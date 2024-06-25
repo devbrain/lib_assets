@@ -50,7 +50,8 @@ namespace spy
 			{
 				try
 				{
-					pe_image_c i(m_data, m_size, m_container);
+					// TODO
+				//	pe_image_c i(m_data, m_size, m_container);
 					return;
 				}
 				catch (...)
@@ -79,7 +80,8 @@ namespace spy
 			{
 				try
 				{
-					pe_image_c i(m_path, m_container);
+					// TODO
+					//pe_image_c i(m_path, m_container);
 					return;
 				}
 				catch (...)

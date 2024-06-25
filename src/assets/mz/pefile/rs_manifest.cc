@@ -1,5 +1,6 @@
 #include <sstream>
-#include "mz/pefile/rs_manifest.hh"
+#include <assets/resources/exe/rs_manifest.hh>
+#include "pefile.hh"
 #include "xml/epp/xml_handler.hh"
 #include "xml/epp/xml.hh"
 
@@ -68,7 +69,7 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	void manifest_c::load (const file_c& file, const resource_c& rn, manifest_c& out) {
+	void manifest_c::load (const windows_pe_file& file, const resource_c& rn, manifest_c& out) {
 		const char* file_data = file.file_data ();
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);

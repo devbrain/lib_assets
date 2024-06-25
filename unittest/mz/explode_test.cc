@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <doctest/doctest.h>
 
-#include "assets/resources/exe/exe_data_manager.hh"
+#include "assets/resources/exe/exe_data_loader.hh"
 #include <bsw/io/memory_stream_buf.hh>
 #include <bsw/digest/md5.hh>
 
@@ -43,7 +43,7 @@ static constexpr auto digest_knowledge_dynamics_TNT = "d813b5ac3095c24c3eba559ba
 using md5_digest = bsw::md5_engine::digest_t;
 
 static md5_digest eval_digest (const unsigned char* data, std::size_t length) {
-	static neutrino::assets::exe_data_manager dm;
+	static neutrino::assets::exe_data_loader dm;
 	bsw::io::memory_input_stream stream ((const char*)data, length);
 	std::vector<char> out_buff = dm.load (stream);
 	bsw::md5_engine md5;

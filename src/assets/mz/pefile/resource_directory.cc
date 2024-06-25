@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include "pefile.hh"
-#include "resource_directory.hh"
+#include "../../../../include/assets/resources/exe/resource_directory.hh"
 #include "bsw/strings/wchar.hh"
 
 namespace assets::pefile {
@@ -136,7 +136,7 @@ namespace assets::pefile {
 	}
 
 	// -------------------------------------------------------------------------
-	std::size_t resource_c::offset_in_file (const file_c& file) const {
+	std::size_t resource_c::offset_in_file (const windows_pe_file& file) const {
 		const char* file_data = file.file_data ();
 		const std::size_t file_size = file.file_size ();
 		const auto& entry = file.optional_header ().DataDirectory[(int)DataDirectory::Resource];

@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include "resource_directory.hh"
-#include "pefile.hh"
+#include "../../../../src/assets/mz/pefile/pefile.hh"
 
 namespace assets::pefile {
 	class ASSETS_EXPORT message_table_c {
@@ -26,7 +26,7 @@ namespace assets::pefile {
 		[[nodiscard]] bool exists (uint16_t key) const;
 		std::wstring operator[] (uint16_t key) const;
 
-		static void load (const file_c& file, const resource_c& rn, message_table_c& out);
+		static void load (const windows_pe_file& file, const resource_c& rn, message_table_c& out);
 	 private:
 		std::map<uint16_t, std::wstring> m_messages;
 	};

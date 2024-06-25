@@ -17,14 +17,14 @@
 namespace neutrino::assets {
 
 	template<typename Resource>
-	class data_manager {
+	class data_loader {
 		public:
 			using resource_loader_t = abstract_resource_loader <Resource>;
 
 		public:
-			data_manager() = default;
-			data_manager& operator =(data_manager&) = delete;
-			data_manager(const data_manager&) = delete;
+			data_loader() = default;
+			data_loader& operator =(data_loader&) = delete;
+			data_loader(const data_loader&) = delete;
 
 			void register_loader(std::string key, std::unique_ptr <resource_loader_t>&& loader);
 
@@ -37,14 +37,14 @@ namespace neutrino::assets {
 	};
 
 	template<typename Resource>
-	void data_manager <Resource>::register_loader(std::string key,
+	void data_loader <Resource>::register_loader(std::string key,
 	                                                             std::unique_ptr <resource_loader_t>&& loader) {
 		ENFORCE(m_loaders.find(key) == m_loaders.end())
 		m_loaders.emplace(std::make_pair(key, std::move(loader)));
 	}
 
 	template<typename Resource>
-	Resource data_manager <Resource>::load(std::istream& is) const {
+	Resource data_loader <Resource>::load(std::istream& is) const {
 		for (auto i = m_loaders.begin(); i != m_loaders.end(); i++) {
 			detail::istream_pos_keeper keeper(is);
 			if (i->second->accept(is)) {
@@ -58,7 +58,7 @@ namespace neutrino::assets {
 	}
 
 	template<typename Resource>
-	Resource data_manager <Resource>::load(std::string key, std::istream& is) const {
+	Resource data_loader <Resource>::load(std::string key, std::istream& is) const {
 		auto i = m_loaders.find(key);
 		if (i == m_loaders.end()) {
 			RAISE_EX("Can not find loader with key = ", key);

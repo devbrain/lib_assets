@@ -8,19 +8,9 @@
 
 #include <bsw/strings/wchar.hh>
 
-static unsigned count_bits (uint64_t value) {
-	unsigned int count = 0;
-	while (value > 0) {           // until all bits are zero
-		if ((value & 1) == 1) {// check lower bit
-			count++;
-		}
-		value >>= 1;              // shift bits, removing lower bit
-	}
-	return count;
-}
 
 namespace assets::pefile {
-	clr_c::clr_c (file_c& f)
+	clr_c::clr_c (windows_pe_file& f)
 		: file (f),
 		  clr_header (nullptr) {
 		auto clr_pos = f.optional_header ().DataDirectory[(int)DataDirectory::CLR];
@@ -38,7 +28,7 @@ namespace assets::pefile {
 		union {
 			const char* bytes;
 			const CLR_HEADER* hdr;
-		} u;
+		} u {};
 		u.bytes = file_data + clr_off;
 		clr_header = u.hdr;
 		_parse_metadata ();

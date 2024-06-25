@@ -3,9 +3,10 @@
 
 #include <map>
 #include "resource_directory.hh"
-#include "pefile.hh"
 
 namespace assets::pefile {
+	class windows_pe_file;
+
 	class ASSETS_EXPORT string_table_c {
 	 public:
 		static constexpr int resource_id () {
@@ -24,7 +25,7 @@ namespace assets::pefile {
 		[[nodiscard]] strings_map_t::const_iterator begin () const;
 		[[nodiscard]] strings_map_t::const_iterator end () const;
 
-		static void load (const file_c& file, const resource_c& rn, string_table_c& out);
+		static void load (const windows_pe_file& file, const resource_c& rn, string_table_c& out);
 	 private:
 		void _number (int x);
 		void _bind (int id, const std::wstring& s);

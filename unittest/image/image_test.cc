@@ -5,7 +5,7 @@
 #include <bsw/io/memory_stream_buf.hh>
 #include <bsw/digest/md5.hh>
 #include <bsw/macros.hh>
-#include <assets/resources/image/image_data_manager.hh>
+#include <assets/resources/image/image_data_loader.hh>
 
 #include "image/data/acu100_1_gif.h"
 #include "image/data/necco_gif.h"
@@ -38,7 +38,7 @@ static constexpr auto digest_rgb32rle_tga = "8489e4d4080c5a64151c92662e76c6a7";
 
 static bool test_image(const unsigned char* input, std::size_t input_size, const char* expected) {
 	bsw::io::memory_input_stream stream((const char*)input, input_size);
-	static neutrino::assets::image_data_manager dm;
+	static neutrino::assets::image_data_loader dm;
 	auto image = dm.load (stream);
 	bsw::md5_engine md5;
 	md5.update (image->pixels, image->pitch*image->h);

@@ -4,12 +4,16 @@
 #include <map>
 #include <vector>
 #include <array>
+#include <string>
 #include <cstdint>
 
-#include "resource_directory.hh"
-#include "pefile.hh"
+#include <assets/assets_export.h>
+
 
 namespace assets::pefile {
+
+	class resource_c;
+	class windows_pe_file;
 
 	class ASSETS_EXPORT version_c {
 	 public:
@@ -53,12 +57,12 @@ namespace assets::pefile {
 		[[nodiscard]] translations_t::const_iterator translations_end () const;
 		[[nodiscard]] std::size_t translations_size () const;
 
-		static void load (const file_c& file, const resource_c& rn, version_c& out);
+		static void load (const windows_pe_file& file, const resource_c& rn, version_c& out);
 	 private:
 		void _bind (const std::wstring& k, const std::wstring& b);
 		void _add_translation (uint16_t x);
 	 private:
-		std::array<uint32_t, MAX_FIELD> m_fields;
+		std::array<uint32_t, MAX_FIELD> m_fields = {};
 		kv_map_t m_kv_map;
 		std::vector<uint16_t> m_translations;
 	};

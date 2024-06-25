@@ -80,34 +80,21 @@ namespace assets::pefile {
 
 	// ----------------------------------------------------------------------------
 	void exe_file_c::load_imports () {
-		pefile::parse_imports (*m_pefile.get (), m_imports);
+		pefile::parse_imports (*m_pefile, m_imports);
 	}
 
 	// ----------------------------------------------------------------------------
 	std::size_t exe_file_c::import_size () const {
-		return pefile::count_imports (*m_pefile.get ());
+		return pefile::count_imports (*m_pefile);
 	}
 
 	// ----------------------------------------------------------------------------
-	exe_file_c::exe_file_c (const std::string& path) {
+	exe_file_c::exe_file_c (std::istream& is) {
 		static abstract_reporter_c reporter;
-		m_pefile = std::make_unique<file_c> (path, reporter);
+		m_pefile = std::make_unique<windows_pe_file> (is, reporter);
 		_load ();
 	}
 
-	// ---------------------------------------------------------------------------
-	exe_file_c::exe_file_c (const std::wstring& path) {
-		static abstract_reporter_c reporter;
-		m_pefile = std::make_unique<file_c> (path, reporter);
-		_load ();
-	}
-
-	// ---------------------------------------------------------------------------
-	exe_file_c::exe_file_c (const char* data, std::size_t size) {
-		static abstract_reporter_c reporter;
-		m_pefile = std::make_unique<file_c> (data, size, reporter);
-		_load ();
-	}
 
 	// ---------------------------------------------------------------------------
 	const imports_table_t& exe_file_c::imports () const {
@@ -204,6 +191,6 @@ namespace assets::pefile {
 
 	// ---------------------------------------------------------------------------
 	std::size_t exe_file_c::resource_offset (const resource_c& rn) const {
-		return rn.offset_in_file (*m_pefile.get ());
+		return rn.offset_in_file (*m_pefile);
 	}
 } // ns pefile

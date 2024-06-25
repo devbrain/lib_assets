@@ -5,14 +5,14 @@
 #ifndef TTF_FONT_DATA_MANAGER_HH
 #define TTF_FONT_DATA_MANAGER_HH
 
-#include <assets/resources/data_manager.hh>
+#include <assets/resources/data_loader.hh>
 #include <sdlpp/video/ttf.hh>
 #include <assets/assets_export.h>
 
 namespace neutrino::assets {
-	class ASSETS_EXPORT ttf_data_manager : public data_manager <sdl::ttf> {
+	class ASSETS_EXPORT ttf_data_loader : public data_loader <sdl::ttf> {
 		public:
-			ttf_data_manager();
+			ttf_data_loader();
 	};
 }
 

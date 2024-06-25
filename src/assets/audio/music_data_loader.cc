@@ -2,7 +2,7 @@
 // Created by igor on 6/23/24.
 //
 
-#include <assets/resources/audio/music_data_manager.hh>
+#include <assets/resources/audio/music_data_loader.hh>
 #include <sdlpp/io/rwops_stream.hh>
 
 namespace neutrino::assets {
@@ -17,7 +17,7 @@ namespace neutrino::assets {
 		}
 	};
 
-	music_data_manager::music_data_manager() {
+	music_data_loader::music_data_loader() {
 		register_loader("music", std::make_unique<mus_loader>());
 	}
 }

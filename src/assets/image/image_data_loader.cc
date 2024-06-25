@@ -4,7 +4,7 @@
 
 #include <sdlpp/io.hh>
 #include <SDL_image.h>
-#include <assets/resources/image/image_data_manager.hh>
+#include <assets/resources/image/image_data_loader.hh>
 #include "image/standard_image_resource_loader.hh"
 
 #include <bsw/macros.hh>
@@ -72,7 +72,7 @@ namespace neutrino::assets {
 	register_loader (detail::standard_image_resource_loader<detail::std_image_format_t::T>::NAME, 	\
 		std::make_unique<detail::standard_image_resource_loader<detail::std_image_format_t::T>>())
 
-	image_data_manager::image_data_manager () {
+	image_data_loader::image_data_loader () {
 		
 		REGISTER_STD_IMG_LOADER(BMP);
 		REGISTER_STD_IMG_LOADER(ICO);

@@ -41,7 +41,7 @@ namespace assets::pefile {
 	};
 
 	// -----------------------------------------------------------------------------------------
-	std::size_t count_imports (const file_c& pefile) {
+	std::size_t count_imports (const windows_pe_file& pefile) {
 		const char* file_data = pefile.file_data ();
 		const std::size_t file_size = pefile.file_size ();
 		const auto& entry = pefile.optional_header ().DataDirectory[(int)DataDirectory::Import];
@@ -89,7 +89,7 @@ namespace assets::pefile {
 	}
 
 	// -----------------------------------------------------------------------------------------
-	void parse_imports (const file_c& pefile, imports_table_t& imports) {
+	void parse_imports (const windows_pe_file& pefile, imports_table_t& imports) {
 		const char* file_data = pefile.file_data ();
 		const std::size_t file_size = pefile.file_size ();
 		const auto& entry = pefile.optional_header ().DataDirectory[(int)DataDirectory::Import];

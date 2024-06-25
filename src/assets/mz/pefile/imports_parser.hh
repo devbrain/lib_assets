@@ -17,8 +17,8 @@ namespace assets::pefile {
 	std::ostream& operator<< (std::ostream& os, const import_entry_s& x);
 
 	using imports_table_t = std::multimap<std::string, import_entry_s>;
-	void parse_imports (const file_c& pefile, imports_table_t& imports);
-	std::size_t count_imports (const file_c& pefile);
+	void parse_imports (const windows_pe_file& pefile, imports_table_t& imports);
+	std::size_t count_imports (const windows_pe_file& pefile);
 }
 
 #endif

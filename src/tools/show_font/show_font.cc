@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sdlpp/sdlpp.hh>
-#include <assets/resources/font/bgi_font_data_manager.hh>
+#include <assets/resources/font/bgi_font_data_loader.hh>
 
 static void render_glyph(const neutrino::assets::bgi_font& fnt, neutrino::sdl::renderer& r, int x, int y, char ch) {
 	const auto& gd = fnt.glyphs.find(ch)->second;
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	using namespace neutrino;
-	assets::bgi_font_data_manager dm;
+	assets::bgi_font_data_loader dm;
 	auto bgi = dm.load(ifs);
 
 	try {

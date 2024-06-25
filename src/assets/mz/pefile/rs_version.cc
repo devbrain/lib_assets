@@ -1,5 +1,9 @@
-#include "mz/pefile/rs_version.hh"
+#include <assets/resources/exe/rs_version.hh>
+#include <assets/resources/exe/resource_directory.hh>
 #include <bsw/strings/wchar.hh>
+
+#include "istream_wrapper.hh"
+#include "pefile.hh"
 
 namespace assets::pefile {
 	// ------------------------------------------------------------------
@@ -96,7 +100,7 @@ namespace assets::pefile {
 		};
 
 		struct named_node_s : public node_s {
-			named_node_s (bsw::istream_wrapper_c& is)
+			explicit named_node_s (bsw::istream_wrapper_c& is)
 				: node_s (is) {
 				is >> cbNode;
 				is >> cbData;
@@ -140,7 +144,7 @@ namespace assets::pefile {
 	}
 
 	// -------------------------------------------------------------------
-	void version_c::load (const file_c& file, const resource_c& rn, version_c& out) {
+	void version_c::load (const windows_pe_file& file, const resource_c& rn, version_c& out) {
 		const char* file_data = file.file_data ();
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);

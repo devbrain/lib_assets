@@ -2,7 +2,7 @@
 // Created by igor on 6/23/24.
 //
 
-#include <assets/resources/audio/sound_effect_data_manager.hh>
+#include <assets/resources/audio/sound_effect_data_loader.hh>
 #include <sdlpp/io/rwops_stream.hh>
 
 namespace neutrino::assets {
@@ -17,7 +17,7 @@ namespace neutrino::assets {
 		}
 	};
 
-	sound_effect_data_manager::sound_effect_data_manager() {
+	sound_effect_data_loader::sound_effect_data_loader() {
 		register_loader("sound", std::make_unique <sound_loader>());
 	}
 }

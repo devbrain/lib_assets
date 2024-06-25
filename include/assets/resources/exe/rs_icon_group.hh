@@ -2,10 +2,12 @@
 #define __PEFILE_RS_ICON_GROUP_HPP__
 
 #include <map>
-#include "resource_directory.hh"
-#include "pefile.hh"
+#include <assets/resources/exe/resource_directory.hh>
+
 
 namespace assets::pefile {
+	class windows_pe_file;
+
 	class ASSETS_EXPORT  icon_group_c {
 	 public:
 		typedef std::multimap<uint32_t, uint16_t> icon_group_t;
@@ -20,7 +22,7 @@ namespace assets::pefile {
 
 		[[nodiscard]] icon_group_t::const_iterator begin () const;
 		[[nodiscard]] icon_group_t::const_iterator end () const;
-		static void load (const file_c& file, const resource_c& rn, icon_group_c& out);
+		static void load (const windows_pe_file& file, const resource_c& rn, icon_group_c& out);
 	 private:
 		void _add_group (uint32_t group_id, uint16_t ordinal);
 	 private:
@@ -42,7 +44,7 @@ namespace assets::pefile {
 		uint64_t offset;
 		uint32_t size;
 
-		static void load (const file_c& file, const resource_c& rn, icon_info_s& out);
+		static void load (const windows_pe_file& file, const resource_c& rn, icon_info_s& out);
 	};
 
 } // ns pefile

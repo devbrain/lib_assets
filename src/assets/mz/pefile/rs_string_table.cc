@@ -1,4 +1,5 @@
-#include "rs_string_table.hh"
+#include <assets/resources/exe/rs_string_table.hh>
+#include "pefile.hh"
 
 namespace assets::pefile {
 	int string_table_c::number () const {
@@ -26,7 +27,7 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	void string_table_c::load (const file_c& file, const resource_c& rn, string_table_c& out) {
+	void string_table_c::load (const windows_pe_file& file, const resource_c& rn, string_table_c& out) {
 		const char* file_data = file.file_data ();
 		const std::size_t file_size = file.file_size ();
 		auto offs = rn.offset_in_file (file);
@@ -37,7 +38,7 @@ namespace assets::pefile {
 
 		bsw::istream_wrapper_c stream (file_data + offs, rn.size ());
 
-		uint16_t id = static_cast<uint16_t>(rn.name ().id ());
+		const auto id = static_cast<uint16_t>(rn.name ().id ());
 
 		out._number (id);
 		int nums = 16 * (id - 1);

@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <vector>
 
-#include <assets/resources/font/bgi_font_data_manager.hh>
+#include <assets/resources/font/bgi_font_data_loader.hh>
 #include <assets/resources/detail/istream_pos_keeper.hh>
 #include <bsw/io/binary_reader.hh>
 #include <bsw/byte_order.hh>
@@ -146,7 +146,7 @@ namespace neutrino::assets {
 		}
 	};
 
-	bgi_font_data_manager::bgi_font_data_manager() {
+	bgi_font_data_loader::bgi_font_data_loader() {
 		register_loader("bgi", std::make_unique<bgi_loader>());
 	}
 }

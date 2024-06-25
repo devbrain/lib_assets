@@ -4,8 +4,8 @@
 #include <map>
 #include <vector>
 #include "resource_directory.hh"
-#include "pefile.hh"
-#include <assets/assets_export.h>
+#include "../../../../src/assets/mz/pefile/pefile.hh"
+#include <assets//assets_export.h>
 
 namespace assets::pefile {
 	class ASSETS_EXPORT dialog_c {
@@ -58,7 +58,7 @@ namespace assets::pefile {
 
 		}
 
-		static void load (const file_c& file, const resource_c& rn, dialog_c& out);
+		static void load (const windows_pe_file& file, const resource_c& rn, dialog_c& out);
 	 public:
 		bool m_extended;
 		uint32_t m_helpid;

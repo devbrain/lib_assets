@@ -1,8 +1,5 @@
-#include <iostream>
-#include <stdexcept>
 #include <algorithm>
 #include "image/icons/pe_image.hpp"
-#include "mz/pefile/istream_wrapper.hh"
 #include "mz/pefile/exefile.hh"
 
 namespace spy
@@ -30,22 +27,10 @@ namespace spy
 			}
 		}
 
-        pe_image_c::pe_image_c (const std::string& path, icons_container_c& container)
+        pe_image_c::pe_image_c (std::istream& is, icons_container_c& container)
         {
-			assets::pefile::exe_file_c exe(path);
+			assets::pefile::exe_file_c exe(is);
 			load(exe, container);
         }
-		// ----------------------------------------------------------
-		pe_image_c::pe_image_c(const std::wstring& path, icons_container_c& container)
-		{
-			assets::pefile::exe_file_c exe(path);
-			load(exe, container);
-		}
-        // ----------------------------------------------------------
-		pe_image_c::pe_image_c(const char* data, std::size_t size, icons_container_c& container)
-		{
-			assets::pefile::exe_file_c exe(data, size);
-			load(exe, container);
-		}
     } // ns am
 } // ns spy

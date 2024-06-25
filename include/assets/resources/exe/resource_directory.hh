@@ -36,7 +36,7 @@ namespace assets::pefile {
 		MANIFEST = 24
 	};
 
-	class file_c;
+	class windows_pe_file;
 
 	class ASSETS_EXPORT resource_name_c {
 		friend bool operator< (const resource_name_c& a, const resource_name_c& b);
@@ -80,7 +80,7 @@ namespace assets::pefile {
 		[[nodiscard]] const resource_name_c& name () const;
 		void name (resource_name_c& rn);
 
-		[[nodiscard]] std::size_t offset_in_file (const file_c& f) const;
+		[[nodiscard]] std::size_t offset_in_file (const windows_pe_file& f) const;
 
 	 private:
 		int m_language_code;
