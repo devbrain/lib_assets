@@ -1,19 +1,21 @@
 #include <assets/resources/exe/winres/rs_dialog.hh>
 #include <stdexcept>
+#include "mz/win_exe/istream_wrapper.hh"
+#include "mz/win_exe/ms_file.hh"
 
-namespace assets::pefile {
-	static resource_name load_resource_name_dlg (bsw::istream_wrapper& is, std::size_t maxlen) {
+namespace neutrino::assets {
+	static windows_resource_name load_resource_name_dlg (bsw::istream_wrapper& is, std::size_t maxlen) {
 		uint16_t descr;
 		is >> descr;
 		if (descr == 0) {
-			return resource_name ();
+			return {};
 		} else {
 			if (descr == 0xFFFF) {
 				uint16_t id;
 				is >> id;
-				return resource_name (id);
+				return windows_resource_name (id);
 			} else {
-				wchar_t ch = static_cast <wchar_t> (descr);
+				auto ch = static_cast <wchar_t> (descr);
 				std::wstring nm;
 				nm += ch;
 				bool term = false;
@@ -30,15 +32,15 @@ namespace assets::pefile {
 				if (!term) {
 					throw std::runtime_error ("String should be null terminated");
 				}
-				return resource_name (nm);
+				return windows_resource_name (nm);
 			}
 		}
 	}
 
 	// ---------------------------------------------------------------------------------
-	void dialog::load (const windows_pe_file& file, const resource& rn, dialog& out) {
+	void windows_resource_traits<windows_rs_dialog>::load (const ms_file& file, const windows_resource& rn, windows_rs_dialog& out) {
 		const std::size_t file_size = file.file_size ();
-		auto offs = rn.offset_in_file (file);
+		auto offs = file.offset_in_file (rn.offset());
 
 		if (offs >= file_size) {
 			return;
@@ -83,7 +85,7 @@ namespace assets::pefile {
 		}
 		is.align4 ();
 		for (uint16_t i = 0; i < num; i++) {
-			dialog::control_s ctl;
+			windows_rs_dialog::control ctl;
 			if (out.m_extended) {
 				is >> ctl.m_helpid >> ctl.m_extstyle >> ctl.m_style;
 			} else {

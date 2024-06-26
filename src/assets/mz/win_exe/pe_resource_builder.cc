@@ -1,36 +1,15 @@
 #include "pe_resource_builder.hh"
-#include "pefile.hh"
+#include "windows_pe_file.hh"
+#include "windows_ne_file.hh"
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	namespace detail {
-		class resource_dir_builder {
-			public:
-				explicit resource_dir_builder(resource_dir& rd);
-
-				void start_main_entry(const resource_name& rcname);
-				void end_main_entry();
-
-				void start_sub_entry(const resource_name& rcname);
-				void add_to_sub_entry(resource& res);
-				void end_sub_entry();
-
-			private:
-				using first_level_t = resource_dir::first_level_t;
-				using second_level_t = resource_dir::second_level_t;
-
-			private:
-				first_level_t& m_dir;
-				second_level_t m_curr;
-				resource_name m_curr_main_entry;
-				resource_name m_curr_sub_entry;
-		};
-
-		resource_dir_builder::resource_dir_builder(resource_dir& rd)
+		resource_dir_builder::resource_dir_builder(windows_resource_directory& rd)
 			: m_dir(rd.m_dir) {
 		}
 
 		// ------------------------------------------------------------------------
-		void resource_dir_builder::start_main_entry(const resource_name& rcname) {
+		void resource_dir_builder::start_main_entry(const windows_resource_name& rcname) {
 			m_curr.clear();
 			m_curr_main_entry = rcname;
 		}
@@ -41,12 +20,12 @@ namespace assets::pefile {
 		}
 
 		// -----------------------------------------------------------------------
-		void resource_dir_builder::start_sub_entry(const resource_name& rcname) {
+		void resource_dir_builder::start_sub_entry(const windows_resource_name& rcname) {
 			m_curr_sub_entry = rcname;
 		}
 
 		// -----------------------------------------------------------------------
-		void resource_dir_builder::add_to_sub_entry(resource& res) {
+		void resource_dir_builder::add_to_sub_entry(windows_resource& res) {
 			res.name(m_curr_sub_entry);
 			m_curr.insert(second_level_t::value_type(m_curr_sub_entry, res));
 		}
@@ -54,10 +33,9 @@ namespace assets::pefile {
 		// -----------------------------------------------------------------------
 		void resource_dir_builder::end_sub_entry() {
 		}
-
 		// =======================================================================
 		struct IMAGE_RESOURCE_DIRECTORY_ENTRY {
-			bool valid() const {
+			[[nodiscard]] bool valid() const {
 				return offset_info.OffsetToData != 0;
 			}
 
@@ -146,7 +124,7 @@ namespace assets::pefile {
 			for (uint32_t i = 0; i < count; i++) {
 				IMAGE_RESOURCE_DIRECTORY_ENTRY entry{};
 				stream >> entry;
-				resource_name rname;
+				windows_resource_name rname;
 				if (depth == 0) {
 					if (entry.name_info.info.NameIsString) {
 						rname.name(read_string(stream, entry.name_info.info.NameOffset));
@@ -176,7 +154,7 @@ namespace assets::pefile {
 						stream >> size;
 						stream.seek(current);
 
-						resource rc;
+						windows_resource rc;
 						rc.language_code(entry.name_info.Id);
 						//	rc.offset(data_rva - rs_rva);
 						rc.offset(data_rva);
@@ -196,7 +174,7 @@ namespace assets::pefile {
 				IMAGE_RESOURCE_DIRECTORY_ENTRY entry{};
 				stream >> entry;
 
-				resource_name rname;
+				windows_resource_name rname;
 				if (entry.name_info.info.NameIsString) {
 					rname.name(read_string(stream, entry.name_info.info.NameOffset));
 				} else {
@@ -213,7 +191,7 @@ namespace assets::pefile {
 		}
 	} // ns detail
 	// ============================================================================
-	void build_resources(const windows_pe_file& pefile, resource_dir& rd) {
+	void build_resources(const windows_pe_file& pefile, windows_resource_directory& rd) {
 		const std::size_t file_size = pefile.file_size();
 		const auto& entry = pefile.optional_header().DataDirectory[(int)DataDirectory::Resource];
 		const uint32_t rc_offs = pefile.translate_rva(entry.VirtualAddress);
@@ -223,5 +201,9 @@ namespace assets::pefile {
 		bsw::istream_wrapper stream(pefile.stream(), rc_offs, entry.Size);
 		detail::resource_dir_builder builder(rd);
 		create_res_dir(entry.VirtualAddress, stream, pefile, builder);
+	}
+
+	void build_resources (const windows_ne_file& pefile, windows_resource_directory& rd) {
+		pefile.build_resources(rd);
 	}
 } // ns pefile

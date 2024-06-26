@@ -7,15 +7,15 @@
 
 #include <assets/assets_export.h>
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	static constexpr int RCT_NEWRESOURCE = 0x2000;
-	enum resource_type_t {
+	enum windows_resource_type {
 		CURSOR = 1,
 		BITMAP = 2,
 		ICON = 3,
 		MENU = 4,
 		DIALOG = 5,
-		STRING = 6,
+		STRINGTABLE = 6,
 		FONTDIR = 7,
 		FONT = 8,
 		ACCELERATORS = 9,
@@ -36,14 +36,17 @@ namespace assets::pefile {
 		MANIFEST = 24
 	};
 
-	class windows_pe_file;
+	ASSETS_EXPORT std::string to_string(windows_resource_type resource_type);
+	ASSETS_EXPORT std::wstring to_wstring(windows_resource_type resource_type);
 
-	class ASSETS_EXPORT resource_name {
-		friend bool operator< (const resource_name& a, const resource_name& b);
+	class ms_file;
+
+	class ASSETS_EXPORT windows_resource_name {
+		friend bool operator< (const windows_resource_name& a, const windows_resource_name& b);
 	 public:
-		resource_name () = default;
-		explicit resource_name (int id);
-		explicit resource_name (const std::wstring& name);
+		windows_resource_name () = default;
+		explicit windows_resource_name (int id);
+		explicit windows_resource_name (const std::wstring& name);
 
 		[[nodiscard]] bool is_id () const;
 		[[nodiscard]] int id () const;
@@ -59,13 +62,13 @@ namespace assets::pefile {
 	};
 
 	// =============================================================================
-	ASSETS_EXPORT bool operator< (const resource_name& a, const resource_name& b);
-	ASSETS_EXPORT std::ostream& operator<< (std::ostream& os, const resource_name& a);
+	ASSETS_EXPORT bool operator< (const windows_resource_name& a, const windows_resource_name& b);
+	ASSETS_EXPORT std::ostream& operator<< (std::ostream& os, const windows_resource_name& a);
 
 	// =============================================================================
-	class ASSETS_EXPORT  resource {
+	class ASSETS_EXPORT  windows_resource {
 	 public:
-		resource ();
+		windows_resource ();
 
 		[[nodiscard]] int language_code () const;
 		void language_code (int x);
@@ -76,39 +79,37 @@ namespace assets::pefile {
 		[[nodiscard]] uint32_t size () const;
 		void size (uint32_t x);
 
-		[[nodiscard]] const resource_name& name () const;
-		void name (resource_name& rn);
-
-		[[nodiscard]] std::size_t offset_in_file (const windows_pe_file& f) const;
+		[[nodiscard]] const windows_resource_name& name () const;
+		void name (windows_resource_name& rn);
 
 	 private:
 		int m_language_code;
 		uint32_t m_offset;
 		uint32_t m_size;
-		resource_name m_rn;
+		windows_resource_name m_rn;
 	};
 	// =============================================================================
 	namespace detail {
 		class resource_dir_builder;
 	}
 
-	class ASSETS_EXPORT resource_dir {
+	class ASSETS_EXPORT windows_resource_directory {
 		friend class detail::resource_dir_builder;
 
 	 public:
-		using second_level_t = std::multimap<resource_name, resource>;
-		using first_level_t = std::map<resource_name, second_level_t>;
+		using second_level_t = std::multimap<windows_resource_name, windows_resource>;
+		using first_level_t = std::map<windows_resource_name, second_level_t>;
 		using iterator = second_level_t::const_iterator;
 	 public:
 		class names_iterator {
-			friend class resource_dir;
+			friend class windows_resource_directory;
 
 		 public:
 			names_iterator& operator++ ();
 			bool operator== (const names_iterator& a);
 			bool operator!= (const names_iterator& a);
-			const resource_name* operator-> () const;
-			const resource_name& operator* () const;
+			const windows_resource_name* operator-> () const;
+			const windows_resource_name& operator* () const;
 		 private:
 			using itr_t = first_level_t::const_iterator;
 		 private:
@@ -118,8 +119,8 @@ namespace assets::pefile {
 		};
 
 	 public:
-		[[nodiscard]] iterator begin (const resource_name& rn) const;
-		[[nodiscard]] iterator end (const resource_name& rn) const;
+		[[nodiscard]] iterator begin (const windows_resource_name& rn) const;
+		[[nodiscard]] iterator end (const windows_resource_name& rn) const;
 		[[nodiscard]] bool exists (int id) const;
 
 		[[nodiscard]] names_iterator names_begin () const;
@@ -128,6 +129,20 @@ namespace assets::pefile {
 		first_level_t m_dir;
 	};
 
+
+	template <typename T>
+	struct windows_resource_traits;
+
+#define d_ASSETS_WINDOWS_RESOURCE_TRAITS(T, ID, SINGLETON)							\
+	class ASSETS_EXPORT T;															\
+	template <>																		\
+	struct ASSETS_EXPORT windows_resource_traits<T> {								\
+		static constexpr int id = ID;												\
+		static constexpr auto singleton = SINGLETON;								\
+		static void load(const ms_file& file, const windows_resource& rn, T& out);	\
+	}
+
+#define d_ASSETS_ADD_WINDOWS_RESOURCE_LOADER(T)	friend struct windows_resource_traits<T>
 } // ns pefile
 
 #endif

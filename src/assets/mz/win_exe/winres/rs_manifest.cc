@@ -1,22 +1,22 @@
 #include <sstream>
 #include <assets/resources/exe/winres/rs_manifest.hh>
 #include <assets/resources/exe/winres/resource_directory.hh>
-#include "pefile.hh"
+#include "mz/win_exe/windows_pe_file.hh"
 
-namespace assets::pefile {
-	void manifest::_text(const char* t) {
+namespace neutrino::assets {
+	void windows_rs_manifest::_text(const char* t) {
 		m_text = t;
 	}
 
 	// ------------------------------------------------------------------
-	const std::string& manifest::text() const {
+	const std::string& windows_rs_manifest::text() const {
 		return m_text;
 	}
 
 	// ------------------------------------------------------------------
-	void manifest::load(const windows_pe_file& file, const resource& rn, manifest& out) {
+	void windows_resource_traits<windows_rs_manifest>::load(const ms_file& file, const windows_resource& rn, windows_rs_manifest& out) {
 		const std::size_t file_size = file.file_size();
-		auto offs = rn.offset_in_file(file);
+		auto offs = file.offset_in_file(rn.offset());
 
 		if (offs >= file_size) {
 			return;

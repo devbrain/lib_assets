@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <iosfwd>
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	class abstract_reporter {
 	 public:
 		enum header_field_t {

@@ -3,9 +3,9 @@
 //
 #include <iostream>
 #include <ctime>
-#include <assets/resources/exe/windows_pe.hh>
+#include "mz/win_exe/windows_pe_structs.hh"
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	struct unix_time {
 		explicit unix_time(uint32_t t)
 			: m_time(t) {

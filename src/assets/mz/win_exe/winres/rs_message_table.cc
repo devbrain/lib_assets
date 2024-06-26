@@ -1,24 +1,25 @@
 #include <assets/resources/exe/winres/rs_message_table.hh>
 #include <bsw/strings/wchar.hh>
-#include "pefile.hh"
+#include "mz/win_exe/ms_file.hh"
+#include "mz/win_exe/istream_wrapper.hh"
 
-namespace assets::pefile {
-	message_table::msg_table_t::const_iterator message_table::begin () const {
+namespace neutrino::assets {
+	windows_rs_message_table::msg_table_t::const_iterator windows_rs_message_table::begin () const {
 		return m_messages.begin ();
 	}
 
 	// ---------------------------------------------------------------------
-	message_table::msg_table_t::const_iterator message_table::end () const {
+	windows_rs_message_table::msg_table_t::const_iterator windows_rs_message_table::end () const {
 		return m_messages.end ();
 	}
 
 	// ---------------------------------------------------------------------
-	bool message_table::exists (uint16_t key) const {
+	bool windows_rs_message_table::exists (uint16_t key) const {
 		return m_messages.find (key) != m_messages.end ();
 	}
 
 	// ---------------------------------------------------------------------
-	std::wstring message_table::operator[] (uint16_t key) const {
+	std::wstring windows_rs_message_table::operator[] (uint16_t key) const {
 		auto i = m_messages.find (key);
 		if (i != m_messages.end ()) {
 			return i->second;
@@ -34,10 +35,10 @@ namespace assets::pefile {
 		};
 	}
 
-	void message_table::load (const windows_pe_file& file, const resource& rn, message_table& out) {
+	void windows_resource_traits<windows_rs_message_table>::load (const ms_file& file, const windows_resource& rn, windows_rs_message_table& out) {
 
 		const std::size_t file_size = file.file_size ();
-		auto offs = rn.offset_in_file (file);
+		auto offs = file.offset_in_file (rn.offset());
 
 		if (offs >= file_size) {
 			return;

@@ -1,19 +1,19 @@
 #include <assets/resources/exe/winres/rs_icon_group.hh>
-#include "istream_wrapper.hh"
-#include "pefile.hh"
+#include "mz/win_exe/istream_wrapper.hh"
+#include "mz/win_exe/ms_file.hh"
 
-namespace assets::pefile {
-	void icon_group::_add_group (uint32_t group_id, uint16_t ordinal) {
+namespace neutrino::assets {
+	void windows_rs_icon_group::_add_group (uint32_t group_id, uint16_t ordinal) {
 		m_grp.insert (icon_group_t::value_type (group_id, ordinal));
 	}
 
 	// ------------------------------------------------------------------
-	icon_group::icon_group_t::const_iterator icon_group::begin () const {
+	windows_rs_icon_group::icon_group_t::const_iterator windows_rs_icon_group::begin () const {
 		return m_grp.begin ();
 	}
 
 	// ------------------------------------------------------------------
-	icon_group::icon_group_t::const_iterator icon_group::end () const {
+	windows_rs_icon_group::icon_group_t::const_iterator windows_rs_icon_group::end () const {
 		return m_grp.end ();
 	}
 	// ------------------------------------------------------------------
@@ -33,9 +33,9 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	void icon_group::load (const windows_pe_file& file, const resource& rn, icon_group& out) {
+	void windows_resource_traits<windows_rs_icon_group>::load (const ms_file& file, const windows_resource& rn, windows_rs_icon_group& out) {
 		const std::size_t file_size = file.file_size ();
-		auto offs = rn.offset_in_file (file);
+		auto offs = file.offset_in_file (rn.offset());
 
 		if (offs >= file_size) {
 			return;
@@ -55,14 +55,14 @@ namespace assets::pefile {
 	}
 
 	// ===================================================================
-	icon_info::icon_info (uint16_t id, uint64_t offs, uint32_t s)
+	windows_rs_icon_info::windows_rs_icon_info (uint16_t id, uint64_t offs, uint32_t s)
 		: ordinal (id),
 		  offset (offs),
 		  size (s) {
 	}
 
 	// ------------------------------------------------------------------
-	icon_info::icon_info ()
+	windows_rs_icon_info::windows_rs_icon_info ()
 		: ordinal (0xFFFF),
 		  offset (0),
 		  size (0) {
@@ -70,13 +70,13 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	void icon_info::load (const windows_pe_file& file, const resource& rn, icon_info& out) {
+	void windows_resource_traits<windows_rs_icon_info>::load (const ms_file& file, const windows_resource& rn, windows_rs_icon_info& out) {
 		out.ordinal = 0xFFFF;
 		if (rn.name ().is_id ()) {
 			out.ordinal = rn.name ().id ();
 		}
 
-		out.offset = rn.offset_in_file (file);
+		out.offset = file.offset_in_file (rn.offset());
 		out.size = rn.size ();
 	}
 } // ns pefile

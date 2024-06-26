@@ -2,9 +2,9 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "pefile.hh"
+#include "windows_pe_file.hh"
 #include "abstract_reporter.hh"
-#include <assets/resources/exe/windows_pe.hh>
+#include "mz/win_exe/windows_pe_structs.hh"
 
 #include "assets/resources/detail/istream_pos_keeper.hh"
 #include "assets/resources/exe/unpacked_exe.hh"
@@ -22,7 +22,7 @@ static bool is_power_of_two (unsigned int x) {
 		x == 2147483648);
 }
 
-namespace assets::pefile {
+namespace neutrino::assets {
 
 
 	static constexpr uint16_t IMAGE_OPTIONAL_HEADER_PE32 = 0x10B;
@@ -239,6 +239,10 @@ namespace assets::pefile {
 		m_stream.seekg(0, std::ios::end);
 		const auto rc = m_stream.tellg();
 		return rc;
+	}
+
+	std::size_t windows_pe_file::offset_in_file(uint32_t res_offset) const {
+		return translate_rva(res_offset);
 	}
 
 	// --------------------------------------------------------------

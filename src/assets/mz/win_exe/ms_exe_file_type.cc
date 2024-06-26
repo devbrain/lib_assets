@@ -6,9 +6,9 @@
 #include <assets/resources/detail/istream_pos_keeper.hh>
 #include "istream_wrapper.hh"
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	ms_exe_file_type get_ms_exe_file_type(std::istream& is) {
-		neutrino::assets::detail::istream_pos_keeper keeper(is);
+		detail::istream_pos_keeper keeper(is);
 
 		bsw::istream_wrapper stream (is);
 

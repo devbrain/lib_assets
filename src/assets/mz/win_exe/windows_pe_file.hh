@@ -7,29 +7,28 @@
 #include <iosfwd>
 #include <memory>
 
-#include "istream_wrapper.hh"
-#include <assets/resources/exe/windows_pe.hh>
+#include "mz/win_exe/istream_wrapper.hh"
+#include "mz/win_exe/windows_pe_structs.hh"
 #include <assets/assets_export.h>
-
-namespace assets::pefile {
+#include "mz/win_exe/ms_file.hh"
+namespace neutrino::assets {
 	class abstract_reporter;
 
-	class ASSETS_EXPORT windows_pe_file {
+	class ASSETS_EXPORT windows_pe_file : public ms_file {
 	 public:
 		typedef std::vector<SECTION> section_t;
 	 public:
 		windows_pe_file (std::istream& is, abstract_reporter& reporter);
 
-		~windows_pe_file ();
+		~windows_pe_file () override;
 		[[nodiscard]] const COFF_HEADER& coff_header () const;
 		[[nodiscard]] const OPTIONAL_HEADER& optional_header () const;
 		[[nodiscard]] const section_t& sections () const;
 
-	//	[[nodiscard]] const char* read_section (const SECTION& s) const;
-
 		[[nodiscard]] uint32_t translate_rva (uint32_t rva) const;
-		[[nodiscard]] std::istream& stream() const;
-		[[nodiscard]] std::size_t file_size () const;
+		[[nodiscard]] std::istream& stream() const override;
+		[[nodiscard]] std::size_t file_size () const override;
+		[[nodiscard]] std::size_t offset_in_file(uint32_t res_offset) const override;
 		[[nodiscard]] std::size_t overlay_offset () const;
 	 private:
 		void _load_headers (bsw::istream_wrapper& stream, abstract_reporter& reporter);

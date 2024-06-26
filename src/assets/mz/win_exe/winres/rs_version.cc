@@ -2,22 +2,22 @@
 #include <assets/resources/exe/winres/resource_directory.hh>
 #include <bsw/strings/wchar.hh>
 
-#include "istream_wrapper.hh"
-#include "pefile.hh"
+#include "mz/win_exe/istream_wrapper.hh"
+#include "mz/win_exe/windows_pe_file.hh"
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	// ------------------------------------------------------------------
-	void version::_bind (const std::wstring& k, const std::wstring& b) {
+	void windows_rs_version::_bind (const std::wstring& k, const std::wstring& b) {
 		m_kv_map[bsw::wstring_to_utf8 (k)] = bsw::wstring_to_utf8 (b);
 	}
 
 	// ------------------------------------------------------------------
-	uint32_t version::operator[] (fields_t f) const {
+	uint32_t windows_rs_version::operator[] (fields_t f) const {
 		return m_fields[f];
 	}
 
 	// ------------------------------------------------------------------
-	std::string version::operator[] (const std::string& v) const {
+	std::string windows_rs_version::operator[] (const std::string& v) const {
 		auto i = m_kv_map.find (v);
 		if (i == m_kv_map.end ()) {
 			return "";
@@ -26,37 +26,37 @@ namespace assets::pefile {
 	}
 
 	// ------------------------------------------------------------------
-	version::kv_map_t::const_iterator version::begin () const {
+	windows_rs_version::kv_map_t::const_iterator windows_rs_version::begin () const {
 		return m_kv_map.begin ();
 	}
 
 	// ------------------------------------------------------------------
-	version::kv_map_t::const_iterator version::end () const {
+	windows_rs_version::kv_map_t::const_iterator windows_rs_version::end () const {
 		return m_kv_map.end ();
 	}
 
 	// ------------------------------------------------------------------
-	std::size_t version::size () const {
+	std::size_t windows_rs_version::size () const {
 		return m_kv_map.size ();
 	}
 
 	// ------------------------------------------------------------------
-	version::translations_t::const_iterator version::translations_begin () const {
+	windows_rs_version::translations_t::const_iterator windows_rs_version::translations_begin () const {
 		return m_translations.begin ();
 	}
 
 	// ------------------------------------------------------------------
-	version::translations_t::const_iterator version::translations_end () const {
+	windows_rs_version::translations_t::const_iterator windows_rs_version::translations_end () const {
 		return m_translations.end ();
 	}
 
 	// ------------------------------------------------------------------
-	std::size_t version::translations_size () const {
+	std::size_t windows_rs_version::translations_size () const {
 		return m_translations.size ();
 	}
 
 	// ------------------------------------------------------------------
-	void version::_add_translation (uint16_t x) {
+	void windows_rs_version::_add_translation (uint16_t x) {
 		m_translations.push_back (x);
 	}
 	// ====================================================================
@@ -111,9 +111,7 @@ namespace assets::pefile {
 					is.align4 ();
 				}
 			}
-
 			std::wstring name;
-
 		};
 
 		struct text_node_s : public node_s {
@@ -144,10 +142,10 @@ namespace assets::pefile {
 	}
 
 	// -------------------------------------------------------------------
-	void version::load (const windows_pe_file& file, const resource& rn, version& out) {
+	void windows_resource_traits<windows_rs_version>::load (const ms_file& file, const windows_resource& rn, windows_rs_version& out) {
 
 		const std::size_t file_size = file.file_size ();
-		auto offs = rn.offset_in_file (file);
+		auto offs = file.offset_in_file (rn.offset());
 
 		if (offs >= file_size) {
 			return;
@@ -163,13 +161,13 @@ namespace assets::pefile {
 		} u;
 
 		u.w = &out.m_fields[0];
-		stream.read (u.bytes, sizeof (uint32_t) * version::MAX_FIELD);
+		stream.read (u.bytes, sizeof (uint32_t) * windows_rs_version::MAX_FIELD);
 
-		if (out.m_fields[version::dwSignature] != 0xfeef04bd) {
+		if (out.m_fields[windows_rs_version::dwSignature] != 0xfeef04bd) {
 			throw std::runtime_error ("Bad VERSION_INFO signature");
 		}
 		//bool zero_ver = (out.m_fields[version_c::dwStrucVersion] == 0);
-		if (out.m_fields[version::dwStrucVersion] > 0x00010000) {
+		if (out.m_fields[windows_rs_version::dwStrucVersion] > 0x00010000) {
 			throw std::runtime_error ("Bad VERSION_INFO version");
 		}
 		stream.align4 ();

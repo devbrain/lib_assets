@@ -1,35 +1,36 @@
 #include <assets/resources/exe/winres/rs_string_table.hh>
-#include "pefile.hh"
+#include "mz/win_exe/ms_file.hh"
+#include "mz/win_exe/istream_wrapper.hh"
 
-namespace assets::pefile {
-	int string_table::number () const {
+namespace neutrino::assets {
+	int windows_rs_string_table::number () const {
 		return m_num;
 	}
 
 	// ------------------------------------------------------------------
-	string_table::strings_map_t::const_iterator string_table::begin () const {
+	windows_rs_string_table::strings_map_t::const_iterator windows_rs_string_table::begin () const {
 		return m_strings.begin ();
 	}
 
 	// ------------------------------------------------------------------
-	string_table::strings_map_t::const_iterator string_table::end () const {
+	windows_rs_string_table::strings_map_t::const_iterator windows_rs_string_table::end () const {
 		return m_strings.end ();
 	}
 
 	// ------------------------------------------------------------------
-	void string_table::_number (int x) {
+	void windows_rs_string_table::_number (int x) {
 		m_num = x;
 	}
 
 	// ------------------------------------------------------------------
-	void string_table::_bind (int id, const std::wstring& s) {
+	void windows_rs_string_table::_bind (int id, const std::wstring& s) {
 		m_strings[id] = s;
 	}
 
 	// ------------------------------------------------------------------
-	void string_table::load (const windows_pe_file& file, const resource& rn, string_table& out) {
+	void windows_resource_traits<windows_rs_string_table>::load (const ms_file& file, const windows_resource& rn, windows_rs_string_table& out) {
 		const std::size_t file_size = file.file_size ();
-		auto offs = rn.offset_in_file (file);
+		auto offs = file.offset_in_file (rn.offset());
 
 		if (offs >= file_size) {
 			return;

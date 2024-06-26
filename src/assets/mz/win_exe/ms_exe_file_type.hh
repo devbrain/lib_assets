@@ -8,14 +8,12 @@
 #include <iosfwd>
 #include <cstdint>
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	enum ms_exe_file_type {
 		NONE,
 		MSDOS,
 		NE,
-		PE,
-		PE_PLUS,
-		CLR
+		PE
 	};
 
 	static inline constexpr uint16_t IMAGE_DOS_SIGNATURE = 0x5A4D;

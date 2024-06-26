@@ -5,22 +5,13 @@
 #include <assets/resources/exe/winres/resource_directory.hh>
 
 
-namespace assets::pefile {
-	class ASSETS_EXPORT manifest {
-	 public:
-		static constexpr int resource_id () {
-			return 24;
-		}
+namespace neutrino::assets {
+	d_ASSETS_WINDOWS_RESOURCE_TRAITS(windows_rs_manifest, MANIFEST, false);
 
-		static constexpr bool singleton () {
-			return true;
-		}
-
+	class ASSETS_EXPORT windows_rs_manifest {
+	 d_ASSETS_ADD_WINDOWS_RESOURCE_LOADER(windows_rs_manifest);
 	 public:
 		[[nodiscard]] const std::string& text () const;
-
-		static void load (const windows_pe_file& file, const resource& rn, manifest& out);
-
 	 private:
 		void _text (const char* t);
 	 public:

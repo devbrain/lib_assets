@@ -6,17 +6,10 @@
 #include <assets/resources/exe/winres/resource_directory.hh>
 
 
-namespace assets::pefile {
-	class ASSETS_EXPORT message_table {
-	 public:
-		static constexpr int resource_id () {
-			return 11;
-		}
-
-		static constexpr bool singleton () {
-			return false;
-		}
-
+namespace neutrino::assets {
+	d_ASSETS_WINDOWS_RESOURCE_TRAITS(windows_rs_message_table, MESSAGETABLE, false);
+	class ASSETS_EXPORT windows_rs_message_table {
+		d_ASSETS_ADD_WINDOWS_RESOURCE_LOADER(windows_rs_message_table);
 	 public:
 		typedef std::map<uint16_t, std::wstring> msg_table_t;
 	 public:
@@ -25,8 +18,6 @@ namespace assets::pefile {
 
 		[[nodiscard]] bool exists (uint16_t key) const;
 		std::wstring operator[] (uint16_t key) const;
-
-		static void load (const windows_pe_file& file, const resource& rn, message_table& out);
 	 private:
 		std::map<uint16_t, std::wstring> m_messages;
 	};

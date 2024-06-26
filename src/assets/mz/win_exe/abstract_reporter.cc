@@ -1,7 +1,7 @@
 #include <iostream>
 #include "abstract_reporter.hh"
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	abstract_reporter::~abstract_reporter () = default;
 
 	// --------------------------------------------------------

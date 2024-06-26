@@ -2,20 +2,13 @@
 #define __PEFILE_RS_STRING_TABLE_HPP__
 
 #include <map>
-#include "resource_directory.hh"
+#include <assets/resources/exe/winres/resource_directory.hh>
 
-namespace assets::pefile {
-	class windows_pe_file;
+namespace neutrino::assets {
+	d_ASSETS_WINDOWS_RESOURCE_TRAITS(windows_rs_string_table, STRINGTABLE, false);
 
-	class ASSETS_EXPORT string_table {
-	 public:
-		static constexpr int resource_id () {
-			return 6;
-		}
-
-		static constexpr bool singleton () {
-			return false;
-		}
+	class ASSETS_EXPORT windows_rs_string_table {
+	 d_ASSETS_ADD_WINDOWS_RESOURCE_LOADER(windows_rs_string_table);
 
 	 public:
 		typedef std::map<int, std::wstring> strings_map_t;
@@ -25,7 +18,6 @@ namespace assets::pefile {
 		[[nodiscard]] strings_map_t::const_iterator begin () const;
 		[[nodiscard]] strings_map_t::const_iterator end () const;
 
-		static void load (const windows_pe_file& file, const resource& rn, string_table& out);
 	 private:
 		void _number (int x);
 		void _bind (int id, const std::wstring& s);

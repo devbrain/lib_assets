@@ -10,7 +10,7 @@
 #include <vector>
 #include <assets/assets_export.h>
 
-namespace assets::pefile {
+namespace neutrino::assets {
 	using u1 = uint8_t;
 	using u2 = uint16_t;
 	using u4 = uint32_t;
