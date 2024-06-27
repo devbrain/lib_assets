@@ -2,6 +2,7 @@
 #include <assets/resources/exe/winres/resource_directory.hh>
 #include <bsw/strings/wchar.hh>
 #include <bsw/exception.hh>
+#include <array>
 
 #include "mz/win_exe/istream_wrapper.hh"
 #include "mz/win_exe/ms_file.hh"
@@ -88,7 +89,6 @@ namespace neutrino::assets {
 
 			pe_vs_version_info(bsw::istream_wrapper& is, uint16_t expected_size)
 				: pe_ver_node(is), Size(0) {
-
 				is >> Size;
 
 				is.assert_word(version_sec_size);
@@ -145,6 +145,39 @@ namespace neutrino::assets {
 	}
 
 	// -------------------------------------------------------------------
+	using word = uint16_t;
+	using dword = uint32_t;
+	using byte = uint8_t;
+	/* This is actually two headers, with the first (VS_VERSIONINFO)
+	 * describing the second. However it seems the second is always
+	 * a VS_FIXEDFILEINFO header, so we ignore most of those details. */
+	struct ne_version_header {
+		word length; /* 00 */
+		word value_length; /* 02 - always 52 (0x34), the length of the second header */
+		/* the "type" field given by Windows is missing */
+		std::array<byte, 16> string{}; /* 04 - the fixed string VS_VERSION_INFO\0 */
+		dword magic; /* 14 - 0xfeef04bd */
+		word struct_2; /* 18 - seems to always be 1.0 */
+		word struct_1; /* 1a */
+		/* 1.2.3.4 &c. */
+		word file_2; /* 1c */
+		word file_1; /* 1e */
+		word file_4; /* 20 */
+		word file_3; /* 22 */
+		word prod_2; /* 24 - always the same as the above? */
+		word prod_1; /* 26 */
+		word prod_4; /* 28 */
+		word prod_3; /* 2a */
+		dword flags_file_mask; /* 2c - always 2 or 3f...? */
+		dword flags_file; /* 30 */
+		dword flags_os; /* 34 */
+		dword flags_type; /* 38 */
+		dword flags_subtype; /* 3c */
+		dword date_1; /* 40 - always 0? */
+		dword date_2; /* 44 */
+	};
+
+	// -------------------------------------------------------------------
 	void windows_resource_traits <windows_rs_version>::load(const ms_file& file, const windows_resource& rn,
 	                                                        windows_rs_version& out) {
 		const std::size_t file_size = file.file_size();
@@ -155,95 +188,105 @@ namespace neutrino::assets {
 		}
 
 		bsw::istream_wrapper stream(file.stream(), offs, rn.size());
+		if (file.is_pe()) {
+			pe_vs_version_info vs_version_info(stream, static_cast <uint16_t>(rn.size()));
 
-		pe_vs_version_info vs_version_info(stream, static_cast <uint16_t>(rn.size()));
+			union {
+				char* bytes;
+				uint32_t* w;
+			} u;
 
-		union {
-			char* bytes;
-			uint32_t* w;
-		} u;
+			u.w = &out.m_fields[0];
+			stream.read(u.bytes, sizeof(uint32_t) * windows_rs_version::MAX_FIELD);
 
-		u.w = &out.m_fields[0];
-		stream.read(u.bytes, sizeof(uint32_t) * windows_rs_version::MAX_FIELD);
+			if (out.m_fields[windows_rs_version::dwSignature] != 0xfeef04bd) {
+				RAISE_EX("Bad VERSION_INFO signature");
+			}
+			//bool zero_ver = (out.m_fields[version_c::dwStrucVersion] == 0);
+			if (out.m_fields[windows_rs_version::dwStrucVersion] > 0x00010000) {
+				RAISE_EX("Bad VERSION_INFO version");
+			}
+			stream.align4();
 
-		if (out.m_fields[windows_rs_version::dwSignature] != 0xfeef04bd) {
-			RAISE_EX("Bad VERSION_INFO signature");
-		}
-		//bool zero_ver = (out.m_fields[version_c::dwStrucVersion] == 0);
-		if (out.m_fields[windows_rs_version::dwStrucVersion] > 0x00010000) {
-			RAISE_EX("Bad VERSION_INFO version");
-		}
-		stream.align4();
+			uint64_t has_bytes = stream.current_pos();
 
-		uint64_t has_bytes = stream.current_pos();
+			while (has_bytes + 6 < vs_version_info.Size) {
+				const uint16_t string_bytes = static_cast <uint16_t>(stream.current_pos());
 
-		while (has_bytes + 6 < vs_version_info.Size) {
-			const uint16_t string_bytes = static_cast <uint16_t>(stream.current_pos());
+				pe_named_node nm(stream);
 
-			pe_named_node nm(stream);
-
-			if (nm.name == L"StringFileInfo") {
-				pe_named_node lang(stream);
-				if (lang.name.size() != 8) {
-					RAISE_EX("Bad language code");
-				}
-				stream.align4();
-
-				const uint16_t string_table_len = nm.cbNode;
-				while (((uint16_t)stream.current_pos() - string_bytes) < string_table_len) {
-					auto enter = stream.current_pos();
-					pe_text_node tn(stream);
-					if (tn.cbNode == 0) {
-						tn.unread(stream);
-						break;
+				if (nm.name == L"StringFileInfo") {
+					pe_named_node lang(stream);
+					if (lang.name.size() != 8) {
+						RAISE_EX("Bad language code");
 					}
-
-					std::wstring key;
-					std::size_t max_key_len = (tn.cbNode - 6) / sizeof(uint16_t);
-					stream.read_string(key, max_key_len + 1, true);
 					stream.align4();
 
-					if (key == L"VarFileInfo") {
-						std::size_t sz;
+					const uint16_t string_table_len = nm.cbNode;
+					while (((uint16_t)stream.current_pos() - string_bytes) < string_table_len) {
+						auto enter = stream.current_pos();
+						pe_text_node tn(stream);
+						if (tn.cbNode == 0) {
+							tn.unread(stream);
+							break;
+						}
+
+						std::wstring key;
+						std::size_t max_key_len = (tn.cbNode - 6) / sizeof(uint16_t);
+						stream.read_string(key, max_key_len + 1, true);
+						stream.align4();
+
+						if (key == L"VarFileInfo") {
+							std::size_t sz;
+							for (auto tr : pe_parse_ver_translations(stream, sz)) {
+								out._add_translation(tr);
+							}
+						} else {
+							std::wstring value;
+							if (tn.cbData) {
+								auto now = stream.current_pos();
+								auto delta = static_cast <std::size_t>(now - enter);
+								max_key_len = tn.cbData + 1;
+								if (delta < tn.cbNode) {
+									max_key_len = tn.cbNode - delta;
+								}
+								if (max_key_len > stream.size_to_end()) {
+									max_key_len = static_cast <std::size_t>(stream.size_to_end());
+								}
+								stream.read_string(value, max_key_len, false);
+
+								if (tn.pos + tn.cbNode >= stream.size()) {
+									break;
+								}
+								stream.seek(tn.pos + tn.cbNode);
+								if (stream.size_to_end() < 4) {
+									break;
+								}
+								stream.align4();
+							}
+							out._bind(key, value);
+						}
+					}
+				} else {
+					if (nm.name == L"VarFileInfo") {
+						std::size_t sz = 0;
 						for (auto tr : pe_parse_ver_translations(stream, sz)) {
 							out._add_translation(tr);
 						}
-					} else {
-						std::wstring value;
-						if (tn.cbData) {
-							auto now = stream.current_pos();
-							auto delta = static_cast <std::size_t>(now - enter);
-							max_key_len = tn.cbData + 1;
-							if (delta < tn.cbNode) {
-								max_key_len = tn.cbNode - delta;
-							}
-							if (max_key_len > stream.size_to_end()) {
-								max_key_len = static_cast <std::size_t>(stream.size_to_end());
-							}
-							stream.read_string(value, max_key_len, false);
+					}
+				}
 
-							if (tn.pos + tn.cbNode >= stream.size()) {
-								break;
-							}
-							stream.seek(tn.pos + tn.cbNode);
-							if (stream.size_to_end() < 4) {
-								break;
-							}
-							stream.align4();
-						}
-						out._bind(key, value);
-					}
-				}
-			} else {
-				if (nm.name == L"VarFileInfo") {
-					std::size_t sz = 0;
-					for (auto tr : pe_parse_ver_translations(stream, sz)) {
-						out._add_translation(tr);
-					}
-				}
+				has_bytes = stream.current_pos();
 			}
+		} else {
+			ne_version_header h {};
+			stream >> h;
+			out.m_fields[windows_rs_version::dwFileOS] = h.flags_os;
+			out.m_fields[windows_rs_version::dwFileFlags] = h.flags_file;
+			out.m_fields[windows_rs_version::dwFileType] = h.flags_type;
+			out.m_fields[windows_rs_version::dwFileSubtype] = h.flags_subtype;
 
-			has_bytes = stream.current_pos();
+			int z = 0;
 		}
 	}
 } // ns pefile

@@ -26,17 +26,18 @@ namespace neutrino::assets {
 			};
 
 			struct control {
-				uint32_t m_helpid;
-				uint32_t m_extstyle;
-				uint32_t m_style;
-				uint16_t m_x;
-				uint16_t m_y;
-				uint16_t m_w;
-				uint16_t m_h;
-				uint32_t m_id;
+				uint32_t m_helpid{};
+				uint32_t m_extstyle{};
+				uint32_t m_style{};
+				uint16_t m_x{};
+				uint16_t m_y{};
+				uint16_t m_w{};
+				uint16_t m_h{};
+				uint32_t m_id{};
 				windows_resource_name m_ctl_class;
 				windows_resource_name m_title;
 				std::vector <char> m_extra;
+				std::vector<windows_resource_name> m_extra_resources;
 			};
 
 		public:

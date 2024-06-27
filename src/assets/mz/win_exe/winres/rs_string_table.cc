@@ -1,6 +1,7 @@
 #include <assets/resources/exe/winres/rs_string_table.hh>
 #include "mz/win_exe/ms_file.hh"
 #include "mz/win_exe/istream_wrapper.hh"
+#include <bsw/strings/wchar.hh>
 
 namespace neutrino::assets {
 	int windows_rs_string_table::number () const {
@@ -44,18 +45,42 @@ namespace neutrino::assets {
 		int nums = 16 * (id - 1);
 		std::size_t has_bytes = 0;
 		std::size_t block_len = rn.size ();
+
 		while (has_bytes < block_len) {
 			uint16_t len;
-			stream >> len;
-			has_bytes += sizeof (len);
+			if (file.is_pe()) {
+				stream >> len;
+				has_bytes += sizeof (len);
+			} else {
+				uint8_t ne_len;
+				stream >> ne_len;
+				len = ne_len;
+				has_bytes += sizeof (ne_len);
+			}
+
 			if (has_bytes + len > block_len) {
 				break;
 			}
 			if (len != 0) {
-				std::wstring w;
-				stream.read_string (w, len, false);
-				has_bytes += sizeof (uint16_t) * (len);
-				out._bind (nums, w);
+				if (file.is_pe()) {
+					std::wstring w;
+					stream.read_string (w, len, false);
+					has_bytes += sizeof (uint16_t) * (len);
+					out._bind (nums, w);
+				} else {
+					std::string w;
+					stream.read_string (w, len, false);
+					has_bytes += len;
+					try {
+						out._bind (nums, bsw::utf8_to_wstring(w));
+					} catch (std::exception& e) {
+						std::wstring fallback;
+						for (auto c : w) {
+							fallback += static_cast<wchar_t>(c);
+						}
+						out._bind (nums, fallback);
+					}
+				}
 			}
 			nums++;
 		}

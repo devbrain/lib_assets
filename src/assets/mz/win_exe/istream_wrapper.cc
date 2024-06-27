@@ -1,5 +1,6 @@
 #include <sstream>
 #include <vector>
+#include <cstring>
 #include "istream_wrapper.hh"
 #include <bsw/strings/wchar.hh>
 #include <bsw/exception.hh>
@@ -104,6 +105,22 @@ namespace bsw {
 		}
 	}
 
+	void istream_wrapper::assert_string(const char* s, bool align) {
+		const std::size_t n = strlen(s);
+		std::vector <char> d(n + 1, 0);
+		(*this) >> d;
+		for (std::size_t i = 0; i <= n; i++) {
+			const auto e = s[i];
+			const auto a = d[i];
+			if (a != e) {
+				RAISE_EX("expected ", s, " actual ", d.data());
+			}
+		}
+		if (align) {
+			align4();
+		}
+	}
+
 	bool istream_wrapper::check_string(const wchar_t* s, bool align) {
 		uint64_t curr = current_pos();
 		const std::size_t n = wcslen(s);
@@ -113,6 +130,26 @@ namespace bsw {
 			const auto e = s[i];
 			const auto a = d[i];
 			if (a != e && a != (e ^ 0x20)) {
+				seek(curr);
+				return false;
+			}
+		}
+		if (align) {
+			align4();
+		}
+
+		return true;
+	}
+
+	bool istream_wrapper::check_string(const char* s, bool align) {
+		uint64_t curr = current_pos();
+		const std::size_t n = strlen(s);
+		std::vector <char> d(n + 1, 0);
+		(*this) >> d;
+		for (std::size_t i = 0; i <= n; i++) {
+			const auto e = s[i];
+			const auto a = d[i];
+			if (a != e) {
 				seek(curr);
 				return false;
 			}
@@ -145,6 +182,27 @@ namespace bsw {
 		bool has_null = false;
 		for (std::size_t i = 0; i < n; i++) {
 			wchar_t x;
+			(*this) >> x;
+
+			if (x) {
+				result += x;
+			} else {
+				has_null = true;
+				break;
+			}
+		}
+		if (ensure_null && !has_null) {
+			RAISE_EX("Bad string length");
+		}
+	}
+
+	void istream_wrapper::read_string(std::string& result, std::size_t n, bool ensure_null) {
+		if (n == 0) {
+			return;
+		}
+		bool has_null = false;
+		for (std::size_t i = 0; i < n; i++) {
+			char x;
 			(*this) >> x;
 
 			if (x) {

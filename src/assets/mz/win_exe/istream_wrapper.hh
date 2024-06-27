@@ -2,6 +2,7 @@
 #define __BSW_FS_ISTREAM_WRAPPER_HPP__
 
 #include <iostream>
+#include <array>
 #include <stdexcept>
 #include <cstddef>
 #include <optional>
@@ -23,6 +24,7 @@ namespace bsw {
 		friend istream_wrapper& operator>>(istream_wrapper& is, T& x);
 
 		friend istream_wrapper& operator>>(istream_wrapper& is, wchar_t& x);
+
 		public:
 			explicit istream_wrapper(std::istream& is);
 
@@ -41,15 +43,17 @@ namespace bsw {
 
 			void assert_word(uint16_t word);
 			void assert_dword(uint32_t word);
-			void assert_string(const wchar_t* s, bool align = true);
 
+			void assert_string(const wchar_t* s, bool align = true);
 			bool check_string(const wchar_t* s, bool align = true);
+			void read_string(std::wstring& result, std::size_t n, bool ensure_null);
+
+			void assert_string(const char* s, bool align = true);
+			bool check_string(const char* s, bool align = true);
+			void read_string(std::string& result, std::size_t n, bool ensure_null);
 
 			void assert_space(uint64_t s) const;
-
 			void align4();
-
-			void read_string(std::wstring& result, std::size_t n, bool ensure_null);
 
 		private:
 			void _seek(std::streampos pos, bool truncate);
@@ -69,8 +73,24 @@ namespace bsw {
 	}
 
 	template<typename T>
-	istream_wrapper& operator>>(istream_wrapper& is, std::vector<T>& x) {
-		for (std::size_t i=0; i<x.size(); i++) {
+	istream_wrapper& operator>>(istream_wrapper& is, std::vector <T>& x) {
+		for (std::size_t i = 0; i < x.size(); i++) {
+			is >> x[i];
+		}
+		return is;
+	}
+
+	template<typename T, std::size_t N>
+	istream_wrapper& operator>>(istream_wrapper& is, T (&x)[N]) {
+		for (std::size_t i = 0; i < N; i++) {
+			is >> x[i];
+		}
+		return is;
+	}
+
+	template<typename T, std::size_t N>
+		istream_wrapper& operator>>(istream_wrapper& is, std::array<T, N>& x) {
+		for (std::size_t i = 0; i < N; i++) {
 			is >> x[i];
 		}
 		return is;
@@ -78,16 +98,16 @@ namespace bsw {
 
 	template<typename T>
 	istream_wrapper& operator>>(istream_wrapper& is, T& x) {
-		static_assert(!std::is_union_v<T>);
+		static_assert(!std::is_union_v <T>);
 
-		if constexpr (std::is_integral_v<T>) {
+		if constexpr (std::is_integral_v <T>) {
 			is.m_reader >> x;
 		} else {
-			if constexpr (std::is_class_v<T>) {
+			if constexpr (std::is_class_v <T>) {
 				boost::pfr::for_each_field(x, [&is](auto& field) {
 					is >> field;
 				});
-			} else if constexpr (std::is_union_v<T>) {
+			} else if constexpr (std::is_union_v <T>) {
 				RAISE_EX("Should not be here");
 			}
 		}
