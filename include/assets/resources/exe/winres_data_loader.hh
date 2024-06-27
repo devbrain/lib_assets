@@ -6,14 +6,14 @@
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_EXE_DATA_MANAGER_HH_
 
 #include <assets/resources/data_loader.hh>
-#include <assets/resources/exe/unpacked_exe.hh>
+#include <assets/resources/exe/windows_resources.hh>
 #include <assets/assets_export.h>
 
 
 namespace neutrino::assets {
- class ASSETS_EXPORT exe_data_loader : public data_loader<unpacked_exe> {
+ class ASSETS_EXPORT winres_data_loader : public data_loader<windows_resource_directory> {
 	 public:
-		exe_data_loader();
+		winres_data_loader();
 	};
 }
 

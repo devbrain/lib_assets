@@ -9,12 +9,12 @@
 
 #include "mz/win_exe/istream_wrapper.hh"
 #include "mz/win_exe/windows_pe_structs.hh"
-#include <assets/assets_export.h>
 #include "mz/win_exe/ms_file.hh"
+
 namespace neutrino::assets {
 	class abstract_reporter;
 
-	class ASSETS_EXPORT windows_pe_file : public ms_file {
+	class windows_pe_file : public ms_file {
 	 public:
 		typedef std::vector<SECTION> section_t;
 	 public:
@@ -28,6 +28,7 @@ namespace neutrino::assets {
 		[[nodiscard]] uint32_t translate_rva (uint32_t rva) const;
 		[[nodiscard]] std::istream& stream() const override;
 		[[nodiscard]] std::size_t file_size () const override;
+		[[nodiscard]] bool is_pe() const override;
 		[[nodiscard]] std::size_t offset_in_file(uint32_t res_offset) const override;
 		[[nodiscard]] std::size_t overlay_offset () const;
 	 private:
@@ -40,7 +41,6 @@ namespace neutrino::assets {
 		void _load (abstract_reporter& reporter);
 	 private:
 		std::istream& m_stream;
-
 		COFF_HEADER m_coff_header;
 		OPTIONAL_HEADER m_optional_header;
 		section_t m_sections;

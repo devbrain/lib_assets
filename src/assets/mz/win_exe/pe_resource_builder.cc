@@ -1,11 +1,13 @@
 #include "pe_resource_builder.hh"
 #include "windows_pe_file.hh"
 #include "windows_ne_file.hh"
+#include <bsw/strings/wchar.hh>
 
 namespace neutrino::assets {
 	namespace detail {
-		resource_dir_builder::resource_dir_builder(windows_resource_directory& rd)
+		resource_dir_builder::resource_dir_builder(windows_resource_directory& rd, std::unique_ptr<ms_file>&& file)
 			: m_dir(rd.m_dir) {
+			rd.m_file = std::move(file);
 		}
 
 		// ------------------------------------------------------------------------
@@ -33,6 +35,7 @@ namespace neutrino::assets {
 		// -----------------------------------------------------------------------
 		void resource_dir_builder::end_sub_entry() {
 		}
+
 		// =======================================================================
 		struct IMAGE_RESOURCE_DIRECTORY_ENTRY {
 			[[nodiscard]] bool valid() const {
@@ -58,6 +61,12 @@ namespace neutrino::assets {
 				} info;
 			} offset_info;
 		};
+
+		bsw::istream_wrapper& operator >> (bsw::istream_wrapper& is, IMAGE_RESOURCE_DIRECTORY_ENTRY& x) {
+			is >> x.name_info.Name
+			   >> x.offset_info.OffsetToData;
+			return is;
+		}
 
 		static_assert(sizeof(IMAGE_RESOURCE_DIRECTORY_ENTRY)
 		              == 8, "sizeof of IMAGE_RESOURCE_DIRECTORY_ENTRY struct should be 8 bytes");
@@ -96,14 +105,10 @@ namespace neutrino::assets {
 
 			std::wstring s;
 			if (size < stream.size_to_end()) {
-				std::vector<char> data(size*2);
-				stream.read(data.data(), data.size());
-				union {
-					const char* bytes;
-					const wchar_t* words;
-				} u;
-				u.bytes = data.data();
-				s.assign(u.words, u.words + size);
+				std::vector <wchar_t> data(size);
+				stream >> data;
+
+				s.assign(data.data(), data.data() + size);
 			}
 
 			stream.seek(curr);
@@ -167,8 +172,7 @@ namespace neutrino::assets {
 
 		// ------------------------------------------------------------------------
 		void
-		create_res_dir(uint32_t rs_rva, bsw::istream_wrapper& stream, const windows_pe_file& pefile,
-		               resource_dir_builder& rdb) {
+		create_res_dir(uint32_t rs_rva, bsw::istream_wrapper& stream, resource_dir_builder& rdb) {
 			const uint32_t count = count_entries(stream);
 			for (uint32_t i = 0; i < count; i++) {
 				IMAGE_RESOURCE_DIRECTORY_ENTRY entry{};
@@ -191,19 +195,56 @@ namespace neutrino::assets {
 		}
 	} // ns detail
 	// ============================================================================
-	void build_resources(const windows_pe_file& pefile, windows_resource_directory& rd) {
-		const std::size_t file_size = pefile.file_size();
-		const auto& entry = pefile.optional_header().DataDirectory[(int)DataDirectory::Resource];
-		const uint32_t rc_offs = pefile.translate_rva(entry.VirtualAddress);
+	windows_resource_directory build_resources(std::unique_ptr<windows_pe_file>&& pefile) {
+		const std::size_t file_size = pefile->file_size();
+		const auto& entry = pefile->optional_header().DataDirectory[(int)DataDirectory::Resource];
+		const uint32_t rc_offs = pefile->translate_rva(entry.VirtualAddress);
 		if (rc_offs == 0 || (rc_offs + entry.Size) > file_size) {
-			return;
+			RAISE_EX("Resource section is corrupted");
 		}
-		bsw::istream_wrapper stream(pefile.stream(), rc_offs, entry.Size);
-		detail::resource_dir_builder builder(rd);
-		create_res_dir(entry.VirtualAddress, stream, pefile, builder);
+		bsw::istream_wrapper stream(pefile->stream(), rc_offs, entry.Size);
+		windows_resource_directory rd;
+		detail::resource_dir_builder builder(rd, std::move(pefile));
+		create_res_dir(entry.VirtualAddress, stream, builder);
+		return rd;
 	}
 
-	void build_resources (const windows_ne_file& pefile, windows_resource_directory& rd) {
-		pefile.build_resources(rd);
+	windows_resource_directory build_resources(std::unique_ptr<windows_ne_file>&& nefile) {
+		windows_resource_directory out;
+
+		auto types = nefile->get_types_info();
+		const auto align_shift = nefile->get_align_shift();
+
+		detail::resource_dir_builder builder(out, std::move(nefile));
+		windows_resource_name main_name(0);
+
+		for (const auto& ti : types) {
+			windows_resource_name sub_name(0);
+			if (ti.name) {
+				sub_name.name(bsw::utf8_to_wstring(*ti.name));
+			} else {
+				sub_name.id(ti.rtTypeID);
+			}
+			builder.start_main_entry(sub_name);
+
+			for (const auto& ni : ti.rtNameInfo) {
+				const uint32_t offs =  ni.rnOffset << align_shift;
+				const uint32_t size = ni.rnLength << align_shift;
+				windows_resource_name rn;
+				if (ni.name) {
+					rn.name(bsw::utf8_to_wstring(*ni.name));
+				} else {
+					rn.id(ni.rnID);
+				}
+				builder.start_sub_entry(rn);
+				windows_resource r;
+				r.offset(offs);
+				r.size(size);
+				builder.add_to_sub_entry(r);
+				builder.end_sub_entry();
+			}
+			builder.end_main_entry();
+		}
+		return out;
 	}
 } // ns pefile

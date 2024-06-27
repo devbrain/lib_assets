@@ -35,6 +35,7 @@ add_library(assets
         mz/win_exe/windows_ne_file.cc
         mz/win_exe/windows_ne_file.hh
         mz/win_exe/ms_file.hh
+        mz/winres_data_loader.cc
 
         ${PROJECT_INCLUDE}/assets/resources/exe/winres/resource_directory.hh
         ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_manifest.hh
@@ -43,7 +44,8 @@ add_library(assets
         ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_version.hh
         ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_string_table.hh
         ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_dialog.hh
-
+        ${PROJECT_INCLUDE}/assets/resources/exe/windows_resources.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres_data_loader.hh
 
 
         mz/win_exe/windows_pe_file.cc

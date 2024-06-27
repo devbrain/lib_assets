@@ -5,9 +5,12 @@
 #include <stdexcept>
 #include <cstddef>
 #include <optional>
-#include <cstring>
 #include <cstdint>
+#include <vector>
+#include <boost/pfr.hpp>
 #include <type_traits>
+#include <bsw/io/binary_reader.hh>
+#include <bsw/exception.hh>
 
 namespace bsw {
 	class istream_wrapper;
@@ -19,6 +22,7 @@ namespace bsw {
 		template<typename T>
 		friend istream_wrapper& operator>>(istream_wrapper& is, T& x);
 
+		friend istream_wrapper& operator>>(istream_wrapper& is, wchar_t& x);
 		public:
 			explicit istream_wrapper(std::istream& is);
 
@@ -49,18 +53,47 @@ namespace bsw {
 
 		private:
 			void _seek(std::streampos pos, bool truncate);
-			std::istream* stream;
+			std::istream& m_stream;
+			io::binary_reader m_reader;
 			std::optional <std::streampos> m_old_pos;
 			std::size_t m_size;
 			std::streampos m_start_pos;
 	};
 
-	template<typename T>
 	inline
+	istream_wrapper& operator>>(istream_wrapper& is, wchar_t& x) {
+		uint16_t u;
+		is.m_reader >> u;
+		x = u;
+		return is;
+	}
+
+	template<typename T>
+	istream_wrapper& operator>>(istream_wrapper& is, std::vector<T>& x) {
+		for (std::size_t i=0; i<x.size(); i++) {
+			is >> x[i];
+		}
+		return is;
+	}
+
+	template<typename T>
 	istream_wrapper& operator>>(istream_wrapper& is, T& x) {
-		is.stream->read(reinterpret_cast <char*>(&x), sizeof (x));
-		if (!(*is.stream)) {
-			throw std::runtime_error("I/O error");
+		static_assert(!std::is_union_v<T>);
+
+		if constexpr (std::is_integral_v<T>) {
+			is.m_reader >> x;
+		} else {
+			if constexpr (std::is_class_v<T>) {
+				boost::pfr::for_each_field(x, [&is](auto& field) {
+					is >> field;
+				});
+			} else if constexpr (std::is_union_v<T>) {
+				RAISE_EX("Should not be here");
+			}
+		}
+
+		if (!is.m_stream) {
+			RAISE_EX("I/O error");
 		}
 		return is;
 	}

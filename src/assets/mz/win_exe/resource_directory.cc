@@ -1,10 +1,9 @@
-#include <iostream>
-#include <sstream>
-#include <stdexcept>
+#include <assets/resources/exe/winres/resource_directory.hh>
 
 #include "windows_pe_file.hh"
-#include <assets/resources/exe/winres/resource_directory.hh>
-#include "bsw/strings/wchar.hh"
+#include <bsw/strings/wchar.hh>
+#include <bsw/exception.hh>
+#include <bsw/strings/number_formatter.hh>
 
 namespace neutrino::assets {
 	std::string to_string(windows_resource_type resource_type) {
@@ -33,7 +32,7 @@ namespace neutrino::assets {
 			case ANIICON: return "ANIICON";
 			case HTML: return "HTML";
 			case MANIFEST: return "MANIFEST";
-			default: return "<UNKNONW>";
+			default: return bsw::number_formatter::format(resource_type);
 		}
 	}
 
@@ -76,22 +75,6 @@ namespace neutrino::assets {
 	void windows_resource_name::name(const std::wstring& x) {
 		m_value.first = -1;
 		m_value.second = x;
-	}
-
-	// --------------------------------------------------------------------
-	bool windows_resource_name::is_special() const {
-		if (is_id()) {
-			if (m_value.first >= CURSOR && m_value.first <= MANIFEST && m_value.first != 18) {
-				return true;
-			}
-			switch (m_value.first) {
-				case NEWBITMAP:
-				case NEWMENU:
-				case NEWDIALOG: return true;
-				default: return false;
-			}
-		}
-		return false;
 	}
 
 	// --------------------------------------------------------------------
@@ -169,9 +152,7 @@ namespace neutrino::assets {
 	windows_resource_directory::iterator windows_resource_directory::begin(const windows_resource_name& rn) const {
 		auto i = m_dir.find(rn);
 		if (i == m_dir.end()) {
-			std::ostringstream os;
-			os << "No main section found for " << rn;
-			throw std::runtime_error(os.str());
+			RAISE_EX("No main section found for ", rn);
 		}
 		return i->second.begin();
 	}
@@ -180,9 +161,7 @@ namespace neutrino::assets {
 	windows_resource_directory::iterator windows_resource_directory::end(const windows_resource_name& rn) const {
 		auto i = m_dir.find(rn);
 		if (i == m_dir.end()) {
-			std::ostringstream os;
-			os << "No main section found for " << rn;
-			throw std::runtime_error(os.str());
+			RAISE_EX("No main section found for ", rn);
 		}
 		return i->second.end();
 	}
@@ -203,19 +182,25 @@ namespace neutrino::assets {
 		return names_iterator(m_dir.end());
 	}
 
+	windows_resource_directory::windows_resource_directory() = default;
+
+	windows_resource_directory::windows_resource_directory(windows_resource_directory&& other) noexcept = default;
+
+	windows_resource_directory::~windows_resource_directory() = default;
+
 	// =======================================================================
 	windows_resource_directory::names_iterator& windows_resource_directory::names_iterator::operator++() {
-		m_itr++;
+		++m_itr;
 		return *this;
 	}
 
 	// -----------------------------------------------------------------------
-	bool windows_resource_directory::names_iterator::operator==(const names_iterator& a) {
+	bool windows_resource_directory::names_iterator::operator==(const names_iterator& a) const {
 		return this->m_itr == a.m_itr;
 	}
 
 	// -----------------------------------------------------------------------
-	bool windows_resource_directory::names_iterator::operator!=(const names_iterator& a) {
+	bool windows_resource_directory::names_iterator::operator!=(const names_iterator& a) const {
 		return !(*this == a);
 	}
 

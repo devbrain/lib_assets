@@ -9,6 +9,7 @@
 #include "ms_exe_file_type.hh"
 #include "pe_resource_builder.hh"
 #include <bsw/strings/wchar.hh>
+#include <bsw/exception.hh>
 #include <assets/resources/detail/istream_pos_keeper.hh>
 
 #define ID_MASK                             0x7FFF
@@ -40,16 +41,16 @@ namespace neutrino::assets {
 	}
 
 	static std::string read_string(std::istream& is, uint32_t offs) {
-		neutrino::assets::detail::istream_pos_keeper keeper(is);
+		const detail::istream_pos_keeper keeper(is);
 		if (!is.seekg(offs, std::ios::beg)) {
 			is.seekg(keeper.curr, std::ios::beg);
 		}
 		uint8_t length;
-		is.read((char*)&length, 1);
+		is.read(reinterpret_cast <char*>(&length), 1);
 		std::string out;
 		for (unsigned i = 0; i < length; i++) {
 			char b;
-			is.read((char*)&b, 1);
+			is.read(&b, 1);
 			out += b;
 		}
 		return out;
@@ -59,26 +60,26 @@ namespace neutrino::assets {
 		: m_stream(stream) {
 		bsw::istream_wrapper is(stream);
 
-		std::streampos fsize = is.size_to_end();
+		const std::streampos fsize = is.size_to_end();
 		m_file_size = fsize;
 
 		uint16_t old_dos_magic;
 		is >> old_dos_magic;
 		if (old_dos_magic != IMAGE_DOS_SIGNATURE) {
-			throw std::runtime_error("Not a MZ file");
+			RAISE_EX("Not a MZ file");
 		}
 		is.advance(26 + 32);
 		int32_t lfanew;
 		is >> lfanew;
 		if (lfanew < 0 || lfanew > fsize) {
-			throw std::runtime_error("Not a PE file");
+			RAISE_EX("Not a NE file");
 		}
 		// read coff magic
 		is.seek(lfanew);
 		uint16_t ne_magic;
 		is >> ne_magic;
 		if (ne_magic != IMAGE_NE_SIGNATURE) {
-			throw std::runtime_error("Not a PE file");
+			RAISE_EX("Not a NE file");
 		}
 
 		is.advance(34);
@@ -86,7 +87,7 @@ namespace neutrino::assets {
 		uint16_t res_table_offset;
 		is >> res_table_offset >> resident_tab;
 		if (res_table_offset == resident_tab) {
-			throw std::runtime_error("No resources found");
+			return;
 		}
 		uint32_t rc_offset = lfanew + res_table_offset;
 		is.seek(rc_offset);
@@ -126,40 +127,6 @@ namespace neutrino::assets {
 		return m_types_info;
 	}
 
-	void windows_ne_file::build_resources(windows_resource_directory& out) const {
-		detail::resource_dir_builder builder(out);
-		windows_resource_name main_name(0);
-
-		for (const auto& ti : m_types_info) {
-			windows_resource_name sub_name(0);
-			if (ti.name) {
-				sub_name.name(bsw::utf8_to_wstring(*ti.name));
-			} else {
-				sub_name.id(ti.rtTypeID);
-			}
-			builder.start_main_entry(sub_name);
-
-			for (std::size_t j = 0; j < ti.rtNameInfo.size(); j++) {
-				const auto& ni = ti.rtNameInfo[j];
-				uint32_t offs = (1 << m_align_shift) * ni.rnOffset;
-				uint16_t ordinal = translate_id(ni.rnID);
-				uint32_t size = (1 << m_align_shift) * ni.rnLength;
-				windows_resource_name rn;
-				if (ni.name) {
-					rn.name(bsw::utf8_to_wstring(*ni.name));
-				} else {
-					rn.id(ni.rnID);
-				}
-				windows_resource r;
-				r.name(rn);
-				r.offset(offs);
-				r.size(size);
-				builder.add_to_sub_entry(r);
-			}
-			builder.end_main_entry();
-		}
-	}
-
 	std::istream& windows_ne_file::stream() const {
 		return m_stream;
 	}
@@ -170,5 +137,9 @@ namespace neutrino::assets {
 
 	std::size_t windows_ne_file::offset_in_file(uint32_t res_offset) const {
 		return res_offset;
+	}
+
+	bool windows_ne_file::is_pe() const {
+		return false;
 	}
 }

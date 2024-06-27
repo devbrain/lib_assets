@@ -54,7 +54,7 @@ namespace neutrino::assets {
 			if (len != 0) {
 				std::wstring w;
 				stream.read_string (w, len, false);
-				has_bytes += sizeof (wchar_t) * (len);
+				has_bytes += sizeof (uint16_t) * (len);
 				out._bind (nums, w);
 			}
 			nums++;

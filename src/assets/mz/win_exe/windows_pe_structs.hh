@@ -9,6 +9,7 @@
 #include <iosfwd>
 #include <vector>
 #include <assets/assets_export.h>
+#include "mz/win_exe/istream_wrapper.hh"
 
 namespace neutrino::assets {
 	using u1 = uint8_t;
@@ -190,6 +191,7 @@ namespace neutrino::assets {
 	};
 
 	class ASSETS_EXPORT SECTION_NAME {
+		friend bsw::istream_wrapper& operator>>(bsw::istream_wrapper& is, SECTION_NAME& x);
 		public:
 			SECTION_NAME();
 			explicit SECTION_NAME(u8 a);
@@ -207,6 +209,12 @@ namespace neutrino::assets {
 	ASSETS_EXPORT bool operator==(const SECTION_NAME& a, const SECTION_NAME& b);
 	ASSETS_EXPORT bool operator!=(const SECTION_NAME& a, const SECTION_NAME& b);
 	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, const SECTION_NAME& s);
+
+	inline
+	bsw::istream_wrapper& operator>>(bsw::istream_wrapper& is, SECTION_NAME& x) {
+		is >> x.name.Qword;
+		return is;
+	}
 
 	struct ASSETS_EXPORT SECTION {
 		SECTION_NAME Name;

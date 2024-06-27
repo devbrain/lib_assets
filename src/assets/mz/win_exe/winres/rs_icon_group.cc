@@ -47,10 +47,18 @@ namespace neutrino::assets {
 			return;
 		}
 		for (uint16_t i = 0; i < hdr.wCount; i++) {
-			stream.advance (4 * sizeof (uint8_t) + 2 * sizeof (uint16_t) + sizeof (uint32_t));
-			uint16_t ordinal;
-			stream >> ordinal;
-			out._add_group (rn.name ().id (), ordinal);
+			uint8_t   bWidth;               // Width, in pixels, of the image
+			uint8_t   bHeight;              // Height, in pixels, of the image
+			uint8_t   bColorCount;          // Number of colors in image (0 if >=8bpp)
+			uint8_t   bReserved;            // Reserved
+			uint16_t   wPlanes;              // Color Planes
+			uint16_t   wBitCount;            // Bits per pixel
+			uint32_t   dwBytesInRes;         // how many bytes in this resource?
+			uint16_t   nID;                  // the ID
+			//stream.advance (4 * sizeof (uint8_t) + 2 * sizeof (uint16_t) + sizeof (uint32_t));
+			//uint16_t ordinal;
+			stream >> bWidth >> bHeight >> bColorCount >> bReserved >> wPlanes >> wBitCount >> dwBytesInRes >> nID;
+			out._add_group (rn.name ().id (), nID);
 		}
 	}
 

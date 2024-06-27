@@ -1,43 +1,41 @@
-#include <iostream>
 #include "abstract_reporter.hh"
+#include <bsw/logger/logger.hh>
 
 namespace neutrino::assets {
-	abstract_reporter::~abstract_reporter () = default;
+	abstract_reporter::~abstract_reporter() = default;
 
 	// --------------------------------------------------------
-	void abstract_reporter::invalid_enum_value (header_field_t f, uint64_t actual_value) {
-		std::cout << "Bad value for " << f << " 0x" << std::hex << actual_value << std::dec << std::endl;
+	void abstract_reporter::invalid_enum_value(header_field_t f, uint64_t actual_value) {
+		EVLOG_TRACE(EVLOG_WARNING, "Bad value for ", f, " ", actual_value);
 	}
 
 	// --------------------------------------------------------
-	void abstract_reporter::invalid_field_value (header_field_t f, uint64_t actual_value) {
-		std::cout << "Bad value for " << f << " 0x" << std::hex << actual_value
-				  << std::dec << std::endl;
+	void abstract_reporter::invalid_field_value(header_field_t f, uint64_t actual_value) {
+		EVLOG_TRACE(EVLOG_WARNING, "Bad value for ", f, " ", actual_value);
 	}
 
 	// --------------------------------------------------------
-	void abstract_reporter::unknown_flag_set (header_field_t f, uint64_t actual_value) {
-		std::cout << "Unknown flag set in " << f << " 0x" << std::hex << actual_value
-				  << std::dec << std::endl;
+	void abstract_reporter::unknown_flag_set(header_field_t f, uint64_t actual_value) {
+		EVLOG_TRACE(EVLOG_WARNING, "Unknown flag set in ", f, " ", actual_value);
 	}
 
 	// --------------------------------------------------------
-	void abstract_reporter::invalid_struct_length (struct_name_t name, uint64_t expected, uint64_t actual) {
-		std::cout << "Invalid " << name << " length. Expected " << expected << ", actual " << actual << std::endl;
+	void abstract_reporter::invalid_struct_length(struct_name_t name, uint64_t expected, uint64_t actual) {
+		EVLOG_TRACE(EVLOG_WARNING, "Invalid ", name, " length. Expected ", expected, ", actual ", actual);
 	}
 
 	// --------------------------------------------------------
-	void abstract_reporter::should_be_zero (reserved_field_t f, uint64_t actual_value) {
-		std::cout << f << " should be zero, but it is " << actual_value << std::endl;
+	void abstract_reporter::should_be_zero(reserved_field_t f, uint64_t actual_value) {
+		EVLOG_TRACE(EVLOG_WARNING, f, " should be zero, but it is ", actual_value);
 	}
 
 	// --------------------------------------------------------
-	void abstract_reporter::bad_checksum () {
-		std::cout << "Bad checksum" << std::endl;
+	void abstract_reporter::bad_checksum() {
+		EVLOG_TRACE(EVLOG_WARNING, "Bad checksum");
 	}
 
 	// ========================================================
-	std::ostream& operator<< (std::ostream& os, abstract_reporter::header_field_t f) {
+	std::ostream& operator<<(std::ostream& os, abstract_reporter::header_field_t f) {
 		switch (f) {
 			case abstract_reporter::COFF_HEADER_MACHINE_TYPE: os << "COFF_HEADER::Machine";
 				break;
@@ -63,7 +61,7 @@ namespace neutrino::assets {
 	}
 
 	// ---------------------------------------------------------------------
-	std::ostream& operator<< (std::ostream& os, abstract_reporter::struct_name_t f) {
+	std::ostream& operator<<(std::ostream& os, abstract_reporter::struct_name_t f) {
 		switch (f) {
 			case abstract_reporter::OPTIONAL_HEADER: os << "OPTIONAL_HEADER";
 				break;
@@ -73,7 +71,7 @@ namespace neutrino::assets {
 	}
 
 	// ------------------------------------------------------------------------
-	std::ostream& operator<< (std::ostream& os, abstract_reporter::reserved_field_t f) {
+	std::ostream& operator<<(std::ostream& os, abstract_reporter::reserved_field_t f) {
 		switch (f) {
 			case abstract_reporter::OPTIONAL_HEADER_WIN32VERSIONVALUE: os << "OPTIONAL_HEADER::Win32VersionValue";
 				break;
@@ -82,6 +80,5 @@ namespace neutrino::assets {
 			default: os << "--- UNKNOWN ---";
 		}
 		return os;
-
 	}
 } // ns pefile

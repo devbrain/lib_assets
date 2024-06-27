@@ -14,6 +14,7 @@ namespace neutrino::assets {
 			[[nodiscard]] virtual std::istream& stream() const = 0;
 			[[nodiscard]] virtual std::size_t file_size() const = 0;
 			[[nodiscard]] virtual std::size_t offset_in_file(uint32_t res_offset) const = 0;
+			[[nodiscard]] virtual bool is_pe() const = 0;
 	};
 }
 

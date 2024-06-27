@@ -17,10 +17,9 @@ namespace neutrino::assets {
 	};
 
 	static inline constexpr uint16_t IMAGE_DOS_SIGNATURE = 0x5A4D;
-	static inline constexpr uint32_t IMAGE_NT_SIGNATURE  = 0x00004550;
-	static inline constexpr uint16_t IMAGE_NE_SIGNATURE  = 0x454E;
+	static inline constexpr uint32_t IMAGE_NT_SIGNATURE = 0x00004550;
+	static inline constexpr uint16_t IMAGE_NE_SIGNATURE = 0x454E;
 	ms_exe_file_type get_ms_exe_file_type(std::istream& is);
 }
-
 
 #endif

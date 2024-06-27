@@ -1,6 +1,7 @@
 #ifndef __PEFILE_RESOURCE_BUILDER_HPP__
 #define __PEFILE_RESOURCE_BUILDER_HPP__
 
+#include <memory>
 #include <assets/resources/exe/winres/resource_directory.hh>
 
 namespace neutrino::assets {
@@ -10,7 +11,7 @@ namespace neutrino::assets {
 	namespace detail {
 		class resource_dir_builder {
 			public:
-				explicit resource_dir_builder(windows_resource_directory& rd);
+				resource_dir_builder(windows_resource_directory& rd, std::unique_ptr<ms_file>&& file);
 
 				void start_main_entry(const windows_resource_name& rcname);
 				void end_main_entry();
@@ -29,12 +30,10 @@ namespace neutrino::assets {
 				windows_resource_name m_curr_main_entry;
 				windows_resource_name m_curr_sub_entry;
 		};
-
-
 	}
 
-	void build_resources(const windows_pe_file& pefile, windows_resource_directory& rd);
-	void build_resources(const windows_ne_file& pefile, windows_resource_directory& rd);
+	windows_resource_directory build_resources(std::unique_ptr<windows_pe_file>&& pefile);
+	windows_resource_directory build_resources(std::unique_ptr<windows_ne_file>&& pefile);
 } // ns pefile
 
 #endif

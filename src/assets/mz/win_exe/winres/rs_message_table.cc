@@ -1,5 +1,6 @@
 #include <assets/resources/exe/winres/rs_message_table.hh>
 #include <bsw/strings/wchar.hh>
+#include <bsw/exception.hh>
 #include "mz/win_exe/ms_file.hh"
 #include "mz/win_exe/istream_wrapper.hh"
 
@@ -52,10 +53,10 @@ namespace neutrino::assets {
 		std::vector<msg_block_s> blocks;
 		blocks.reserve (num_blocks);
 		for (uint32_t i = 0; i < num_blocks; i++) {
-			msg_block_s b;
+			msg_block_s b{};
 			is >> b.idlo >> b.idhi >> b.offs;
 			if (b.idlo > b.idhi) {
-				throw std::runtime_error ("b.idlo > b.idhi");
+				RAISE_EX ("b.idlo > b.idhi");
 			}
 			blocks.push_back (b);
 		}
@@ -63,7 +64,7 @@ namespace neutrino::assets {
 		for (auto b : blocks) {
 			is.seek (b.offs);
 
-			uint16_t id = static_cast <uint16_t>(b.idlo);
+			auto id = static_cast <uint16_t>(b.idlo);
 			while (id < b.idhi) {
 				if (is.size_to_end () < 4) {
 					break;
@@ -72,7 +73,7 @@ namespace neutrino::assets {
 				uint16_t isunicode;
 				is >> len >> isunicode;
 				if (len < 4) {
-					throw std::runtime_error ("Illegal message block length");
+					RAISE_EX ("Illegal message block length");
 				}
 				if (is.size_to_end () < len - 4) {
 					break;
@@ -84,10 +85,16 @@ namespace neutrino::assets {
 				if (isunicode) {
 					union {
 						char* c;
-						wchar_t* w;
-					} u;
+						uint16_t* w;
+					} u {};
 					u.c = text.data ();
-					std::wstring w = u.w;
+					uint16_t* wptr = u.w;
+					std::wstring w;
+					while (*wptr) {
+						w += static_cast <wchar_t>(*wptr);
+						wptr++;
+					}
+
 					out.m_messages[id] = w;
 					id++;
 

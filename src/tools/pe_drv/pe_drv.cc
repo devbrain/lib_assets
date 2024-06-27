@@ -1,8 +1,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <fstream>
-#include "mz/win_exe/windows_ne_file.hh"
-#include "assets/resources/exe/winres/rs_icon_group.hh"
+#include <assets/resources/exe/winres_data_loader.hh>
+#include <bsw/io/binary_reader.hh>
 
 
 int main(int argc, char* argv[])
@@ -18,24 +18,19 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "Parsing " << infile << std::endl;
 		std::ifstream ifs(infile, std::ios::in | std::ios::binary);
-		windows_ne_file exe(ifs);
-		//manifest v;
-		//exe.load_resource(v);
-		windows_resource_directory rd;
-		exe.build_resources(rd);
-		auto ni = rd.names_begin ();
-		auto end = rd.names_end ();
-		bool found = false;
-		windows_rs_icon_group out;
-		for (auto i = ni; i != end; ++i) {
-
-				if (i->is_id () && i->id () == windows_resource_traits<windows_rs_icon_group>::id) {
-					for (auto j = rd.begin (*i); j != rd.end (*i); j++) {
-						found = true;
-						windows_resource_traits<windows_rs_icon_group>::load (exe, j->second, out);
-					}
-				}
+		winres_data_loader dm;
+		auto rd = dm.load(ifs);
+		for (auto i = rd.names_begin(); i != rd.names_end(); ++i) {
+			if (i->id()) {
+				std::cout << to_string(static_cast<windows_resource_type>(i->id())) << std::endl;
+			} else {
+				std::cout << *i << std::endl;
+			}
+			for (auto j = rd.begin(*i); j != rd.end(*i); ++j) {
+				std::cout << "\t" << j->first << std::endl;
+			}
 		}
+		auto v = rd.load<windows_rs_version>();
 		return 0;
 	}
 	catch (std::exception& e)

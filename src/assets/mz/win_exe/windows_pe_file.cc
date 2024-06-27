@@ -1,13 +1,11 @@
 #include <algorithm>
-#include <stdexcept>
-#include <iostream>
-
+#include <boost/pfr.hpp>
 #include "windows_pe_file.hh"
 #include "abstract_reporter.hh"
 #include "mz/win_exe/windows_pe_structs.hh"
-
+#include "mz/win_exe/ms_exe_file_type.hh"
 #include "assets/resources/detail/istream_pos_keeper.hh"
-#include "assets/resources/exe/unpacked_exe.hh"
+
 
 static bool is_power_of_two (unsigned int x) {
 	return (
@@ -173,18 +171,13 @@ namespace neutrino::assets {
 
 	// ===========================================================================
 	void windows_pe_file::_load (abstract_reporter& reporter) {
-		if (!m_stream) {
-			throw std::runtime_error ("Failed to open file");
-		}
+
 		bsw::istream_wrapper stream (m_stream);
 
-
-		static const uint16_t IMAGE_DOS_SIGNATURE = 0x5A4D;
-		static const uint32_t IMAGE_NT_SIGNATURE = 0x00004550;
 		uint16_t old_dos_magic;
 		stream >> old_dos_magic;
 		if (old_dos_magic != IMAGE_DOS_SIGNATURE) {
-			throw std::runtime_error ("Not a MZ file");
+			RAISE_EX ("Not a MZ file");
 		}
 		stream.advance (26 + 32);
 		int32_t lfanew;
@@ -192,14 +185,14 @@ namespace neutrino::assets {
 		const auto fsize = file_size();
 
 		if (lfanew < 0 || lfanew > fsize ) {
-			throw std::runtime_error ("Not a PE file");
+			RAISE_EX ("Not a PE file");
 		}
 		// read coff magic
 		stream.seek (lfanew);
 		uint32_t pe_magic;
 		stream >> pe_magic;
 		if (pe_magic != IMAGE_NT_SIGNATURE) {
-			throw std::runtime_error ("Not a PE file");
+			RAISE_EX ("Not a PE file");
 		}
 		_load_headers (stream, reporter);
 		_load_sections (stream, reporter);
@@ -241,6 +234,10 @@ namespace neutrino::assets {
 		return rc;
 	}
 
+	bool windows_pe_file::is_pe() const {
+		return true;
+	}
+
 	std::size_t windows_pe_file::offset_in_file(uint32_t res_offset) const {
 		return translate_rva(res_offset);
 	}
@@ -248,7 +245,6 @@ namespace neutrino::assets {
 	// --------------------------------------------------------------
 	std::size_t windows_pe_file::overlay_offset () const {
 		const section_t& table = sections ();
-		const OPTIONAL_HEADER& opt = optional_header ();
 		std::size_t offset = 0;
 		if (table.empty ()) {
 			offset = file_size ();
@@ -324,7 +320,7 @@ namespace neutrino::assets {
 				assign (m_optional_header, &header64);
 			} else {
 				reporter.invalid_field_value (abstract_reporter::OPTIONAL_HEADER_MAGIC, pe_kind);
-				throw std::runtime_error ("Unknown type of the OPTIONAL_HEADER");
+				RAISE_EX ("Unknown type of the OPTIONAL_HEADER");
 			}
 		}
 		m_optional_header.DataDirectory.resize (m_optional_header.NumberOfRvaAndSizes);
@@ -412,6 +408,6 @@ namespace neutrino::assets {
 		return m_sections;
 	}
 
-	// ================================================================================
+
 
 } // ns pefile

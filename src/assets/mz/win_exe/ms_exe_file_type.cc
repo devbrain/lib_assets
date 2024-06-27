@@ -10,14 +10,14 @@ namespace neutrino::assets {
 	ms_exe_file_type get_ms_exe_file_type(std::istream& is) {
 		detail::istream_pos_keeper keeper(is);
 
-		bsw::istream_wrapper stream (is);
+		bsw::istream_wrapper stream(is);
 
 		uint16_t old_dos_magic;
 		stream >> old_dos_magic;
 		if (old_dos_magic != IMAGE_DOS_SIGNATURE) {
 			return NONE;
 		}
-		stream.advance (26 + 32);
+		stream.advance(26 + 32);
 		int32_t lfanew;
 		stream >> lfanew;
 		auto fsize = stream.size();
@@ -26,15 +26,17 @@ namespace neutrino::assets {
 			return MSDOS;
 		}
 		// read coff magic
-		stream.seek (lfanew);
+		stream.seek(lfanew);
 		uint32_t pe_magic;
 		stream >> pe_magic;
-		if (pe_magic == IMAGE_NE_SIGNATURE) {
-			return NE;
-		}
 		if (pe_magic == IMAGE_NT_SIGNATURE) {
 			return PE;
 		}
+		pe_magic = pe_magic & 0xFFFF;
+		if (pe_magic == IMAGE_NE_SIGNATURE) {
+			return NE;
+		}
+
 		return MSDOS;
 	}
 }

@@ -1,5 +1,5 @@
 #include <assets/resources/exe/winres/rs_dialog.hh>
-#include <stdexcept>
+#include <bsw/exception.hh>
 #include "mz/win_exe/istream_wrapper.hh"
 #include "mz/win_exe/ms_file.hh"
 
@@ -30,7 +30,7 @@ namespace neutrino::assets {
 					}
 				}
 				if (!term) {
-					throw std::runtime_error ("String should be null terminated");
+					RAISE_EX ("String should be null terminated");
 				}
 				return windows_resource_name (nm);
 			}
@@ -112,7 +112,7 @@ namespace neutrino::assets {
 			is >> extra_size;
 			if (extra_size) {
 				if (extra_size < 2) {
-					throw std::runtime_error ("Illegal extasize");
+					RAISE_EX ("Illegal extasize");
 				}
 				ctl.m_extra.resize (extra_size - 2);
 				is.read (ctl.m_extra.data (), ctl.m_extra.size ());
