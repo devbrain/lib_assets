@@ -36,6 +36,8 @@ add_library(assets
         mz/win_exe/windows_ne_file.hh
         mz/win_exe/ms_file.hh
         mz/winres_data_loader.cc
+        mz/windows_resources_loader.cc
+        mz/windows_resources_loader.hh
 
         ${PROJECT_INCLUDE}/assets/resources/exe/winres/resource_directory.hh
         ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_manifest.hh
@@ -102,6 +104,14 @@ add_library(assets
         ${PROJECT_INCLUDE}/assets/resources/font/ttf_data_loader.hh
         font/bgi_font_data_loader.cc
         font/ttf_data_loader.cc
+
+        ${PROJECT_INCLUDE}/assets/resources/tileset/tileset.hh
+        ${PROJECT_INCLUDE}/assets/resources/tileset/tileset_data_loader.hh
+        tileset/tileset.cc
+        tileset/tileset_data_loader.cc
+        tileset/win_icon_loader.cc
+        tileset/win_icon_loader.hh
+
 
 #        tmx/animation.cc
 #        tmx/animation.hh

@@ -140,6 +140,17 @@ namespace neutrino::assets {
 			[[nodiscard]] names_iterator names_begin() const;
 			[[nodiscard]] names_iterator names_end() const;
 
+
+		template <typename ResType>
+		[[nodiscard]] bool exists() const {
+			for (auto i = names_begin(); i != names_end(); ++i) {
+				if (i->is_id() && i->id() == windows_resource_traits<ResType>::id) {
+					return begin(*i) != end(*i);
+				}
+			}
+			return false;
+		}
+
 		template <typename ResType>
 		std::enable_if_t<windows_resource_traits<ResType>::singleton, std::optional<std::tuple<windows_resource_name, ResType>>>
 		load() const {
