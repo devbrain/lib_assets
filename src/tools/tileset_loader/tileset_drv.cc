@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 		std::ifstream ifs(infile, std::ios::in | std::ios::binary);
 		tileset_data_loader dm;
 		auto ts = dm.load(ifs);
-
+		ts.get_surface().save_bmp("zopa.bmp");
 		return 0;
 	}
 	catch (std::exception& e)
