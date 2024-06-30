@@ -5,11 +5,11 @@
 #ifndef NEUTRINO_TILE_HH
 #define NEUTRINO_TILE_HH
 
-#include "component.hh"
-#include "image.hh"
-#include "object_layer.hh"
-#include "animation.hh"
-#include "reader.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/image.hh"
+#include "world/tmx/object_layer.hh"
+#include "world/tmx/animation.hh"
+#include "world/tmx/reader.hh"
 
 #include <memory>
 #include <array>

@@ -7,7 +7,7 @@
 
 #include <optional>
 #include <bsw/spimpl.h>
-#include "reader.hh"
+#include "world/tmx/reader.hh"
 
 namespace pugi {
   class xml_node;

@@ -9,8 +9,8 @@
 #include <optional>
 #include <vector>
 #include <sdlpp/video/geometry.hh>
-#include "reader.hh"
-#include "json_reader.hh"
+#include "world/tmx/reader.hh"
+#include "world/tmx/json_reader.hh"
 #include <memory>
 
 namespace neutrino::assets::tmx {

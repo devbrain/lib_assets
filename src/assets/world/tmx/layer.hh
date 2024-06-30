@@ -5,8 +5,8 @@
 #ifndef NEUTRINO_LAYER_HH
 #define NEUTRINO_LAYER_HH
 
-#include "component.hh"
-#include "reader.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/reader.hh"
 #include <tuple>
 
 namespace neutrino::assets::tmx {

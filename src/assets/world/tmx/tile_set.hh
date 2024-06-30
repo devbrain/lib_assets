@@ -5,13 +5,13 @@
 #ifndef NEUTRINO_TILE_SET_HH
 #define NEUTRINO_TILE_SET_HH
 
-#include "component.hh"
-#include "image.hh"
-#include "terrain.hh"
-#include "tile.hh"
-#include "reader.hh"
-#include "assets/resources/world/path_resolver.hh"
-#include "wang_set.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/image.hh"
+#include "world/tmx/terrain.hh"
+#include "world/tmx/tile.hh"
+#include "world/tmx/reader.hh"
+#include <assets/resources/world/path_resolver.hh>
+#include "world/tmx/wang_set.hh"
 #include <sdlpp/video/geometry.hh>
 #include <utility>
 #include <vector>

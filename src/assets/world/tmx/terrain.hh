@@ -5,8 +5,8 @@
 #ifndef NEUTRINO_TERRAIN_HH
 #define NEUTRINO_TERRAIN_HH
 
-#include "component.hh"
-#include "reader.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/reader.hh"
 
 namespace neutrino::assets::tmx {
   /**

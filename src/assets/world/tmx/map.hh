@@ -8,18 +8,18 @@
 #include <utility>
 #include <variant>
 
-#include "component.hh"
-#include "layer.hh"
-#include "tile_set.hh"
-#include "reader.hh"
-#include "color.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/layer.hh"
+#include "world/tmx/tile_set.hh"
+#include "world/tmx/reader.hh"
+#include "world/tmx/color.hh"
 #include <assets/resources/world/path_resolver.hh>
 #include <assets/resources/world/world_props.hh>
 
-#include "tile_layer.hh"
-#include "object_layer.hh"
-#include "image_layer.hh"
-#include "group.hh"
+#include "world/tmx/tile_layer.hh"
+#include "world/tmx/object_layer.hh"
+#include "world/tmx/image_layer.hh"
+#include "world/tmx/group.hh"
 
 namespace neutrino::assets::tmx {
 

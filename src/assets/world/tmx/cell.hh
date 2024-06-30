@@ -5,8 +5,6 @@
 #ifndef NEUTRINO_CELL_HH
 #define NEUTRINO_CELL_HH
 
-#include <bitflags/bitflags.hpp>
-
 namespace neutrino::assets::tmx {
   /**
    * @brief A cell is a square on a map layer that is filled with a tile.

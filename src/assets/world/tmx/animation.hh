@@ -5,7 +5,7 @@
 #ifndef NEUTRINO_ANIMATION_HH
 #define NEUTRINO_ANIMATION_HH
 
-#include "reader.hh"
+#include "world/tmx/reader.hh"
 #include <vector>
 #include <chrono>
 

@@ -17,10 +17,10 @@
 #include <bsw/exception.hh>
 #include <utility>
 
-#include "xml_reader.hh"
-#include "json_reader.hh"
-#include "color.hh"
-#include "map.hh"
+#include "tmx/xml_reader.hh"
+#include "tmx/json_reader.hh"
+#include "tmx/color.hh"
+#include "tmx/map.hh"
 
 namespace neutrino::assets::tmx {
   // first_gid -> tileset

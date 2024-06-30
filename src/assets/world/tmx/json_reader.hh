@@ -6,13 +6,11 @@
 #define NEUTRINO_JSON_READER_HH
 
 #include <cstdint>
-#include <map>
-#include <memory>
 #include <string>
 #include <vector>
 #include <functional>
 
-#include "reader.hh"
+#include "world/tmx/reader.hh"
 #include <bsw/spimpl.h>
 #include <sdlpp/video/geometry.hh>
 #include <nlohmann/json_fwd.hpp>

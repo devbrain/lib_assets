@@ -10,10 +10,10 @@
 #include <filesystem>
 #include <variant>
 #include <optional>
-#include <strong_type//strong_type.hpp>
+#include <strong_type/strong_type.hpp>
 
-#include "reader.hh"
-#include "color.hh"
+#include "world/tmx/reader.hh"
+#include "world/tmx/color.hh"
 
 namespace neutrino::assets::tmx {
   namespace detail {

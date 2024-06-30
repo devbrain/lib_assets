@@ -10,8 +10,8 @@
 #include <vector>
 #include <variant>
 
-#include "component.hh"
-#include "color.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/color.hh"
 #include <sdlpp/video/geometry.hh>
 
 namespace neutrino::assets::tmx {

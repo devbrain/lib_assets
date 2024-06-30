@@ -9,9 +9,9 @@
 #include <string>
 #include <array>
 
-#include "component.hh"
-#include "reader.hh"
-#include "color.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/reader.hh"
+#include "world/tmx/color.hh"
 
 namespace neutrino::assets::tmx {
 

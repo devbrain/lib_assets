@@ -7,9 +7,9 @@
 
 #include <optional>
 #include <tuple>
-#include "reader.hh"
-#include "component.hh"
-#include "color.hh"
+#include "world/tmx/reader.hh"
+#include "world/tmx/component.hh"
+#include "world/tmx/color.hh"
 
 namespace neutrino::assets::tmx {
 

@@ -5,10 +5,10 @@
 #ifndef NEUTRINO_OBJECT_LAYER_HH
 #define NEUTRINO_OBJECT_LAYER_HH
 
-#include "object.hh"
-#include "layer.hh"
-#include "color.hh"
-#include "group.hh"
+#include "world/tmx/object.hh"
+#include "world/tmx/layer.hh"
+#include "world/tmx/color.hh"
+#include "world/tmx/group.hh"
 #include <memory>
 #include <utility>
 

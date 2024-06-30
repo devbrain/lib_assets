@@ -5,10 +5,10 @@
 #ifndef NEUTRINO_TILE_LAYER_HH
 #define NEUTRINO_TILE_LAYER_HH
 
-#include "cell.hh"
-#include "layer.hh"
-#include "group.hh"
-#include "reader.hh"
+#include "world/tmx/cell.hh"
+#include "world/tmx/layer.hh"
+#include "world/tmx/group.hh"
+#include "world/tmx/reader.hh"
 #include <vector>
 
 namespace neutrino::assets::tmx {

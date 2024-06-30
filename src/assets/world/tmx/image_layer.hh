@@ -5,10 +5,10 @@
 #ifndef NEUTRINO_IMAGE_LAYER_HH
 #define NEUTRINO_IMAGE_LAYER_HH
 
-#include "layer.hh"
-#include "image.hh"
-#include "reader.hh"
-#include "group.hh"
+#include "world/tmx/layer.hh"
+#include "world/tmx/image.hh"
+#include "world/tmx/reader.hh"
+#include "world/tmx/group.hh"
 #include <memory>
 
 namespace neutrino::assets::tmx {
