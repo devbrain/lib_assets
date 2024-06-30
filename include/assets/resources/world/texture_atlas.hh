@@ -10,7 +10,7 @@
 #include <sdlpp/video/geometry.hh>
 #include <sdlpp/video/texture.hh>
 #include <sdlpp/video/surface.hh>
-#include <assets/resources/tmx/types.hh>
+#include <assets/resources/world/types.hh>
 
 namespace neutrino::assets {
   class texture_atlas_builder;

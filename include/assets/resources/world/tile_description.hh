@@ -9,7 +9,7 @@
 #include <vector>
 #include <optional>
 #include <bitflags/bitflags.hpp>
-#include <assets/resources/tmx/types.hh>
+#include <assets/resources/world/types.hh>
 
 namespace neutrino::assets {
   BEGIN_RAW_BITFLAGS(flip_t)

@@ -13,8 +13,8 @@
 #include "tile_set.hh"
 #include "reader.hh"
 #include "color.hh"
-#include <assets/resources/tmx/path_resolver.hh>
-#include <assets/resources/tmx/world_props.hh>
+#include <assets/resources/world/path_resolver.hh>
+#include <assets/resources/world/world_props.hh>
 
 #include "tile_layer.hh"
 #include "object_layer.hh"

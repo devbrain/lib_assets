@@ -5,10 +5,11 @@
 #ifndef INCLUDE_NEUTRINO_TILED_WORLD_LAYERS_BUILDER_HH
 #define INCLUDE_NEUTRINO_TILED_WORLD_LAYERS_BUILDER_HH
 
-#include <assets/resources/tmx/layer.hh>
+#include <assets/resources/world/world_layer.hh>
+#include <assets/assets_export.h>
 
 namespace neutrino::assets {
-  class layers_builder {
+  class ASSETS_EXPORT layers_builder {
     public:
       layers_builder(unsigned int width, unsigned int height);
       layers_builder& add_tile(unsigned int x, unsigned int y, texture_id_t texture_id, tile_id_t tile_id, flip_t flip);

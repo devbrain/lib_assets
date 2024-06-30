@@ -5,14 +5,15 @@
 #ifndef NEUTRINO_TILED_WORLD_WORLD_HH
 #define NEUTRINO_TILED_WORLD_WORLD_HH
 
-#include <assets/resources/tmx/layer.hh>
-#include <assets/resources/tmx/world_props.hh>
+#include <assets/resources/world/world_layer.hh>
+#include <assets/resources/world/world_props.hh>
 #include <sdlpp/video/color.hh>
+#include <assets/assets_export.h>
 
 namespace neutrino::assets {
   class world_builder;
 
-  class world {
+  class ASSETS_EXPORT world {
     friend class world_builder;
     public:
       world(const world&) = delete;

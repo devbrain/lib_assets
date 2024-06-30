@@ -5,12 +5,12 @@
 #include <fstream>
 #include <algorithm>
 
-#include <assets/resources/tmx/tmx.hh>
-#include <assets/resources/tmx/world.hh>
+#include <assets/resources/world/tmx.hh>
+#include <assets/resources/world/world.hh>
 
-#include <assets/resources/tmx/texture_atlas_builder.hh>
-#include <assets/resources/tmx/layers_builder.hh>
-#include <assets/resources/tmx/world_builder.hh>
+#include <assets/resources/world/texture_atlas_builder.hh>
+#include <assets/resources/world/layers_builder.hh>
+#include <assets/resources/world/world_builder.hh>
 
 
 #include <bsw/override.hh>

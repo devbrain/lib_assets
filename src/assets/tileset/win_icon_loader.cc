@@ -54,7 +54,7 @@ namespace neutrino::assets {
 			if (hdr.size == PNG_MAGIC) {
 				is.seekg(ico.offset, std::ios::beg);
 				int32_t header[1 + 1 + 1 + 1];
-				is.read((char*)header, sizeof (header));
+				is.read(reinterpret_cast <char*>(header), sizeof (header));
 				w = bsw::byte_order::from_big_endian(header[2]);
 				h = bsw::byte_order::from_big_endian(header[3]);
 			} else {
@@ -77,7 +77,7 @@ namespace neutrino::assets {
 		return area;
 	}
 
-	struct rgb_quad_s {
+	struct rgb_quad {
 		uint8_t blue;
 		uint8_t green;
 		uint8_t red;
@@ -156,14 +156,14 @@ namespace neutrino::assets {
 				has_bytes += delta;
 			}
 
-			rgb_quad_s pal[256];
+			rgb_quad pal[256];
 			unsigned int palette_count = 0;
 			if (bi.clr_used != 0 || bi.bit_count < 24) {
 				palette_count = (bi.clr_used != 0 ? bi.clr_used : 1 << bi.bit_count);
 				if (palette_count > 256) {
 					return false;
 				}
-				const std::streampos to_read = palette_count * sizeof(rgb_quad_s);
+				const std::streampos to_read = palette_count * sizeof(rgb_quad);
 				if (has_bytes + to_read > size) {
 					return false;
 				}
@@ -182,10 +182,10 @@ namespace neutrino::assets {
 
 			std::vector <uint8_t> image_data(image_size);
 			std::vector <uint8_t> mask_data(mask_size);
-			is.read((char*)image_data.data(), image_data.size());
-			is.read((char*)mask_data.data(), mask_data.size());
+			is.read(reinterpret_cast <char*>(image_data.data()), image_data.size());
+			is.read(reinterpret_cast <char*>(mask_data.data()), mask_data.size());
 
-			uint8_t* row = (uint8_t*)out.data();
+			auto* row = out.data();
 
 			for (uint32_t d = 0; d < height; d++) {
 				uint32_t x;

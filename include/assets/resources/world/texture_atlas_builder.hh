@@ -16,27 +16,28 @@
 #include <sdlpp/video/color.hh>
 #include <sdlpp/video/render.hh>
 #include <sdlpp/video/surface.hh>
-#include <assets/resources/tmx/texture_atlas.hh>
+#include <assets/resources/world/texture_atlas.hh>
+#include <assets/assets.hh>
 
 namespace neutrino::assets {
   namespace detail {
-    class base_image {
+    class ASSETS_EXPORT base_image {
       public:
         base_image (std::optional<sdl::color> transparent_color,
-                    std::optional<sdl::point> dimensions,
+                    std::optional<sdl::area_type> dimensions,
                     std::optional<std::string> format);
 
         [[nodiscard]] std::optional<sdl::color> transparent_color () const noexcept;
-        [[nodiscard]] std::optional<sdl::point> dimensions () const noexcept;
+        [[nodiscard]] std::optional<sdl::area_type> dimensions () const noexcept;
         [[nodiscard]] std::optional<std::string> format () const noexcept;
       private:
         std::optional<sdl::color> m_transparent_color;
-        std::optional<sdl::point> m_dimensions;
+        std::optional<sdl::area_type> m_dimensions;
         std::optional<std::string> m_format;
     };
   }
 
-  class named_image : public detail::base_image {
+  class ASSETS_EXPORT named_image : public detail::base_image {
     public:
       named_image (const std::optional<sdl::color>& transparent_color, const std::optional<sdl::area_type>& dimensions,
                    const std::optional<std::string>& format, std::string name);
@@ -45,7 +46,7 @@ namespace neutrino::assets {
       std::string m_name;
   };
 
-  class image_data : public detail::base_image {
+  class ASSETS_EXPORT image_data : public detail::base_image {
     public:
       image_data (const std::optional<sdl::color>& transparent_color, const std::optional<sdl::area_type>& dimensions,
                   const std::optional<std::string>& format, std::vector<char> data);
@@ -68,7 +69,7 @@ namespace neutrino::assets {
   using image_source_t = std::variant<named_image, image_data>;
 
 
-  class tile_sheet_info {
+  class ASSETS_EXPORT tile_sheet_info {
     public:
       tile_sheet_info (image_source_t image_source,
                        unsigned tile_width,
@@ -108,7 +109,7 @@ namespace neutrino::assets {
       std::size_t m_num_tiles;
   };
 
-  class texture_atlas_builder {
+  class ASSETS_EXPORT texture_atlas_builder {
     public:
       texture_atlas_builder() = default;
 
@@ -125,7 +126,7 @@ namespace neutrino::assets {
        * @param renderer SDL renderer
        * @param loader functor to load images by string
        */
-      texture_atlas build(sdl::renderer& renderer, std::function<sdl::surface(const std::string&)> loader) const;
+      texture_atlas build(sdl::renderer& renderer, const std::function<sdl::surface(const std::string&)>& loader) const;
     private:
       std::vector<tile_sheet_info> m_info;
   };

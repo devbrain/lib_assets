@@ -13,11 +13,20 @@ add_library(assets
         ${PROJECT_INCLUDE}/assets/init.hh
         init.cc
         ${PROJECT_INCLUDE}/assets/assets.hh
+        ${PROJECT_INCLUDE}/assets/resources/detail/istream_pos_keeper.hh
+        ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/data_loader.hh
+        # --------------------------------------------------------
+        # EXPLODE
+        # --------------------------------------------------------
+        ${PROJECT_INCLUDE}/assets/resources/exe/exe_data_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/unpacked_exe.hh
 
-        mz/explode/io.cc
-        mz/explode/io.hh
+        mz/exe_data_loader.cc
         mz/explode/exe_file.cc
         mz/explode/exe_file.hh
+        mz/explode/io.cc
+        mz/explode/io.hh
         mz/explode/knowledge_dynamics.cc
         mz/explode/knowledge_dynamics.hh
         mz/explode/struct_reader.hh
@@ -29,132 +38,139 @@ add_library(assets
         mz/explode/unpklite.hh
 
 
-        mz/win_exe/winres/rs_icon_group.cc
-        mz/win_exe/winres/rs_dialog.cc
-        mz/win_exe/pe_resource_builder.hh
-        mz/win_exe/windows_ne_file.cc
-        mz/win_exe/windows_ne_file.hh
-        mz/win_exe/ms_file.hh
-        mz/winres_data_loader.cc
-        mz/windows_resources_loader.cc
-        mz/windows_resources_loader.hh
-
-        ${PROJECT_INCLUDE}/assets/resources/exe/winres/resource_directory.hh
-        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_manifest.hh
-        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_icon_group.hh
-        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_message_table.hh
-        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_version.hh
-        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_string_table.hh
-        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_dialog.hh
+        # --------------------------------------------------------
+        # WINRES
+        # --------------------------------------------------------
         ${PROJECT_INCLUDE}/assets/resources/exe/windows_resources.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres/resource_directory.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_dialog.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_icon_group.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_manifest.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_message_table.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_string_table.hh
+        ${PROJECT_INCLUDE}/assets/resources/exe/winres/rs_version.hh
         ${PROJECT_INCLUDE}/assets/resources/exe/winres_data_loader.hh
 
-
+        mz/win_exe/abstract_reporter.cc
+        mz/win_exe/abstract_reporter.hh
+        mz/win_exe/istream_wrapper.cc
+        mz/win_exe/istream_wrapper.hh
+        mz/win_exe/ms_exe_file_type.cc
+        mz/win_exe/ms_exe_file_type.hh
+        mz/win_exe/ms_file.hh
+        mz/win_exe/pe_resource_builder.cc
+        mz/win_exe/pe_resource_builder.hh
+        mz/win_exe/resource_directory.cc
+        mz/win_exe/windows_ne_file.cc
+        mz/win_exe/windows_ne_file.hh
         mz/win_exe/windows_pe_file.cc
         mz/win_exe/windows_pe_file.hh
         mz/win_exe/windows_pe_structs.cc
         mz/win_exe/windows_pe_structs.hh
-
-        mz/win_exe/ms_exe_file_type.cc
-        mz/win_exe/ms_exe_file_type.hh
-
-        mz/win_exe/pe_resource_builder.cc
-        mz/win_exe/winres/rs_string_table.cc
-
-        mz/win_exe/resource_directory.cc
-        mz/win_exe/abstract_reporter.hh
-
-
-        mz/win_exe/abstract_reporter.cc
-
-
-        mz/win_exe/winres/rs_message_table.cc
+        mz/win_exe/winres/rs_dialog.cc
+        mz/win_exe/winres/rs_icon_group.cc
         mz/win_exe/winres/rs_manifest.cc
+        mz/win_exe/winres/rs_message_table.cc
+        mz/win_exe/winres/rs_string_table.cc
         mz/win_exe/winres/rs_version.cc
+        mz/windows_resources_loader.cc
+        mz/windows_resources_loader.hh
+        mz/winres_data_loader.cc
 
-        mz/win_exe/istream_wrapper.cc
-        mz/win_exe/istream_wrapper.hh
-
+        # ---------------------------------------------------------
+        # Image
+        # ---------------------------------------------------------
+        ${PROJECT_INCLUDE}/assets/resources/image/image_data_loader.hh
 
         image/thirdparty/stb_image.h
         image/stb_wrapper.cc
         image/stb_wrapper.hh
         image/standard_image_resource_loader.hh
-
-
-        ${PROJECT_INCLUDE}/assets/resources/detail/istream_pos_keeper.hh
-        ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
-        ${PROJECT_INCLUDE}/assets/resources/data_loader.hh
-
-        ${PROJECT_INCLUDE}/assets/resources/image/image_data_loader.hh
-
-        ${PROJECT_INCLUDE}/assets/resources/exe/exe_data_loader.hh
-        ${PROJECT_INCLUDE}/assets/resources/exe/unpacked_exe.hh
         image/image_data_loader.cc
-        mz/exe_data_loader.cc
 
+        # -------------------------------------------------------------
+        # AUDIO
+        # -------------------------------------------------------------
 
         ${PROJECT_INCLUDE}/assets/resources/audio/music_data_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/audio/sound_effect_data_loader.hh
         audio/music_data_loader.cc
         audio/sound_effect_data_loader.cc
 
+        # -------------------------------------------------------------
+        # FONTS
+        # -------------------------------------------------------------
+
         ${PROJECT_INCLUDE}/assets/resources/font/bgi_font.hh
         ${PROJECT_INCLUDE}/assets/resources/font/bgi_font_data_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/font/ttf_data_loader.hh
+
         font/bgi_font_data_loader.cc
         font/ttf_data_loader.cc
 
+        # -------------------------------------------------------------
+        # TILESET
+        # -------------------------------------------------------------
+
         ${PROJECT_INCLUDE}/assets/resources/tileset/tileset.hh
         ${PROJECT_INCLUDE}/assets/resources/tileset/tileset_data_loader.hh
+
         tileset/tileset.cc
         tileset/tileset_data_loader.cc
         tileset/win_icon_loader.cc
         tileset/win_icon_loader.hh
 
+        # ------------------------------------------------------------------
+        # WORLD
+        # ------------------------------------------------------------------
 
-#        tmx/animation.cc
-#        tmx/animation.hh
-#        tmx/cell.cc
-#        tmx/cell.hh
-#        tmx/color.hh
-#        tmx/component.cc
-#        tmx/component.hh
-#        tmx/group.cc
-#        tmx/group.hh
-#        tmx/image.cc
-#        tmx/image.hh
-#        tmx/image_layer.cc
-#        tmx/image_layer.hh
-#        tmx/json_reader.cc
-#        tmx/json_reader.hh
-#        tmx/layer.cc
-#        tmx/layer.hh
-#        tmx/map.cc
-#        tmx/map.hh
-#        tmx/object.cc
-#        tmx/object.hh
-#        tmx/object_layer.cc
-#        tmx/object_layer.hh
-#        tmx/parse_data.cc
-#        tmx/parse_data.hh
-#        tmx/reader.cc
-#        tmx/reader.hh
-#        tmx/terrain.cc
-#        tmx/terrain.hh
-#        tmx/tile.cc
-#        tmx/tile.hh
-#        tmx/tile_layer.cc
-#        tmx/tile_layer.hh
-#        tmx/tile_set.cc
-#        tmx/tile_set.hh
-#        tmx/tmx.cc
-#        tmx/wang_set.cc
-#        tmx/wang_set.hh
-#        tmx/xml_reader.cc
-#        tmx/xml_reader.hh
-#        tmx/csv/parser.hpp
-
+        tmx/animation.cc
+        tmx/animation.hh
+        tmx/cell.cc
+        tmx/cell.hh
+        tmx/color.hh
+        tmx/component.cc
+        tmx/component.hh
+        tmx/csv/parser.hpp
+        tmx/group.cc
+        tmx/group.hh
+        tmx/image.cc
+        tmx/image.hh
+        tmx/image_layer.cc
+        tmx/image_layer.hh
+        tmx/json_reader.cc
+        tmx/json_reader.hh
+        tmx/layer.cc
+        tmx/layer.hh
+        tmx/layers_builder.cc
+        tmx/map.cc
+        tmx/map.hh
+        tmx/object.cc
+        tmx/object.hh
+        tmx/object_layer.cc
+        tmx/object_layer.hh
+        tmx/parse_data.cc
+        tmx/parse_data.hh
+        tmx/reader.cc
+        tmx/reader.hh
+        tmx/terrain.cc
+        tmx/terrain.hh
+        tmx/texture_atlas.cc
+        tmx/texture_atlas_builder.cc
+        tmx/tile.cc
+        tmx/tile.hh
+        tmx/tile_layer.cc
+        tmx/tile_layer.hh
+        tmx/tile_set.cc
+        tmx/tile_set.hh
+        tmx/tmx.cc
+        tmx/wang_set.cc
+        tmx/wang_set.hh
+        tmx/world.cc
+        tmx/world_builder.cc
+        tmx/world_layer.cc
+        tmx/xml_reader.cc
+        tmx/xml_reader.hh
 )
 
 add_library(neutrino::assets ALIAS assets)

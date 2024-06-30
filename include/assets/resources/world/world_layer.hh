@@ -6,12 +6,13 @@
 #define INCLUDE_NEUTRINO_TILED_WORLD_LAYER_HH
 
 #include <vector>
-#include <assets/resources/tmx/tile_description.hh>
+#include <assets/resources/world/tile_description.hh>
+#include <assets/assets_export.h>
 
 namespace neutrino::assets {
   class layers_builder;
 
-  class tiles_layer {
+  class ASSETS_EXPORT tiles_layer {
     friend class layers_builder;
     public:
       tiles_layer(const tiles_layer&) = delete;
