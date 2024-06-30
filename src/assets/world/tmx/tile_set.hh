@@ -19,175 +19,177 @@
 #include <optional>
 
 namespace neutrino::assets::tmx {
-  /**
-   * @brief A tileset is a set of tiles in a single file (image or TSX file).
-   */
-  class tile_set : public component {
-    public:
-      class grid {
-        public:
-          static grid parse (const reader& elt);
-        public:
-          grid (bool ortho, unsigned w, unsigned h)
-              : m_orthogonal (ortho),
-                m_width (w),
-                m_height (h) {
-          }
+	/**
+	 * @brief A tileset is a set of tiles in a single file (image or TSX file).
+	 */
+	class tile_set : public component {
+		public:
+			class grid {
+				public:
+					static grid parse(const reader& elt);
 
-          [[nodiscard]] bool is_orthogonal () const noexcept {
-            return m_orthogonal;
-          }
+				public:
+					grid(bool ortho, unsigned w, unsigned h)
+						: m_orthogonal(ortho),
+						  m_width(w),
+						  m_height(h) {
+					}
 
-          [[nodiscard]] unsigned width () const noexcept {
-            return m_width;
-          }
+					[[nodiscard]] bool is_orthogonal() const noexcept {
+						return m_orthogonal;
+					}
 
-          [[nodiscard]] unsigned height () const noexcept {
-            return m_height;
-          }
+					[[nodiscard]] unsigned width() const noexcept {
+						return m_width;
+					}
 
-        private:
-          bool m_orthogonal;
-          unsigned m_width;
-          unsigned m_height;
-      };
+					[[nodiscard]] unsigned height() const noexcept {
+						return m_height;
+					}
 
-    public:
-      static tile_set parse (const reader& elt, const path_resolver_t& resolver);
+				private:
+					bool m_orthogonal;
+					unsigned m_width;
+					unsigned m_height;
+			};
 
-      tile_set (unsigned firstgid, std::string name, unsigned tilewidth, unsigned tileheight,
-                unsigned spacing, unsigned margin, unsigned tilecount, unsigned columns)
-          : m_firstgid (firstgid), m_name (std::move (name)), m_tilewidth (tilewidth), m_tileheight (tileheight),
-            m_spacing (spacing), m_margin (margin), m_tilecount (tilecount), m_columns (columns),
-            m_x (0), m_y (0), m_image (nullptr) {
-      }
+		public:
+			static tile_set parse(const reader& elt, const path_resolver_t& resolver);
 
-      [[nodiscard]] unsigned first_gid () const noexcept {
-        return m_firstgid;
-      }
+			tile_set(unsigned firstgid, std::string name, unsigned tilewidth, unsigned tileheight,
+			         unsigned spacing, unsigned margin, unsigned tilecount, unsigned columns)
+				: m_firstgid(firstgid), m_name(std::move(name)), m_tilewidth(tilewidth), m_tileheight(tileheight),
+				  m_spacing(spacing), m_margin(margin), m_tilecount(tilecount), m_columns(columns),
+				  m_x(0), m_y(0), m_image(nullptr) {
+			}
 
-      [[nodiscard]] const std::string& name () const noexcept {
-        return m_name;
-      }
+			[[nodiscard]] unsigned first_gid() const noexcept {
+				return m_firstgid;
+			}
 
-      [[nodiscard]] unsigned tile_width () const noexcept {
-        return m_tilewidth;
-      }
+			[[nodiscard]] const std::string& name() const noexcept {
+				return m_name;
+			}
 
-      [[nodiscard]] unsigned tile_height () const noexcept {
-        return m_tileheight;
-      }
+			[[nodiscard]] unsigned tile_width() const noexcept {
+				return m_tilewidth;
+			}
 
-      [[nodiscard]] unsigned spacing () const noexcept {
-        return m_spacing;
-      }
+			[[nodiscard]] unsigned tile_height() const noexcept {
+				return m_tileheight;
+			}
 
-      [[nodiscard]] unsigned margin () const noexcept {
-        return m_margin;
-      }
+			[[nodiscard]] unsigned spacing() const noexcept {
+				return m_spacing;
+			}
 
-      [[nodiscard]] unsigned tile_count () const noexcept {
-        return m_tilecount;
-      }
+			[[nodiscard]] unsigned margin() const noexcept {
+				return m_margin;
+			}
 
-      void offset (int x, int y) noexcept {
-        m_x = x;
-        m_y = y;
-      }
+			[[nodiscard]] unsigned tile_count() const noexcept {
+				return m_tilecount;
+			}
 
-      [[nodiscard]] int offset_x () const noexcept {
-        return m_x;
-      }
+			void offset(int x, int y) noexcept {
+				m_x = x;
+				m_y = y;
+			}
 
-      [[nodiscard]] int offset_y () const noexcept {
-        return m_y;
-      }
+			[[nodiscard]] int offset_x() const noexcept {
+				return m_x;
+			}
 
-      void set_image (std::unique_ptr<image> aimage) {
-        m_image = std::move (aimage);
-      }
+			[[nodiscard]] int offset_y() const noexcept {
+				return m_y;
+			}
 
-      [[nodiscard]] bool has_image () const noexcept {
-        return m_image != nullptr;
-      }
+			void set_image(std::unique_ptr <image> aimage) {
+				m_image = std::move(aimage);
+			}
 
-      [[nodiscard]] const image* get_image () const noexcept {
-        return m_image.get ();
-      }
+			[[nodiscard]] bool has_image() const noexcept {
+				return m_image != nullptr;
+			}
 
-      [[nodiscard]] image* get_image () noexcept {
-        return m_image.get ();
-      }
+			[[nodiscard]] const image* get_image() const noexcept {
+				return m_image.get();
+			}
 
-      void add_terrain (terrain aterrain) {
-        m_terrains.emplace_back (std::move (aterrain));
-      }
+			[[nodiscard]] image* get_image() noexcept {
+				return m_image.get();
+			}
 
-      [[nodiscard]] const std::vector<terrain>& get_terrains () const noexcept {
-        return m_terrains;
-      }
+			void add_terrain(terrain aterrain) {
+				m_terrains.emplace_back(std::move(aterrain));
+			}
 
-      typedef std::vector<tile>::const_iterator const_iterator;
+			[[nodiscard]] const std::vector <terrain>& get_terrains() const noexcept {
+				return m_terrains;
+			}
 
-      void add_tile (tile atile) {
-        m_tiles.emplace_back (std::move (atile));
-      }
+			typedef std::vector <tile>::const_iterator const_iterator;
 
-      [[nodiscard]] const_iterator begin () const noexcept {
-        return m_tiles.cbegin ();
-      }
+			void add_tile(tile atile) {
+				m_tiles.emplace_back(std::move(atile));
+			}
 
-      [[nodiscard]] const_iterator end () const noexcept {
-        return m_tiles.cend ();
-      }
+			[[nodiscard]] const_iterator begin() const noexcept {
+				return m_tiles.cbegin();
+			}
 
-      [[nodiscard]] const tile* get_tile (unsigned id) const noexcept;
+			[[nodiscard]] const_iterator end() const noexcept {
+				return m_tiles.cend();
+			}
 
-      [[nodiscard]] sdl::rect get_coords (unsigned id, const sdl::area_type& size) const noexcept;
+			[[nodiscard]] const tile* get_tile(unsigned id) const noexcept;
 
-      [[nodiscard]] unsigned columns () const noexcept {
-        return m_columns;
-      }
+			[[nodiscard]] sdl::rect get_coords(unsigned id, const sdl::area_type& size) const noexcept;
 
-      [[nodiscard]] const std::vector<wang_set>& wang_sets () const noexcept {
-        return m_wang_sets;
-      }
+			[[nodiscard]] unsigned columns() const noexcept {
+				return m_columns;
+			}
 
-      void add_wang_set (wang_set ws) {
-        m_wang_sets.emplace_back (std::move (ws));
-      }
+			[[nodiscard]] const std::vector <wang_set>& wang_sets() const noexcept {
+				return m_wang_sets;
+			}
 
-      void add_grid (grid g) {
-        m_grid = g;
-      }
+			void add_wang_set(wang_set ws) {
+				m_wang_sets.emplace_back(std::move(ws));
+			}
 
-      [[nodiscard]] std::optional<grid> grid_info () const noexcept {
-        return m_grid;
-      }
+			void add_grid(grid g) {
+				m_grid = g;
+			}
 
-    private:
-      static tile_set parse_inner (unsigned first_gid, const reader& elt);
-      static tile_set parse_from_file (unsigned first_gid, const std::string& source, const path_resolver_t& resolver);
-    private:
-      const unsigned m_firstgid;
-      const std::string m_name;
-      const unsigned m_tilewidth;
-      const unsigned m_tileheight;
-      const unsigned m_spacing;
-      const unsigned m_margin;
-      const unsigned m_tilecount;
-      const unsigned m_columns;
+			[[nodiscard]] std::optional <grid> grid_info() const noexcept {
+				return m_grid;
+			}
 
-      int m_x;
-      int m_y;
+		private:
+			static tile_set parse_inner(unsigned first_gid, const reader& elt);
+			static tile_set parse_from_file(unsigned first_gid, const std::string& source,
+			                                const path_resolver_t& resolver);
 
-      std::unique_ptr<image> m_image;
-      std::vector<terrain> m_terrains;
-      std::vector<tile> m_tiles;
-      std::vector<wang_set> m_wang_sets;
-      std::optional<grid> m_grid;
-  };
+		private:
+			const unsigned m_firstgid;
+			const std::string m_name;
+			const unsigned m_tilewidth;
+			const unsigned m_tileheight;
+			const unsigned m_spacing;
+			const unsigned m_margin;
+			const unsigned m_tilecount;
+			const unsigned m_columns;
 
+			int m_x;
+			int m_y;
+
+			std::unique_ptr <image> m_image;
+			std::vector <terrain> m_terrains;
+			std::vector <tile> m_tiles;
+			std::vector <wang_set> m_wang_sets;
+			std::optional <grid> m_grid;
+	};
 }
 
 #endif

@@ -33,7 +33,10 @@ namespace neutrino::assets {
 			ENFORCE(((tu + 1) * tilewidth + du) <= canvas_w);
 			ENFORCE(((tv + 1) * tileheight + dv) <= canvas_h);
 
-			return {(int)(tu * tilewidth + du), (int)(tv * tileheight + dv), (int)tilewidth, (int)tileheight};
+			return {
+				static_cast <int>(tu * tilewidth + du), static_cast <int>(tv * tileheight + dv),
+				static_cast <int>(tilewidth), static_cast <int>(tileheight)
+			};
 		}
 	}
 
