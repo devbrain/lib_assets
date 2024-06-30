@@ -38,12 +38,18 @@ if (is_top_level)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${LIB_OUT_DIR})
 endif()
 
+
+
 add_subdirectory(ext)
-add_subdirectory(src)
 
 if (assets_ENABLE_TESTING)
-  add_subdirectory(unittest)
+    add_subdirectory(unittest)
+    set (TEST_IMPL_LIB doctest_runner)
 endif()
+
+add_subdirectory(src)
+
+
 
 
 if (assets_INCLUDE_PACKAGING)

@@ -1,3 +1,18 @@
+function(BIN2C input_file RESULT_NAME)
+    get_filename_component(INPUT_DIR ${input_file} DIRECTORY)
+    get_filename_component(INPUT_NAME ${input_file} NAME_WE)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${INPUT_DIR})
+    set(ONAME ${CMAKE_CURRENT_BINARY_DIR}/${INPUT_DIR}/${INPUT_NAME}.h)
+    add_custom_command(
+            OUTPUT ${ONAME}
+            COMMAND $<TARGET_FILE:bin2c> ${CMAKE_CURRENT_SOURCE_DIR}/${input_file} ${ONAME} ${INPUT_NAME}
+            DEPENDS bin2c
+            MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${input_file}
+    )
+    set(${RESULT_NAME} ${ONAME} PARENT_SCOPE)
+endfunction()
+
+
 if (NOT DEFINED CMAKE_CXX_VISIBILITY_PRESET AND
         NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -8,7 +23,58 @@ if (DEFINED assets_SHARED_LIBS)
     set(BUILD_SHARED_LIBS "${assets_SHARED_LIBS}")
 endif ()
 
-add_library(assets
+set(TEST_DATA
+        test1/example.tmx
+        test1/js_example.json
+        test1/test_base64_level.tmx
+
+        test1/test_csv_level.tmx
+        test1/test_xml_level.tmx
+        test-rs/tiled_flipped.tmx
+        test-rs/tilesheet.tsx
+        test-rs/tiled_base64_zlib.tmx
+        test-rs/tiled_base64_gzip.tmx
+        test-rs/js_tiled_base64_gzip.json
+        test-rs/tiled_base64_zstandard.tmx
+        test3/b64zlib.tmx
+        test-rs/tiled_base64_zlib_infinite.tmx
+        test-rs/js_tiled_base64_zlib_infinite.json
+        test-rs/tilesheet.tsx
+        test-rs/tiled_image_layers.tmx
+        test-rs/js_tiled_image_layers.json
+        test4/example.tmx
+        test4/js_example.json
+        json/simple_map.json
+        wang/isometric_staggered_grass_and_water.tmx
+        wang/js_isometric_staggered_grass_and_water.json
+)
+
+set(generated_test_headers)
+foreach (FILE ${TEST_DATA})
+    bin2c("world/tmx/test/data/${FILE}" generated)
+    list(APPEND generated_test_headers ${generated})
+endforeach ()
+
+set(tmx_test_src
+        world/tmx/test/test1_example_tmx.cc
+        world/tmx/test/test_color.cc
+        world/tmx/test/test_compression.cc
+        world/tmx/test/test_encodings.cc
+        world/tmx/test/test_flipped.cc
+        world/tmx/test/test_image_layers.cc
+        world/tmx/test/test_infinite.cc
+        world/tmx/test/test_json_complex.cc
+        world/tmx/test/test_json_simple.cc
+        world/tmx/test/test_properties.cc
+        world/tmx/test/test_text.cc
+        world/tmx/test/test_utils.cc
+        world/tmx/test/test_utils.hh
+        world/tmx/test/test_wang.cc
+        ${generated_test_headers}
+)
+
+
+set(assets_src
         ${PROJECT_INCLUDE}/assets/assets_export.h
         ${PROJECT_INCLUDE}/assets/init.hh
         init.cc
@@ -173,6 +239,15 @@ add_library(assets
         world/world_layer.cc
 )
 
+if (assets_ENABLE_TESTING)
+    set (assets_test_src ${tmx_test_src})
+    set (test_lib thirdparty::doctest)
+    set (test_include ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+
+add_library(assets ${assets_src} ${assets_test_src})
+
 add_library(neutrino::assets ALIAS assets)
 
 set_target_properties(assets PROPERTIES
@@ -181,15 +256,22 @@ set_target_properties(assets PROPERTIES
 
 target_include_directories(assets
         PUBLIC ${PROJECT_INCLUDE} ${PROJECT_CONFIG_INCLUDE}
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${test_include}
 )
 
 target_compile_features(assets PUBLIC cxx_std_17)
 
 include(GenerateExportHeader)
 generate_export_header(assets EXPORT_FILE_NAME ${PROJECT_CONFIG_INCLUDE}/assets/assets_export_def.h)
-target_compile_definitions(assets PUBLIC "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:assets_STATIC_DEFINE>")
+if (assets_ENABLE_TESTING)
+    target_compile_definitions(assets PRIVATE ASSETS_BUILD_FOR_TESTING DOCTEST_CONFIG_IMPLEMENTATION_IN_DLL)
+endif()
 target_link_libraries(assets
-        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer
+        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer ${test_lib}
         PRIVATE thirdparty::json thirdparty::pugixml
 )
+
+
+

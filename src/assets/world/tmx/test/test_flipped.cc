@@ -4,10 +4,10 @@
 
 #include <doctest/doctest.h>
 #include "test_utils.hh"
-#include "test-rs/tiled_flipped.h"
-#include "test-rs/tilesheet.h"
+#include "world/tmx/test/data/test-rs/tiled_flipped.h"
+#include "world/tmx/test/data/test-rs/tilesheet.h"
 
-using namespace neutrino::tiled::tmx;
+using namespace neutrino::assets::tmx;
 
 TEST_CASE("test_flipped") {
   auto resolver = [] (const std::string& p) -> std::string {

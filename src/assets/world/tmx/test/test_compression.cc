@@ -4,12 +4,12 @@
 
 #include <doctest/doctest.h>
 #include "test_utils.hh"
-#include "test-rs/tiled_base64_gzip.h"
-#include "test-rs/tiled_base64_zlib.h"
-#include "test-rs/js_tiled_base64_gzip.h"
-#include "test-rs/tiled_base64_zstandard.h"
+#include "world/tmx/test/data/test-rs/tiled_base64_gzip.h"
+#include "world/tmx/test/data/test-rs/tiled_base64_zlib.h"
+#include "world/tmx/test/data/test-rs/js_tiled_base64_gzip.h"
+#include "world/tmx/test/data/test-rs/tiled_base64_zstandard.h"
 
-using namespace neutrino::tiled::tmx;
+using namespace neutrino::assets::tmx;
 
 TEST_CASE("test tmx compression") {
   auto zmap = test::load_map (tiled_base64_zlib, tiled_base64_zlib_length);

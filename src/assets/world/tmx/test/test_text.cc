@@ -4,9 +4,9 @@
 
 #include <doctest/doctest.h>
 #include "test_utils.hh"
-#include "test3/b64zlib.h"
+#include "world/tmx/test/data/test3/b64zlib.h"
 
-using namespace neutrino::tiled::tmx;
+using namespace neutrino::assets::tmx;
 
 TEST_CASE("test text object") {
   auto the_map = test::load_map (b64zlib, b64zlib_length);

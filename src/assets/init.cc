@@ -4,6 +4,11 @@
 #include <assets/init.hh>
 #include <sdlpp/system.hh>
 
+#if defined(ASSETS_BUILD_FOR_TESTING)
+#include <doctest/doctest.h>
+DOCTEST_SYMBOL_EXPORT void from_dll();   // to silence "-Wmissing-declarations" with GCC
+DOCTEST_SYMBOL_EXPORT void from_dll() {} // force the creation of a .lib file with MSVC
+#endif
 
 namespace neutrino::assets {
 	initializer::initializer () {

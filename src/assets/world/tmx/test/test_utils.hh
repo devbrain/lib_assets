@@ -6,10 +6,10 @@
 #define NEUTRINO_TEST_UTILS_HH
 
 #include <string>
-#include "tiled/loader/tmx/reader.hh"
-#include "tiled/loader/tmx/map.hh"
+#include "world/tmx/reader.hh"
+#include "world/tmx/map.hh"
 
-namespace neutrino::tiled::tmx::test {
+namespace neutrino::assets::tmx::test {
 
   inline std::string null_resolver (const std::string&) {
     return "";
