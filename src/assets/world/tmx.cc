@@ -5,7 +5,7 @@
 #include <fstream>
 #include <algorithm>
 
-#include <assets/resources/world/tmx.hh>
+#include "world/tmx.hh"
 #include <assets/resources/world/world.hh>
 
 #include <assets/resources/world/builder/texture_atlas_builder.hh>

@@ -15,11 +15,11 @@ namespace neutrino::assets {
   class ASSETS_EXPORT tiles_layer {
     friend class layers_builder;
     public:
-      tiles_layer(const tiles_layer&) = default;
-      tiles_layer& operator = (const tiles_layer&) = default;
-
-      tiles_layer(tiles_layer&&) = default;
-      tiles_layer& operator = (tiles_layer&&) = default;
+      // tiles_layer(const tiles_layer&) = default;
+      // tiles_layer& operator = (const tiles_layer&) = default;
+      //
+      // tiles_layer(tiles_layer&&) = default;
+      // tiles_layer& operator = (tiles_layer&&) = default;
 
       /**
        * Returns tile at coords <x,y>. Throws exception if the coords are out of bounds

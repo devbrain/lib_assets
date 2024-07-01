@@ -16,10 +16,10 @@ namespace neutrino::assets {
   class ASSETS_EXPORT world {
     friend class world_builder;
     public:
-      world(const world&) = delete;
-      world& operator = (const world&) = delete;
-
-      world(world&&) = default;
+      // world(const world&) = delete;
+      // world& operator = (const world&) = delete;
+      //
+      // world(world&&) = default;
 
       template <class Functor>
       void visit_layers(Functor&& visitor);

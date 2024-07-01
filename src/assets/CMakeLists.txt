@@ -195,9 +195,9 @@ set(assets_src
         ${PROJECT_INCLUDE}/assets/resources/world/path_resolver.hh
         ${PROJECT_INCLUDE}/assets/resources/world/texture_atlas.hh
         ${PROJECT_INCLUDE}/assets/resources/world/tile_description.hh
-        ${PROJECT_INCLUDE}/assets/resources/world/tmx.hh
         ${PROJECT_INCLUDE}/assets/resources/world/types.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/world_data_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world_layer.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world_props.hh
 
@@ -206,6 +206,7 @@ set(assets_src
         world/texture_atlas.cc
         world/texture_atlas_builder.cc
         world/tmx.cc
+        world/tmx.hh
         world/tmx/animation.cc
         world/tmx/animation.hh
         world/tmx/cell.cc
@@ -247,6 +248,7 @@ set(assets_src
         world/tmx/xml_reader.cc
         world/tmx/xml_reader.hh
         world/world.cc
+        world/world_data_loader.cc
         world/world_builder.cc
         world/world_layer.cc
 )
