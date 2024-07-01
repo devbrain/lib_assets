@@ -189,6 +189,18 @@ set(assets_src
         # ------------------------------------------------------------------
         # WORLD
         # ------------------------------------------------------------------
+        ${PROJECT_INCLUDE}/assets/resources/world/builder/layers_builder.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/builder/texture_atlas_builder.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/builder/world_builder.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/path_resolver.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/texture_atlas.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/tile_description.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/tmx.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/types.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/world.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/world_layer.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/world_props.hh
+
 
         world/layers_builder.cc
         world/texture_atlas.cc

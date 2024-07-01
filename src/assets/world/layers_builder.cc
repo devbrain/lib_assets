@@ -2,7 +2,7 @@
 // Created by igor on 20/09/2021.
 //
 
-#include <assets/resources/world/layers_builder.hh>
+#include <assets/resources/world/builder/layers_builder.hh>
 #include <bsw/exception.hh>
 
 namespace neutrino::assets {

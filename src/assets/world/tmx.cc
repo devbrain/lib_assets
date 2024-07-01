@@ -8,9 +8,9 @@
 #include <assets/resources/world/tmx.hh>
 #include <assets/resources/world/world.hh>
 
-#include <assets/resources/world/texture_atlas_builder.hh>
-#include <assets/resources/world/layers_builder.hh>
-#include <assets/resources/world/world_builder.hh>
+#include <assets/resources/world/builder/texture_atlas_builder.hh>
+#include <assets/resources/world/builder/layers_builder.hh>
+#include <assets/resources/world/builder/world_builder.hh>
 
 #include <bsw/override.hh>
 #include <bsw/exception.hh>
@@ -82,6 +82,7 @@ namespace neutrino::assets::tmx {
 				colori tcl{*img->transparent()};
 				transparent_color = sdl::color{tcl.r, tcl.g, tcl.b, tcl.a};
 			}
+
 			if (!img->source().empty()) {
 				tiles_builder_info.emplace_back(
 					named_image{transparent_color, img->size(), img->format(), img->source()},

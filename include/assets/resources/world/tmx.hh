@@ -12,7 +12,7 @@
 
 #include <assets/resources/world/path_resolver.hh>
 #include <assets/resources/world/world.hh>
-#include <assets/resources/world/texture_atlas_builder.hh>
+#include <assets/resources/world/builder/texture_atlas_builder.hh>
 
 namespace neutrino::assets::tmx {
   std::tuple<world, texture_atlas_builder> load (const char* text, std::size_t size, path_resolver_t resolver);

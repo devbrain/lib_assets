@@ -2,7 +2,7 @@
 // Created by igor on 27/08/2021.
 //
 
-#include <assets/resources/world/texture_atlas_builder.hh>
+#include <assets/resources/world/builder/texture_atlas_builder.hh>
 
 #include <sdlpp/video/surface.hh>
 #include <bsw/exception.hh>

@@ -2,7 +2,7 @@
 // Created by igor on 21/09/2021.
 //
 
-#include <assets/resources/world/world_builder.hh>
+#include <assets/resources/world/builder/world_builder.hh>
 
 namespace neutrino::assets {
 	world_builder& world_builder::add(tiles_layer&& alayer) {
