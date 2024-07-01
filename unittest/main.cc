@@ -2,7 +2,7 @@
 // Created by igor on 1/10/24.
 //
 
-
+#define DOCTEST_CONFIG_IMPLEMENT_DLL
 #include <doctest/doctest.h>
 
 DOCTEST_SYMBOL_IMPORT void from_dll();

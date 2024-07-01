@@ -48,7 +48,7 @@ namespace neutrino::assets {
 	class ms_file;
 
 	class ASSETS_EXPORT windows_resource_name {
-		friend bool operator<(const windows_resource_name& a, const windows_resource_name& b);
+		friend  ASSETS_EXPORT bool operator<(const windows_resource_name& a, const windows_resource_name& b);
 
 		public:
 			windows_resource_name() = default;
@@ -115,7 +115,7 @@ namespace neutrino::assets {
 			windows_resource_directory(windows_resource_directory&& other) noexcept ;
 			~windows_resource_directory();
 
-			class names_iterator {
+			class ASSETS_EXPORT names_iterator {
 				friend class windows_resource_directory;
 
 				public:

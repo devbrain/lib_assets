@@ -15,8 +15,8 @@ namespace neutrino::assets {
   class ASSETS_EXPORT tiles_layer {
     friend class layers_builder;
     public:
-      tiles_layer(const tiles_layer&) = delete;
-      tiles_layer& operator = (const tiles_layer&) = delete;
+      tiles_layer(const tiles_layer&) = default;
+      tiles_layer& operator = (const tiles_layer&) = default;
 
       tiles_layer(tiles_layer&&) = default;
       tiles_layer& operator = (tiles_layer&&) = default;

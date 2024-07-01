@@ -266,10 +266,10 @@ target_compile_features(assets PUBLIC cxx_std_17)
 include(GenerateExportHeader)
 generate_export_header(assets EXPORT_FILE_NAME ${PROJECT_CONFIG_INCLUDE}/assets/assets_export_def.h)
 if (assets_ENABLE_TESTING)
-    target_compile_definitions(assets PRIVATE ASSETS_BUILD_FOR_TESTING DOCTEST_CONFIG_IMPLEMENTATION_IN_DLL)
+    target_compile_definitions(assets PRIVATE ASSETS_BUILD_FOR_TESTING)
 endif()
 target_link_libraries(assets
-        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer ${test_lib}
+        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer doctest_runner
         PRIVATE thirdparty::json thirdparty::pugixml
 )
 

@@ -5,9 +5,14 @@
 #include <sdlpp/system.hh>
 
 #if defined(ASSETS_BUILD_FOR_TESTING)
+#define DOCTEST_CONFIG_IMPLEMENT_DLL
+//#define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
+#include <iostream>
 DOCTEST_SYMBOL_EXPORT void from_dll();   // to silence "-Wmissing-declarations" with GCC
-DOCTEST_SYMBOL_EXPORT void from_dll() {} // force the creation of a .lib file with MSVC
+DOCTEST_SYMBOL_EXPORT void from_dll() {
+	std::cout << "ZOPA" << std::endl;
+} // force the creation of a .lib file with MSVC
 #endif
 
 namespace neutrino::assets {

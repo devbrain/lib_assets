@@ -5,5 +5,5 @@ add_executable(unittest
         mz/explode_test.cc
 )
 
-target_link_libraries(unittest PRIVATE neutrino::assets doctest_runner)
+target_link_libraries(unittest neutrino::assets doctest_runner)
 target_include_directories(unittest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
