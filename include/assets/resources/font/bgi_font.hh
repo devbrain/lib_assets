@@ -2,8 +2,8 @@
 // Created by igor on 6/23/24.
 //
 
-#ifndef ASSETS_FONT_BGI_FONT_HH
-#define ASSETS_FONT_BGI_FONT_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_BGI_FONT_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_BGI_FONT_HH
 
 #include <vector>
 #include <map>
@@ -24,4 +24,4 @@ namespace neutrino::assets {
 	};
 }
 
-#endif //ASSETS_FONT_BGI_FONT_HH
+#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_BGI_FONT_HH

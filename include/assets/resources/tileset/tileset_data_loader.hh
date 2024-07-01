@@ -2,8 +2,8 @@
 // Created by igor on 6/23/24.
 //
 
-#ifndef TILESET_DATA_LOADER_HH
-#define TILESET_DATA_LOADER_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_TILESET_DATA_LOADER_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_TILESET_DATA_LOADER_HH
 
 #include <assets/resources/tileset/tileset.hh>
 #include <assets/resources/data_loader.hh>
@@ -16,4 +16,4 @@ namespace neutrino::assets {
 	};
 }
 
-#endif //ASSETS_AUDIO_DATA_LOADER_HH
+#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_TILESET_DATA_LOADER_HH

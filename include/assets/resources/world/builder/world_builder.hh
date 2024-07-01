@@ -2,8 +2,8 @@
 // Created by igor on 21/09/2021.
 //
 
-#ifndef INCLUDE_NEUTRINO_TILED_WORLD_WORLD_BUILDER_HH
-#define INCLUDE_NEUTRINO_TILED_WORLD_WORLD_BUILDER_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_BUILDER_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_BUILDER_HH
 
 #include <assets/resources/world/world.hh>
 #include <assets/assets_export.h>
@@ -52,4 +52,4 @@ namespace neutrino::assets {
 
 }
 
-#endif //INCLUDE_NEUTRINO_TILED_WORLD_WORLD_BUILDER_HH
+#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_BUILDER_HH

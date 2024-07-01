@@ -2,8 +2,8 @@
 // Created by igor on 06/07/2021.
 //
 
-#ifndef NEUTRINO_TILED_WORLD_WORLD_HH
-#define NEUTRINO_TILED_WORLD_WORLD_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_HH
 
 #include <assets/resources/world/world_layer.hh>
 #include <assets/resources/world/world_props.hh>

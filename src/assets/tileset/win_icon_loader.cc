@@ -257,7 +257,7 @@ namespace neutrino::assets {
 		sdl::surface surface(area.w, area.h, sdl::pixel_format(sdl::pixel_format::ARGB8888));
 		tileset ts;
 		int px = 0;
-		tile_id_t tid = 0;
+		tile_id_t tid (0);
 
 		for (const auto& [_, ico] : icons) {
 			auto dims = load_ico(surface, ico, is, px);

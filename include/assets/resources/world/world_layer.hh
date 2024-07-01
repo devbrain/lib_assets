@@ -2,8 +2,8 @@
 // Created by igor on 20/09/2021.
 //
 
-#ifndef INCLUDE_NEUTRINO_TILED_WORLD_LAYER_HH
-#define INCLUDE_NEUTRINO_TILED_WORLD_LAYER_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_LAYER_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_LAYER_HH
 
 #include <vector>
 #include <assets/resources/world/tile_description.hh>

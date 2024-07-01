@@ -1,5 +1,5 @@
-#ifndef __PEFILE_RS_STRING_TABLE_HPP__
-#define __PEFILE_RS_STRING_TABLE_HPP__
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_PEFILE_RS_STRING_TABLE_HPP_
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_PEFILE_RS_STRING_TABLE_HPP_
 
 #include <map>
 #include <assets/resources/exe/winres/resource_directory.hh>

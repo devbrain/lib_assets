@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <fstream>
-#include <assets/resources/exe/winres_data_loader.hh>
+#include <assets/assets.hh>
 #include <bsw/io/binary_reader.hh>
 
 
@@ -18,8 +18,8 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "Parsing " << infile << std::endl;
 		std::ifstream ifs(infile, std::ios::in | std::ios::binary);
-		winres_data_loader dm;
-		auto rd = dm.load(ifs);
+		data_manager<> dm;
+		auto rd = dm.load<windows_resource_directory>(ifs);
 		for (auto i = rd.names_begin(); i != rd.names_end(); ++i) {
 			if (i->id()) {
 				std::cout << to_string(static_cast<windows_resource_type>(i->id())) << std::endl;

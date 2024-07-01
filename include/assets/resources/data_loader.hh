@@ -2,8 +2,8 @@
 // Created by igor on 5/29/24.
 //
 
-#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_DATA_MANAGER_HH_
-#define ASSETS_INCLUDE_ASSETS_RESOURCES_DATA_MANAGER_HH_
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_DATA_LOADER_HH_
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_DATA_LOADER_HH_
 
 #include <istream>
 #include <memory>
@@ -20,7 +20,7 @@ namespace neutrino::assets {
 	class data_loader {
 		public:
 			using resource_loader_t = abstract_resource_loader <Resource>;
-
+			using resource_type_t = Resource;
 		public:
 			data_loader() = default;
 			data_loader& operator =(data_loader&) = delete;

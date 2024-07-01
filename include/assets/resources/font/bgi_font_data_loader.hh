@@ -2,8 +2,8 @@
 // Created by igor on 6/24/24.
 //
 
-#ifndef BGI_FONT_DATA_MANAGER_HH
-#define BGI_FONT_DATA_MANAGER_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_BGI_FONT_DATA_MANAGER_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_BGI_FONT_DATA_MANAGER_HH
 
 #include <assets/resources/data_loader.hh>
 #include <assets/resources/font/bgi_font.hh>
@@ -16,4 +16,4 @@ namespace neutrino::assets {
 	};
 }
 
-#endif //BGI_FONT_DATA_MANAGER_HH
+#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_BGI_FONT_DATA_MANAGER_HH

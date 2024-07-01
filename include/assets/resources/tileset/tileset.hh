@@ -2,16 +2,17 @@
 // Created by igor on 6/28/24.
 //
 
-#ifndef TILESET_HH
-#define TILESET_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_TILESET_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_TILESET_HH
 
 #include <map>
 #include <sdlpp/video/surface.hh>
 #include <sdlpp/video/geometry.hh>
+#include <assets/resources/world/types.hh>
 #include <assets/assets_export.h>
 
 namespace neutrino::assets {
-	using tile_id_t = int;
+	//using tile_id_t = int;
 
 	class ASSETS_EXPORT tileset {
 		public:

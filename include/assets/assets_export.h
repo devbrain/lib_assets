@@ -2,8 +2,8 @@
 // Created by igor on 6/23/24.
 //
 
-#ifndef ASSETS_EXPORT_DEF_H
-#define ASSETS_EXPORT_DEF_H
+#ifndef ASSETS_INCLUDE_ASSETS_EXPORT_DEF_H
+#define ASSETS_INCLUDE_ASSETS_EXPORT_DEF_H
 
 #include <assets/assets_export_def.h>
 

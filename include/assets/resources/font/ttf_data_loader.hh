@@ -2,8 +2,8 @@
 // Created by igor on 6/24/24.
 //
 
-#ifndef TTF_FONT_DATA_MANAGER_HH
-#define TTF_FONT_DATA_MANAGER_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_TTF_FONT_DATA_MANAGER_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_TTF_FONT_DATA_MANAGER_HH
 
 #include <assets/resources/data_loader.hh>
 #include <sdlpp/video/ttf.hh>
@@ -16,4 +16,4 @@ namespace neutrino::assets {
 	};
 }
 
-#endif //TTF_FONT_DATA_MANAGER_HH
+#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_FONT_TTF_FONT_DATA_MANAGER_HH

@@ -2,8 +2,8 @@
 // Created by igor on 6/26/24.
 //
 
-#ifndef WINDOWS_RESOURCES_HH
-#define WINDOWS_RESOURCES_HH
+#ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_WINDOWS_RESOURCES_HH
+#define ASSETS_INCLUDE_ASSETS_RESOURCES_WINDOWS_RESOURCES_HH
 
 #include <assets/resources/exe/winres/resource_directory.hh>
 #include <assets/resources/exe/winres/rs_icon_group.hh>
