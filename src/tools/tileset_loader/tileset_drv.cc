@@ -4,8 +4,6 @@
 #include <assets/resources/tileset/tileset_data_loader.hh>
 #include <bsw/io/binary_reader.hh>
 
-#define DOCTEST_CONFIG_IMPLEMENT
-#include <doctest/doctest.h>
 
 int main(int argc, char* argv[])
 {
