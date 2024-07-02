@@ -199,7 +199,6 @@ set(assets_src
         ${PROJECT_INCLUDE}/assets/resources/world/world_component.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world_tiles_layer.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world_image_layer.hh
-        ${PROJECT_INCLUDE}/assets/resources/world/world_props.hh
 
 
         world/path_resolver.hh

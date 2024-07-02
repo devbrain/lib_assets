@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <iosfwd>
 #include <vector>
-#include <assets/assets_export.h>
 #include "mz/win_exe/istream_wrapper.hh"
 
 namespace neutrino::assets {
@@ -17,7 +16,7 @@ namespace neutrino::assets {
 	using u4 = uint32_t;
 	using u8 = uint64_t;
 
-	struct ASSETS_EXPORT COFF_HEADER {
+	struct COFF_HEADER {
 		enum IMAGE_FILE_MACHINE {
 			IMAGE_FILE_MACHINE_UNKNOWN = 0x0,
 			// The contents of this field are assumed to be applicable to any machine type
@@ -91,12 +90,12 @@ namespace neutrino::assets {
 
 	static_assert(sizeof(COFF_HEADER) == 20, "COFF_HEADER size should be 20 bytes");
 
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, COFF_HEADER::IMAGE_FILE_MACHINE v);
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, COFF_HEADER::IMAGE_FILE_CHARACTERISTICS v);
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, const COFF_HEADER& v);
+	std::ostream& operator<<(std::ostream& os, COFF_HEADER::IMAGE_FILE_MACHINE v);
+	std::ostream& operator<<(std::ostream& os, COFF_HEADER::IMAGE_FILE_CHARACTERISTICS v);
+	std::ostream& operator<<(std::ostream& os, const COFF_HEADER& v);
 
 	// =========================================================
-	struct ASSETS_EXPORT DATA_DIRECTORY {
+	struct DATA_DIRECTORY {
 		u4 VirtualAddress;
 		u4 Size;
 	};
@@ -104,7 +103,7 @@ namespace neutrino::assets {
 	static_assert(sizeof(DATA_DIRECTORY) == 8, "DATA_DIRECTORY size should be 8 bytes");
 
 	// =========================================================
-	struct ASSETS_EXPORT OPTIONAL_HEADER {
+	struct OPTIONAL_HEADER {
 		bool Is64Bit{};
 		u1 MajorLinkerVersion{}; //	The linker major version number.
 		u1 MinorLinkerVersion{}; // The linker minor version number.
@@ -190,7 +189,7 @@ namespace neutrino::assets {
 		};
 	};
 
-	class ASSETS_EXPORT SECTION_NAME {
+	class SECTION_NAME {
 		friend bsw::istream_wrapper& operator>>(bsw::istream_wrapper& is, SECTION_NAME& x);
 		public:
 			SECTION_NAME();
@@ -205,10 +204,10 @@ namespace neutrino::assets {
 			} name;
 	};
 
-	ASSETS_EXPORT bool operator<(const SECTION_NAME& a, const SECTION_NAME& b);
-	ASSETS_EXPORT bool operator==(const SECTION_NAME& a, const SECTION_NAME& b);
-	ASSETS_EXPORT bool operator!=(const SECTION_NAME& a, const SECTION_NAME& b);
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, const SECTION_NAME& s);
+	bool operator<(const SECTION_NAME& a, const SECTION_NAME& b);
+	bool operator==(const SECTION_NAME& a, const SECTION_NAME& b);
+	bool operator!=(const SECTION_NAME& a, const SECTION_NAME& b);
+	std::ostream& operator<<(std::ostream& os, const SECTION_NAME& s);
 
 	inline
 	bsw::istream_wrapper& operator>>(bsw::istream_wrapper& is, SECTION_NAME& x) {
@@ -216,7 +215,7 @@ namespace neutrino::assets {
 		return is;
 	}
 
-	struct ASSETS_EXPORT SECTION {
+	struct SECTION {
 		SECTION_NAME Name;
 		// An 8 - byte, null - padded UTF - 8 encoded string.If the string is exactly 8�characters long, there is no terminating null.For longer names, this field contains a slash(/ ) that is followed by an ASCII representation of a decimal number that is an offset into the string table.Executable images do not use a string table and do not support section names longer than 8�characters.Long names in object files are truncated if they are emitted to an executable file.
 		u4 VirtualSize{};
@@ -280,8 +279,8 @@ namespace neutrino::assets {
 
 	static_assert(sizeof(SECTION) == 40, "SECTION size should be 40 bytes");
 
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, SECTION::CHARACTERISITICS v);
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, const SECTION& v);
+	std::ostream& operator<<(std::ostream& os, SECTION::CHARACTERISITICS v);
+	std::ostream& operator<<(std::ostream& os, const SECTION& v);
 
 	enum class DataDirectory {
 		Export = 0,
@@ -302,9 +301,9 @@ namespace neutrino::assets {
 		Reserved = 15
 	};
 
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, OPTIONAL_HEADER::IMAGE_SUBSYSTEM v);
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, OPTIONAL_HEADER::IMAGE_DLLCHARACTERISTICS v);
-	ASSETS_EXPORT std::ostream& operator<<(std::ostream& os, const OPTIONAL_HEADER& v);
+	std::ostream& operator<<(std::ostream& os, OPTIONAL_HEADER::IMAGE_SUBSYSTEM v);
+	std::ostream& operator<<(std::ostream& os, OPTIONAL_HEADER::IMAGE_DLLCHARACTERISTICS v);
+	std::ostream& operator<<(std::ostream& os, const OPTIONAL_HEADER& v);
 
 	namespace detail {
 

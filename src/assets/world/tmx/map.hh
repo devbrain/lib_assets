@@ -14,7 +14,7 @@
 #include "world/tmx/reader.hh"
 #include "world/tmx/color.hh"
 #include "world/path_resolver.hh"
-#include <assets/resources/world/world_props.hh>
+#include <assets/resources/world/types.hh>
 
 #include "world/tmx/tile_layer.hh"
 #include "world/tmx/object_layer.hh"

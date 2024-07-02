@@ -7,7 +7,7 @@
 
 #include <map>
 #include <assets/resources/world/world_tiles_layer.hh>
-#include <assets/resources/world/world_props.hh>
+#include <assets/resources/world/types.hh>
 #include <sdlpp/video/color.hh>
 #include <sdlpp/video/surface.hh>
 #include <assets/assets_export.h>
