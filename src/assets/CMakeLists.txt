@@ -191,22 +191,23 @@ set(assets_src
         # ------------------------------------------------------------------
         ${PROJECT_INCLUDE}/assets/resources/world/builder/layers_builder.hh
         ${PROJECT_INCLUDE}/assets/resources/world/builder/texture_atlas_builder.hh
-        ${PROJECT_INCLUDE}/assets/resources/world/builder/world_builder.hh
-        ${PROJECT_INCLUDE}/assets/resources/world/path_resolver.hh
         ${PROJECT_INCLUDE}/assets/resources/world/texture_atlas.hh
         ${PROJECT_INCLUDE}/assets/resources/world/tile_description.hh
         ${PROJECT_INCLUDE}/assets/resources/world/types.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world_data_loader.hh
-        ${PROJECT_INCLUDE}/assets/resources/world/world_layer.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/world_component.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/world_tiles_layer.hh
+        ${PROJECT_INCLUDE}/assets/resources/world/world_image_layer.hh
         ${PROJECT_INCLUDE}/assets/resources/world/world_props.hh
 
 
+        world/path_resolver.hh
         world/layers_builder.cc
         world/texture_atlas.cc
         world/texture_atlas_builder.cc
-        world/tmx.cc
-        world/tmx.hh
+        world/tmx_loader.cc
+        world/tmx_loader.hh
         world/tmx/animation.cc
         world/tmx/animation.hh
         world/tmx/cell.cc
@@ -249,8 +250,9 @@ set(assets_src
         world/tmx/xml_reader.hh
         world/world.cc
         world/world_data_loader.cc
-        world/world_builder.cc
-        world/world_layer.cc
+        world/world_component.cc
+        world/world_tiles_layer.cc
+        world/world_image_layer.cc
 )
 
 if (assets_ENABLE_TESTING)

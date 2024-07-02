@@ -19,13 +19,14 @@
     namespace detail    {                                   \
         struct PPCAT(NAME,_){};                             \
     }                                                       \
-    using NAME = strong::type<TYPE, detail::PPCAT(NAME,_), strong::ordered, strong::ostreamable, strong::bicrementable>
+    using NAME = strong::type<TYPE, detail::PPCAT(NAME,_), strong::ordered, strong::ostreamable, strong::bicrementable, strong::equality>
 
 namespace neutrino::assets {
-  d_DECLARE_TILED_TYPE_ORDERED(std::size_t, texture_id_t);
-  d_DECLARE_TILED_TYPE_ORDERED(std::size_t, layer_id_t);
-  d_DECLARE_TILED_TYPE_ORDERED(std::size_t, tile_id_t);
-
+	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, texture_id_t);
+	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, layer_id_t);
+	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, tile_id_t);
+	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, image_id_t);
+    d_DECLARE_TILED_TYPE_ORDERED(int, object_id_t);
 }
 
 #endif

@@ -5,8 +5,10 @@
 #include "component.hh"
 #include "xml_reader.hh"
 #include "json_reader.hh"
+#include <sdlpp/video/color.hh>
 #include <bsw/strings/number_parser.hh>
 #include <bsw/switch_by_string.hh>
+#include <bsw/override.hh>
 
 namespace neutrino::assets::tmx {
 	bool component::contains(const std::string& name) const noexcept {
@@ -23,6 +25,19 @@ namespace neutrino::assets::tmx {
 			return std::nullopt;
 		}
 		return i->second;
+	}
+
+	void component::assign(neutrino::assets::component& out) const {
+		for (const auto& [k, v] : m_prop) {
+			std::visit(bsw::overload(
+					[&k, &out] (const colori& ci) {
+						out.add(k, sdl::color(ci.r, ci.g, ci.b, ci.a));
+					},
+					[&k, &out] (const auto& x) {
+						out.add(k, x);
+					}
+				), v);
+		}
 	}
 
 	static void add_propery(component& obj, const std::string& name, const std::string& type,
@@ -45,7 +60,7 @@ namespace neutrino::assets::tmx {
 					obj.add(name, std::filesystem::path(value.empty() ? "." : value));
 					break;
 				case "object"_case:
-					obj.add(name, object_id(bsw::number_parser::parse(value)));
+					obj.add(name, object_id_t(bsw::number_parser::parse(value)));
 					break;
 				case "string"_case:
 					obj.add(name, value);

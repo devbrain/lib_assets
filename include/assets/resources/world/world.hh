@@ -5,71 +5,86 @@
 #ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_HH
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_HH
 
-#include <assets/resources/world/world_layer.hh>
+#include <map>
+#include <assets/resources/world/world_tiles_layer.hh>
 #include <assets/resources/world/world_props.hh>
 #include <sdlpp/video/color.hh>
+#include <sdlpp/video/surface.hh>
 #include <assets/assets_export.h>
 
 namespace neutrino::assets {
-  class world_builder;
+	class world_builder;
 
-  class ASSETS_EXPORT world {
-    friend class world_builder;
-    public:
-      // world(const world&) = delete;
-      // world& operator = (const world&) = delete;
-      //
-      // world(world&&) = default;
+	class ASSETS_EXPORT world {
+		public:
+			world(orientation_t orientation,
+			      render_order_t render_order,
+			      const sdl::area_type& map_dims,
+			      const sdl::area_type& tile_dims,
+			      const sdl::color& bgcolor
+			);
 
-      template <class Functor>
-      void visit_layers(Functor&& visitor);
+			world(orientation_t orientation,
+			      render_order_t render_order,
+			      const sdl::area_type& map_dims,
+			      const sdl::area_type& tile_dims,
+			      const sdl::color& bgcolor,
+			      unsigned int hex_side_length,
+			      stagger_axis_t axis,
+			      stagger_index_t index,
+			      bool infinite);
 
-      [[nodiscard]] orientation_t orientation () const;
-      [[nodiscard]] unsigned int width () const;
-      [[nodiscard]] unsigned int height () const;
-      [[nodiscard]] unsigned int tile_width () const;
-      [[nodiscard]] unsigned int tile_height () const;
-      [[nodiscard]] const sdl::color& bg_color () const;
-      [[nodiscard]] render_order_t render_order () const;
-      [[nodiscard]] unsigned int hex_side_length () const;
-      [[nodiscard]] stagger_axis_t stagger_axis () const;
-      [[nodiscard]] stagger_index_t stagger_index () const;
-      [[nodiscard]]  bool infinite () const;
-    private:
-    public:
-      world (orientation_t orientation, unsigned int width, unsigned int height,
-             unsigned int tilewidth, unsigned int tileheight, const sdl::color& bgcolor,
-             render_order_t render_order, unsigned int hex_side_length, stagger_axis_t axis,
-             stagger_index_t index, bool infinite);
-    private:
-      std::vector<tiles_layer> m_layers;
-      const orientation_t m_orientation;
+			world(const world&) = delete;
+			world& operator =(const world&) = delete;
 
-      const unsigned m_width;
-      const unsigned m_height;
+			world(world&&) = default;
 
-      const unsigned m_tilewidth;
-      const unsigned m_tileheight;
+			template<class Functor>
+			void visit_layers(Functor&& visitor);
 
-      const sdl::color m_bgcolor;
+			[[nodiscard]] orientation_t get_orientation() const;
+			[[nodiscard]] render_order_t get_render_order() const;
 
-      const render_order_t m_render_order;
+			[[nodiscard]] sdl::area_type get_map_dimension() const;
+			[[nodiscard]] sdl::area_type get_tiles_dimension() const;
 
-      const unsigned m_hex_side_length;
-      const stagger_axis_t m_axis;
-      const stagger_index_t m_index;
+			[[nodiscard]] const sdl::color& get_background_color() const;
 
-      const bool m_infinite;
-  };
-  // ==========================================================================
-  template <class Functor>
-  void world::visit_layers(Functor&& visitor) {
-    for (const auto& the_layer : m_layers) {
-      visitor(the_layer);
-    }
-  }
+			[[nodiscard]] unsigned int get_hex_side_length() const;
+			[[nodiscard]] stagger_axis_t get_stagger_axis() const;
+			[[nodiscard]] stagger_index_t get_stagger_index() const;
+			[[nodiscard]] bool get_infinite() const;
 
+			void add_image(image_id_t image_id, sdl::surface image);
+			const sdl::surface& get_image(image_id_t image_id) const;
 
+		private:
+			std::vector <tiles_layer> m_layers;
+			const orientation_t m_orientation;
+
+			const sdl::area_type m_map_dims;
+			const sdl::area_type m_tile_dims;
+
+			const sdl::color m_bgcolor;
+
+			const render_order_t m_render_order;
+
+			unsigned m_hex_side_length;
+			stagger_axis_t m_axis;
+			stagger_index_t m_index;
+
+			bool m_infinite;
+
+			std::map <image_id_t, sdl::surface> m_images;
+	};
+
+	// ==========================================================================
+	template<class Functor>
+	void world::visit_layers(Functor&& visitor) {
+		for (const auto& the_layer : m_layers) {
+			visitor(the_layer);
+		}
+	}
 }
 
 #endif

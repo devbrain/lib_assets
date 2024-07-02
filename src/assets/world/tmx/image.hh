@@ -122,4 +122,18 @@ namespace neutrino::assets::tmx {
 	};
 }
 
+template<>
+struct std::hash<neutrino::assets::tmx::image>
+{
+	std::size_t operator()(const neutrino::assets::tmx::image& s) const noexcept
+	{
+		if (s.data().empty()) {
+			const std::size_t h1 = std::hash<std::string>{}(s.source());
+			const std::size_t h2 = s.transparent() ? std::hash<std::string>{}(*s.transparent()) : 0;
+			return h1 ^ (h2 << 1); // or use boost::hash_combine
+		}
+		return std::hash<std::string_view>{}({s.data().data(), s.data().size()});
+	}
+};
+
 #endif //NEUTRINO_IMAGE_HH

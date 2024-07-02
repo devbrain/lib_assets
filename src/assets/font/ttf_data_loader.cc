@@ -4,14 +4,15 @@
 #include <assets/resources/font/ttf_data_loader.hh>
 #include <sdlpp/io/rwops_stream.hh>
 namespace neutrino::assets {
-	class ttf_loader : public abstract_resource_loader<sdl::ttf> {
+	class ttf_loader : public abstract_resource_loader<sdl::ttf, point_size> {
 		bool accept(std::istream& is) const override {
 			return true;
 		}
 
-		sdl::ttf load(std::istream& is) const override {
+		sdl::ttf load(std::istream& is, const point_size& p) const override {
 			sdl::rw_istream rwops(is);
-			return {}; // TODO
+
+			return {rwops, p.ptsize, p.hdpi, p.vdpi};
 		}
 	};
 

@@ -5,7 +5,7 @@
 #ifndef ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_LAYERS_BUILDER_HH
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_LAYERS_BUILDER_HH
 
-#include <assets/resources/world/world_layer.hh>
+#include <assets/resources/world/world_tiles_layer.hh>
 #include <assets/assets_export.h>
 
 namespace neutrino::assets {

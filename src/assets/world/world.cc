@@ -3,59 +3,77 @@
 //
 
 #include <assets/resources/world/world.hh>
+#include <bsw/exception.hh>
 
 namespace neutrino::assets {
-	world::world(orientation_t orientation, unsigned int width, unsigned int height,
-	             unsigned int tilewidth, unsigned int tileheight, const sdl::color& bgcolor,
-	             render_order_t render_order, unsigned int hex_side_length, stagger_axis_t axis,
-	             stagger_index_t index, bool infinite)
-		: m_orientation(orientation), m_width(width), m_height(height),
-		  m_tilewidth(tilewidth), m_tileheight(tileheight), m_bgcolor(bgcolor),
+	world::world(orientation_t orientation,
+	             render_order_t render_order,
+	             const sdl::area_type& world_dims,
+	             const sdl::area_type& tile_dims,
+	             const sdl::color& bgcolor,
+	             unsigned int hex_side_length,
+	             stagger_axis_t axis,
+	             stagger_index_t index,
+	             bool infinite)
+		: m_orientation(orientation), m_map_dims(world_dims),
+		  m_tile_dims(tile_dims), m_bgcolor(bgcolor),
 		  m_render_order(render_order), m_hex_side_length(hex_side_length),
 		  m_axis(axis), m_index(index), m_infinite(infinite) {
 	}
 
-	orientation_t world::orientation() const {
+	world::world(orientation_t orientation, render_order_t render_order, const sdl::area_type& map_dims,
+	             const sdl::area_type& tile_dims, const sdl::color& bgcolor)
+		: m_orientation(orientation), m_map_dims(map_dims),
+		  m_tile_dims(tile_dims), m_bgcolor(bgcolor),
+		  m_render_order(render_order), m_hex_side_length(0),
+		  m_axis(stagger_axis_t::X), m_index(stagger_index_t::ODD), m_infinite(false) {
+	}
+
+	orientation_t world::get_orientation() const {
 		return m_orientation;
 	}
 
-	unsigned int world::width() const {
-		return m_width;
-	}
-
-	unsigned int world::height() const {
-		return m_height;
-	}
-
-	unsigned int world::tile_width() const {
-		return m_tilewidth;
-	}
-
-	unsigned int world::tile_height() const {
-		return m_tileheight;
-	}
-
-	const sdl::color& world::bg_color() const {
-		return m_bgcolor;
-	}
-
-	render_order_t world::render_order() const {
+	render_order_t world::get_render_order() const {
 		return m_render_order;
 	}
 
-	unsigned int world::hex_side_length() const {
+	sdl::area_type world::get_map_dimension() const {
+		return m_map_dims;
+	}
+
+	sdl::area_type world::get_tiles_dimension() const {
+		return m_tile_dims;
+	}
+
+	const sdl::color& world::get_background_color() const {
+		return m_bgcolor;
+	}
+
+	unsigned int world::get_hex_side_length() const {
 		return m_hex_side_length;
 	}
 
-	stagger_axis_t world::stagger_axis() const {
+	stagger_axis_t world::get_stagger_axis() const {
 		return m_axis;
 	}
 
-	stagger_index_t world::stagger_index() const {
+	stagger_index_t world::get_stagger_index() const {
 		return m_index;
 	}
 
-	bool world::infinite() const {
+	bool world::get_infinite() const {
 		return m_infinite;
+	}
+
+	void world::add_image(image_id_t image_id, sdl::surface image) {
+		m_images.insert(std::make_pair(image_id, std::move(image)));
+	}
+
+	const sdl::surface& world::get_image(image_id_t image_id) const {
+		const auto i = m_images.find(image_id);
+		if (i == m_images.end()) {
+			RAISE_EX("Can not find image with id ", image_id);
+		}
+		return i->second;
 	}
 }

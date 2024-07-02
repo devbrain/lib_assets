@@ -10,7 +10,7 @@
 #include "world/tmx/terrain.hh"
 #include "world/tmx/tile.hh"
 #include "world/tmx/reader.hh"
-#include <assets/resources/world/path_resolver.hh>
+#include "world/path_resolver.hh"
 #include "world/tmx/wang_set.hh"
 #include <sdlpp/video/geometry.hh>
 #include <utility>

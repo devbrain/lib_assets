@@ -14,6 +14,8 @@
 
 #include <bsw/override.hh>
 #include <bsw/exception.hh>
+#include <bsw/logger/logger.hh>
+#include <bsw/mp/type_name/type_name.hpp>
 #include <utility>
 
 #include "tmx/xml_reader.hh"
@@ -216,8 +218,9 @@ namespace neutrino::assets::tmx {
 				bsw::overload([&wb, &gid_map](const tile_layer& tl) {
 					              wb.add(transform_layer(tl, gid_map));
 				              },
-				              [](const auto&) {
-					              RAISE_EX("NOT supported yet");
+				              [](const auto& usupported_layer) {
+				              	EVLOG_TRACE(EVLOG_ERROR, "Layer of type ", type_name_v<std::decay_t<decltype(usupported_layer)>>, " is not supported");
+					          //  RAISE_EX("NOT supported yet");
 				              }
 				),
 				wl

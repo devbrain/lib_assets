@@ -2,7 +2,7 @@
 // Created by igor on 20/09/2021.
 //
 
-#include <assets/resources/world/world_layer.hh>
+#include <assets/resources/world/world_tiles_layer.hh>
 #include <bsw/exception.hh>
 
 namespace neutrino::assets {

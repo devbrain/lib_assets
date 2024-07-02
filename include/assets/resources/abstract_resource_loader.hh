@@ -9,38 +9,39 @@
 
 
 namespace neutrino::assets {
-	struct no_args;
+	namespace detail {
+		struct no_args;
 
-	template<typename Resource, typename AdditionalArg>
-	class abstract_resource_loader_base {
-		public:
+		template<typename Resource, typename AdditionalArg>
+		class abstract_resource_loader_base {
+			public:
 			static constexpr bool has_additional_arg = true;
 			using resource_type_t = Resource;
 			using arg_type_t = AdditionalArg;
 
-		public:
+			public:
 			virtual ~abstract_resource_loader_base() = default;
 			virtual bool accept(std::istream& is) const = 0;
 
 			virtual Resource load(std::istream& is, const AdditionalArg& arg) const = 0;
-	};
+		};
 
-	template<typename Resource>
-	class abstract_resource_loader_base<Resource, no_args> {
-		public:
-		static constexpr bool has_additional_arg = false;
-		using resource_type_t = Resource;
-		using arg_type_t = no_args;
+		template<typename Resource>
+		class abstract_resource_loader_base<Resource, no_args> {
+			public:
+			static constexpr bool has_additional_arg = false;
+			using resource_type_t = Resource;
+			using arg_type_t = no_args;
 
-		public:
-		virtual ~abstract_resource_loader_base() = default;
-		virtual bool accept(std::istream& is) const = 0;
+			public:
+			virtual ~abstract_resource_loader_base() = default;
+			virtual bool accept(std::istream& is) const = 0;
 
-		virtual Resource load(std::istream& is) const = 0;
-	};
-
-	template<typename Resource, typename AdditionalArg = no_args>
-	class abstract_resource_loader : public abstract_resource_loader_base<Resource, AdditionalArg> {
+			virtual Resource load(std::istream& is) const = 0;
+		};
+	} // ns detail
+	template<typename Resource, typename AdditionalArg = detail::no_args>
+	class abstract_resource_loader : public detail::abstract_resource_loader_base<Resource, AdditionalArg> {
 
 	};
 

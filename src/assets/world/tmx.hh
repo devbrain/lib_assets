@@ -4,7 +4,7 @@
 
 #ifndef NEUTRINO_TILED_LOADER_TMX_HH
 #define NEUTRINO_TILED_LOADER_TMX_HH
-
+#if 0
 #include <filesystem>
 #include <iosfwd>
 #include <tuple>
@@ -19,5 +19,5 @@ namespace neutrino::assets::tmx {
   std::tuple<world, texture_atlas_builder> load (std::istream& is, path_resolver_t resolver);
   std::tuple<world, texture_atlas_builder> load (std::filesystem::path& path, path_resolver_t resolver);
 }
-
+#endif
 #endif
