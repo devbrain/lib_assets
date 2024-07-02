@@ -9,7 +9,6 @@
 #include <variant>
 
 #include "world/tmx/component.hh"
-#include "world/tmx/layer.hh"
 #include "world/tmx/tile_set.hh"
 #include "world/tmx/reader.hh"
 #include "world/tmx/color.hh"

@@ -6,7 +6,6 @@
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_TILE_DESCRIPTION_HH
 
 #include <cstdint>
-#include <vector>
 #include <optional>
 #include <bitflags/bitflags.hpp>
 #include <assets/resources/world/types.hh>
