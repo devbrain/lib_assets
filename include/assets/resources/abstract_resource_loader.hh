@@ -21,7 +21,7 @@ namespace neutrino::assets {
 
 			public:
 			virtual ~abstract_resource_loader_base() = default;
-			virtual bool accept(std::istream& is) const = 0;
+			virtual bool accept(std::istream& is, const AdditionalArg& arg) const = 0;
 
 			virtual Resource load(std::istream& is, const AdditionalArg& arg) const = 0;
 		};

@@ -80,6 +80,7 @@ set(assets_src
         init.cc
         ${PROJECT_INCLUDE}/assets/assets.hh
         ${PROJECT_INCLUDE}/assets/resources/detail/istream_pos_keeper.hh
+        ${PROJECT_INCLUDE}/assets/resources/detail/bitmap2d.hh
         ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/data_loader.hh
         # --------------------------------------------------------
@@ -170,10 +171,23 @@ set(assets_src
         ${PROJECT_INCLUDE}/assets/resources/font/bgi_font.hh
         ${PROJECT_INCLUDE}/assets/resources/font/bgi_font_data_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/font/ttf_data_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/font/rom_font.hh
+        ${PROJECT_INCLUDE}/assets/resources/font/rom_font_data_loader.hh
 
         font/bgi_font_data_loader.cc
         font/ttf_data_loader.cc
-
+        font/rom_font.cc
+        font/rom_font_data_loader.cc
+        font/bgi/bold_chr.h
+        font/bgi/euro_chr.h
+        font/bgi/goth_chr.h
+        font/bgi/lcom_chr.h
+        font/bgi/litt_chr.h
+        font/bgi/sans_chr.h
+        font/bgi/scri_chr.h
+        font/bgi/simp_chr.h
+        font/bgi/trip_chr.h
+        font/bgi/tschr_chr.h
         # -------------------------------------------------------------
         # TILESET
         # -------------------------------------------------------------
@@ -284,7 +298,7 @@ if (assets_ENABLE_TESTING)
     target_compile_definitions(assets PRIVATE ASSETS_BUILD_FOR_TESTING)
 endif()
 target_link_libraries(assets
-        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer doctest_runner
+        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer thirdparty::dynamic_bitset doctest_runner
         PRIVATE thirdparty::json thirdparty::pugixml
 )
 

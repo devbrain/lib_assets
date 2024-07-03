@@ -8,12 +8,13 @@
 #include <vector>
 #include <map>
 #include <sdlpp/video/geometry.hh>
+#include <assets/assets_export.h>
 
 namespace neutrino::assets {
-	class bgi_font {
+	class ASSETS_EXPORT bgi_font {
 		public:
 			struct command {
-				bool move;
+				bool move{};
 				sdl::point coords;
 			};
 			struct glyph_data {

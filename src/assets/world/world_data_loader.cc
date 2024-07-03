@@ -12,7 +12,7 @@
 
 namespace neutrino::assets {
 	class world_loader : public abstract_resource_loader <world, world_fs_resolver> {
-		bool accept([[maybe_unused]] std::istream& is) const override {
+		bool accept([[maybe_unused]] std::istream& is, [[maybe_unused]] const world_fs_resolver& arg) const override {
 			return true;
 		};
 

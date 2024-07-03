@@ -9,6 +9,7 @@ endif()
 add_subdirectory(sdlpp)
 add_subdirectory(nlohmann)
 add_subdirectory(pugixml)
+add_subdirectory(dynamic_bitset)
 
 
 

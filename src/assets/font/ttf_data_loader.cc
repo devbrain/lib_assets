@@ -5,7 +5,7 @@
 #include <sdlpp/io/rwops_stream.hh>
 namespace neutrino::assets {
 	class ttf_loader : public abstract_resource_loader<sdl::ttf, point_size> {
-		bool accept(std::istream& is) const override {
+		bool accept(std::istream& is, [[maybe_unused]] const point_size&) const override {
 			return true;
 		}
 

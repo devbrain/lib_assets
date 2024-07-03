@@ -76,7 +76,7 @@ namespace neutrino::assets {
 		Resource data_loader_base <Resource, AdditionalArg>::load(std::istream& is, const AdditionalArg& arg) const {
 			for (auto i = m_loaders.begin(); i != m_loaders.end(); ++i) {
 				istream_pos_keeper keeper(is);
-				if (i->second->accept(is)) {
+				if (i->second->accept(is, arg)) {
 					keeper.rewind();
 					try {
 						return i->second->load(is, arg);
@@ -96,7 +96,7 @@ namespace neutrino::assets {
 				RAISE_EX("Can not find loader with key = ", key);
 			}
 			istream_pos_keeper keeper(is);
-			if (i->second->accept(is)) {
+			if (i->second->accept(is, arg)) {
 				keeper.rewind();
 				try {
 					return i->second->load(is, arg);

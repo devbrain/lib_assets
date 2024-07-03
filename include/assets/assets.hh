@@ -15,17 +15,16 @@
 #include "assets/resources/audio/music_data_loader.hh"
 #include "assets/resources/font/bgi_font_data_loader.hh"
 #include "assets/resources/font/ttf_data_loader.hh"
+#include "assets/resources/font/rom_font_data_loader.hh"
 #include "assets/resources/tileset/tileset_data_loader.hh"
 #include "assets/resources/world/world_data_loader.hh"
 
 #include <bsw/mp/typelist.hh>
 
 namespace neutrino::assets {
-
 	namespace detail {
-		template <typename X>
-		struct resource_type_mapper
-		{
+		template<typename X>
+		struct resource_type_mapper {
 			using type = typename X::resource_type_t;
 		};
 
@@ -41,49 +40,56 @@ namespace neutrino::assets {
 				ttf_data_loader,
 				tileset_data_loader,
 				world_data_loader,
+				rom_font_data_loader,
+				rom_font_8x8_data_loader,
+				rom_font_8x14_data_loader,
+				rom_font_8x16_data_loader,
 				Loaders...
 			>;
-			using resources_list_t = bsw::mp::type_list_map_t<resource_type_mapper, loaders_list_t>;
-			using holder_t = bsw::mp::type_list_to_tuple_t<loaders_list_t>;
+			using resources_list_t = bsw::mp::type_list_map_t <resource_type_mapper, loaders_list_t>;
+			using holder_t = bsw::mp::type_list_to_tuple_t <loaders_list_t>;
 
-
-
-			template <typename ResourceType>
+			template<typename ResourceType>
 			static constexpr auto get_index() {
-				return bsw::mp::type_list_find_first_v<ResourceType, resources_list_t>;
+				return bsw::mp::type_list_find_first_v <ResourceType, resources_list_t>;
 			}
 
-			template <typename ResourceType>
+			template<typename ResourceType>
 			static constexpr bool has_additional_arg() {
-				return bsw::mp::type_list_at_t<get_index<ResourceType>(), loaders_list_t>::has_additional_arg;
+				return bsw::mp::type_list_at_t <get_index <ResourceType>(), loaders_list_t>::has_additional_arg;
 			}
 
-			template <typename ResourceType>
-			using additional_arg_t = typename bsw::mp::type_list_at_t<get_index<ResourceType>(), loaders_list_t>::additional_arg_t;
+			template<typename ResourceType>
+			using additional_arg_t = typename bsw::mp::type_list_at_t <
+				get_index <ResourceType>(), loaders_list_t>::additional_arg_t;
 		};
 	}
 
 	template<typename... Loaders>
 	class data_manager {
-		using my_traits = detail::data_manager_traits<Loaders...>;
+		using my_traits = detail::data_manager_traits <Loaders...>;
+
 		public:
 			data_manager() = default;
 
-			template <typename ResourceType>
+			template<typename ResourceType>
 			constexpr auto& get_data_loader() {
-				return std::get<my_traits::template get_index<ResourceType>()>(m_holder);
+				return std::get <my_traits::template get_index <ResourceType>()>(m_holder);
 			}
 
-			template <typename ResourceType>
-			std::enable_if_t<!my_traits::template has_additional_arg<ResourceType>(), ResourceType> load(std::istream& is) {
-				return get_data_loader<ResourceType>().load(is);
+			template<typename ResourceType>
+			std::enable_if_t <!my_traits::template has_additional_arg <ResourceType>(), ResourceType> load(
+				std::istream& is) {
+				return get_data_loader <ResourceType>().load(is);
 			}
 
-			template <typename ResourceType>
-			std::enable_if_t<my_traits::template has_additional_arg<ResourceType>(), ResourceType> load(std::istream& is,
-												const typename my_traits::template additional_arg_t<ResourceType>& arg) {
-				return get_data_loader<ResourceType>().load(is, arg);
+			template<typename ResourceType>
+			std::enable_if_t <my_traits::template has_additional_arg <ResourceType>(), ResourceType> load(
+				std::istream& is,
+				const typename my_traits::template additional_arg_t <ResourceType>& arg) {
+				return get_data_loader <ResourceType>().load(is, arg);
 			}
+
 		private:
 			typename my_traits::holder_t m_holder;
 	};
