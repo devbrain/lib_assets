@@ -156,6 +156,11 @@ set(assets_src
         image/image_data_loader.cc
 
         # -------------------------------------------------------------
+        # PALETTE
+        # -------------------------------------------------------------
+        ${PROJECT_INCLUDE}/assets/resources/palette/palette_data_loader.hh
+        palette/palette_data_loader.cc
+        # -------------------------------------------------------------
         # AUDIO
         # -------------------------------------------------------------
 

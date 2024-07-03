@@ -8,14 +8,15 @@
 #include <tuple>
 #include <type_traits>
 
-#include "assets/resources/image/image_data_loader.hh"
+#include "assets/resources/audio/music_data_loader.hh"
+#include "assets/resources/audio/sound_effect_data_loader.hh"
 #include "assets/resources/exe/exe_data_loader.hh"
 #include "assets/resources/exe/winres_data_loader.hh"
-#include "assets/resources/audio/sound_effect_data_loader.hh"
-#include "assets/resources/audio/music_data_loader.hh"
 #include "assets/resources/font/bgi_font_data_loader.hh"
-#include "assets/resources/font/ttf_data_loader.hh"
 #include "assets/resources/font/rom_font_data_loader.hh"
+#include "assets/resources/font/ttf_data_loader.hh"
+#include "assets/resources/image/image_data_loader.hh"
+#include "assets/resources/palette/palette_data_loader.hh"
 #include "assets/resources/tileset/tileset_data_loader.hh"
 #include "assets/resources/world/world_data_loader.hh"
 
@@ -31,19 +32,20 @@ namespace neutrino::assets {
 		template<typename... Loaders>
 		struct data_manager_traits {
 			using loaders_list_t = bsw::mp::type_list <
-				image_data_loader,
-				exe_data_loader,
-				winres_data_loader,
-				sound_effect_data_loader,
-				music_data_loader,
 				bgi_font_data_loader,
-				ttf_data_loader,
-				tileset_data_loader,
-				world_data_loader,
-				rom_font_data_loader,
-				rom_font_8x8_data_loader,
+				exe_data_loader,
+				image_data_loader,
+				music_data_loader,
+				palette_data_loader,
 				rom_font_8x14_data_loader,
 				rom_font_8x16_data_loader,
+				rom_font_8x8_data_loader,
+				rom_font_data_loader,
+				sound_effect_data_loader,
+				tileset_data_loader,
+				ttf_data_loader,
+				winres_data_loader,
+				world_data_loader,
 				Loaders...
 			>;
 			using resources_list_t = bsw::mp::type_list_map_t <resource_type_mapper, loaders_list_t>;

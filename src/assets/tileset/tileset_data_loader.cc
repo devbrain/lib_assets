@@ -7,6 +7,6 @@
 
 namespace neutrino::assets {
 	tileset_data_loader::tileset_data_loader() {
-		register_loader("MZICO", std::make_unique<win_icon_loader>());
+		register_loader("MSICO", std::make_unique<win_icon_loader>());
 	}
 }
