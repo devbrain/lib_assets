@@ -13,6 +13,7 @@
 #include "world/tmx/component.hh"
 #include "world/tmx/color.hh"
 #include <sdlpp/video/geometry.hh>
+#include <assets/resources/world/world_object.hh>
 
 namespace neutrino::assets::tmx {
 	/**
@@ -177,7 +178,6 @@ namespace neutrino::assets::tmx {
 				return m_dflip;
 			}
 
-		private:
 			unsigned m_id;
 			std::string m_name;
 			std::string m_type;
@@ -244,7 +244,7 @@ namespace neutrino::assets::tmx {
 			/**
 			 * @brief A point iterator.
 			 */
-			typedef typename std::vector <sdl::point2f>::const_iterator const_iterator;
+			typedef std::vector <sdl::point2f>::const_iterator const_iterator;
 
 			/**
 			 * @brief Get the begin iterator on the points.
@@ -268,7 +268,6 @@ namespace neutrino::assets::tmx {
 				return m_points;
 			}
 
-		private:
 			std::vector <sdl::point2f> m_points;
 	};
 
@@ -304,28 +303,15 @@ namespace neutrino::assets::tmx {
 
 	class text : public object {
 		public:
-			enum class halign_t {
-				LEFT,
-				CENTER,
-				RIGHT,
-				JUSTIFY
-			};
-
-			enum class valign_t {
-				TOP,
-				CENTER,
-				BOTTOM
-			};
-
 			explicit text(object_attribs a)
-				: object(a) {
+				: object(std::move(a)), m_halign(assets::text::halign_t::CENTER), m_valign(assets::text::valign_t::CENTER) {
 			}
 
 			void parse(const reader& elt);
 
 			text(object_attribs a, std::string font_family, int pixel_size, bool wrap,
 			     colori color, bool bold, bool italic, bool underline, bool strike,
-			     bool kerning, halign_t halign, valign_t valign, std::string data)
+			     bool kerning, neutrino::assets::text::halign_t halign, neutrino::assets::text::valign_t valign, std::string data)
 				: object(std::move(a)),
 				  m_font_family(std::move(font_family)),
 				  m_pixel_size(pixel_size),
@@ -377,11 +363,11 @@ namespace neutrino::assets::tmx {
 				return m_kerning;
 			}
 
-			[[nodiscard]] halign_t halign() const noexcept {
+			[[nodiscard]] assets::text::halign_t halign() const noexcept {
 				return m_halign;
 			}
 
-			[[nodiscard]] valign_t valign() const noexcept {
+			[[nodiscard]] assets::text::valign_t valign() const noexcept {
 				return m_valign;
 			}
 
@@ -389,24 +375,25 @@ namespace neutrino::assets::tmx {
 				return m_data;
 			}
 
-		private:
 			std::string m_font_family;
-			int m_pixel_size;
-			bool m_wrap;
+			int m_pixel_size{};
+			bool m_wrap{};
 			colori m_color;
-			bool m_bold;
-			bool m_italic;
-			bool m_underline;
-			bool m_strike;
-			bool m_kerning;
-			halign_t m_halign;
-			valign_t m_valign;
+			bool m_bold{};
+			bool m_italic{};
+			bool m_underline{};
+			bool m_strike{};
+			bool m_kerning{};
+			assets::text::halign_t m_halign;
+			assets::text::valign_t m_valign;
 			std::string m_data;
 	};
 
 	using object_t = std::variant <object, point, ellipse, polygon, polyline, text>;
 
 	object_t parse_object(const reader& elt);
+
+	assets::object_t transform(const object_t& obj);
 }
 
 #endif

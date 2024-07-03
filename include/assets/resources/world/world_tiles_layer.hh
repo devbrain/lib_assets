@@ -58,4 +58,4 @@ namespace neutrino::assets {
   };
 } // ns neutrino::tiled
 
-#endif //INCLUDE_NEUTRINO_TILED_WORLD_LAYER_HH
+#endif //ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_LAYER_HH

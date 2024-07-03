@@ -45,7 +45,7 @@ namespace neutrino::assets::tmx {
 			[[nodiscard]] std::optional <property_t> get(const std::string& name) const noexcept;
 
 
-			void assign(neutrino::assets::component& out) const;
+			void assign(assets::component& out) const;
 		private:
 			std::map <std::string, property_t> m_prop;
 	};

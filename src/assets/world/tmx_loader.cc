@@ -5,8 +5,6 @@
 #include <vector>
 #include <assets/resources/world/world.hh>
 
-#include <assets/resources/world/builder/texture_atlas_builder.hh>
-
 #include <bsw/override.hh>
 #include <bsw/exception.hh>
 #include <bsw/logger/logger.hh>
@@ -79,9 +77,59 @@ namespace neutrino::assets::tmx {
 
 			for (const auto& t : ts) {
 				if (const image* img = t.get_image()) {
-					image_id_t image_id(std::hash <image>{}(*img));
-					out.add_image(image_id, create_surface(*img, resolver, image_loader));
+					EVLOG_TRACE(EVLOG_WARNING, "Per tile images are not supported");
+					break;
 				}
+			}
+		}
+	}
+
+	static void load_tilesets(world& out, const map& in) {
+		for (const auto& ts : in.tile_sets()) {
+			if (const image* img = ts.get_image()) {
+				const auto tiles_count = ts.tile_count();
+				if (tiles_count == 0) {
+					EVLOG_TRACE(EVLOG_WARNING, "Found tileset with zero tiles");
+					continue;
+				}
+				const image_id_t image_id(std::hash <image>{}(*img));
+				const auto first_gid = ts.first_gid();
+				const auto tw = ts.tile_width();
+				const auto tl = ts.tile_height();
+				tiles_set ots(image_id, first_gid,
+					sdl::area_type(static_cast<int>(tw), static_cast<int>(tl)),
+					tiles_count);
+				ts.assign(ots);
+				sdl::area_type image_dims;
+				if (auto isize = img->size()) {
+					image_dims = *isize;
+				} else {
+					image_dims = out.get_image(image_id).get_dimanesions();
+				}
+
+				for (unsigned i=0; i<tiles_count; i++) {
+					const local_tile_id_t local_id(i);
+					ots.set_rect(local_id, ts.get_coords(i, image_dims));
+					if (auto* local_tile = ts.get_tile(i)) {
+						local_tile->assign(ots.get_property(local_id));
+						const auto& local_anim = local_tile->get_animation();
+						if (const auto& frames = local_anim.frames(); !frames.empty()) {
+							const auto global_tile_id = ots.from_local(local_id);
+							animation_sequence as;
+							for (const auto& f : frames) {
+								const local_tile_id_t lid(f.id());
+								const auto tid = ots.from_local(lid);
+								as.add(tid, f.duration());
+							}
+							if (!as.empty()) {
+								out.add_animation_sequence(global_tile_id, as);
+							}
+						}
+					}
+				}
+				out.add_tile_set(ots);
+			} else {
+				EVLOG_TRACE(EVLOG_WARNING, "Found tileset without image");
 			}
 		}
 	}
@@ -102,7 +150,7 @@ namespace neutrino::assets::tmx {
 		        raw.infinite());
 
 		load_images(w, raw, resolver, image_loader);
-
+		load_tilesets(w, raw);
 		return w;
 	}
 

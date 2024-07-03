@@ -6,8 +6,10 @@
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_HH
 
 #include <map>
-#include <assets/resources/world/world_tiles_layer.hh>
 #include <assets/resources/world/types.hh>
+#include <assets/resources/world/world_tiles_layer.hh>
+#include <assets/resources/world/world_tiles_set.hh>
+#include <assets/resources/world/world_animation_sequence.hh>
 #include <sdlpp/video/color.hh>
 #include <sdlpp/video/surface.hh>
 #include <assets/assets_export.h>
@@ -56,8 +58,10 @@ namespace neutrino::assets {
 			[[nodiscard]] bool get_infinite() const;
 
 			void add_image(image_id_t image_id, sdl::surface image);
-			const sdl::surface& get_image(image_id_t image_id) const;
+			[[nodiscard]] const sdl::surface& get_image(image_id_t image_id) const;
 
+			void add_tile_set(const tiles_set& ts);
+			void add_animation_sequence(tile_id_t tid, const animation_sequence& aseq);
 		private:
 			std::vector <tiles_layer> m_layers;
 			const orientation_t m_orientation;
@@ -76,6 +80,8 @@ namespace neutrino::assets {
 			bool m_infinite;
 
 			std::map <image_id_t, sdl::surface> m_images;
+			std::vector <tiles_set> m_tile_sets;
+			std::map <tile_id_t, animation_sequence> m_animations;
 	};
 
 	// ==========================================================================

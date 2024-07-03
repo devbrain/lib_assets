@@ -64,6 +64,7 @@ namespace neutrino::assets {
 	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, texture_id_t);
 	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, layer_id_t);
 	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, tile_id_t);
+    d_DECLARE_TILED_TYPE_ORDERED(std::size_t, local_tile_id_t);
 	d_DECLARE_TILED_TYPE_ORDERED(std::size_t, image_id_t);
     d_DECLARE_TILED_TYPE_ORDERED(int, object_id_t);
 }

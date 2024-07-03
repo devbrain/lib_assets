@@ -27,7 +27,7 @@ namespace neutrino::assets::tmx {
 		return i->second;
 	}
 
-	void component::assign(neutrino::assets::component& out) const {
+	void component::assign(assets::component& out) const {
 		for (const auto& [k, v] : m_prop) {
 			std::visit(bsw::overload(
 					[&k, &out] (const colori& ci) {

@@ -10,6 +10,7 @@
 #include <bsw/strings/number_parser.hh>
 #include <bsw/strings/string_utils.hh>
 #include <bsw/exception.hh>
+#include <bsw/override.hh>
 
 namespace neutrino::assets::tmx {
 	namespace {
@@ -144,19 +145,19 @@ namespace neutrino::assets::tmx {
 
 			m_color = colori(elt.get_string_attribute("color", "#000000"));
 
-			static const std::map <std::string, text::halign_t> hmp = {
-				{"left", text::halign_t::LEFT},
-				{"right", text::halign_t::RIGHT},
-				{"center", text::halign_t::CENTER},
-				{"justify", text::halign_t::JUSTIFY}
+			static const std::map <std::string, assets::text::halign_t> hmp = {
+				{"left", assets::text::halign_t::LEFT},
+				{"right", assets::text::halign_t::RIGHT},
+				{"center", assets::text::halign_t::CENTER},
+				{"justify", assets::text::halign_t::JUSTIFY}
 			};
-			m_halign = elt.parse_enum("halign", text::halign_t::LEFT, hmp);
-			static const std::map <std::string, text::valign_t> vmp = {
-				{"center", text::valign_t::CENTER},
-				{"top", text::valign_t::TOP},
-				{"bottom", text::valign_t::BOTTOM}
+			m_halign = elt.parse_enum("halign", assets::text::halign_t::LEFT, hmp);
+			static const std::map <std::string, assets::text::valign_t> vmp = {
+				{"center", assets::text::valign_t::CENTER},
+				{"top", assets::text::valign_t::TOP},
+				{"bottom", assets::text::valign_t::BOTTOM}
 			};
-			m_valign = elt.parse_enum("valign", text::valign_t::TOP, vmp);
+			m_valign = elt.parse_enum("valign", assets::text::valign_t::TOP, vmp);
 			if (const auto* xml_rdr = dynamic_cast <const xml_reader*>(&elt); xml_rdr) {
 				m_data = xml_rdr->get_text();
 			} else if (const auto* json_rdr = dynamic_cast <const json_reader*>(&elt); json_rdr) {
@@ -169,5 +170,92 @@ namespace neutrino::assets::tmx {
 			auto name = elt.get_string_attribute("name", "<unknown>");
 			RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse text object [", name, "], id [", id, "]");
 		}
+	}
+
+	void transform(const object& obj, assets::world_object& out) {
+		out.m_id = obj.m_id;
+		out.m_name = obj.m_name;
+		out.m_type = obj.m_type;
+		out.m_origin = obj.m_origin;
+		out.m_width = obj.m_width;
+		out.m_height = obj.m_height;
+		out.m_rotation = obj.m_rotation;
+		out.m_visible = obj.m_visible;
+		out.m_gid = tile_id_t(obj.m_gid);
+		out.m_hflip = obj.m_hflip;
+		out.m_vflip = obj.m_vflip;
+		out.m_dflip = obj.m_dflip;
+		obj.assign(out);
+	}
+
+	void transform(const ellipse& obj, assets::ellipse& out) {
+		transform(static_cast <const object&>(obj), out);
+	}
+
+	void transform(const point& obj, assets::point& out) {
+		transform(static_cast <const object&>(obj), out);
+	}
+
+	void transform(const polyline& obj, assets::poly_line& out) {
+		transform(static_cast <const object&>(obj), out);
+		out.m_points = obj.m_points;
+	}
+
+	void transform(const polygon& obj, assets::polygon& out) {
+		transform(static_cast <const object&>(obj), out);
+		out.m_points = obj.m_points;
+	}
+
+	void transform(const text& obj, assets::text& out) {
+		transform(static_cast <const object&>(obj), out);
+		out.m_font_family = obj.m_font_family;
+		out.m_pixel_size = obj.m_pixel_size;
+		out.m_wrap = obj.m_wrap;
+		out.m_color = sdl::color(obj.m_color.r, obj.m_color.g, obj.m_color.b, obj.m_color.a);
+		out.m_bold = obj.m_bold;
+		out.m_italic = obj.m_italic;
+		out.m_underline = obj.m_underline;
+		out.m_strike = obj.m_strike;
+		out.m_kerning = obj.m_kerning;
+		out.m_halign = obj.m_halign;
+		out.m_valign = obj.m_valign;
+		out.m_data = obj.m_data;
+
+	}
+
+	assets::object_t transform(const object_t& obj) {
+		return std::visit(bsw::overload(
+			                  [](const object& obj) {
+				                  assets::world_object out;
+				                  transform(obj, out);
+				                  return assets::object_t{out};
+			                  },
+			                  [](const ellipse& obj) {
+				                  assets::ellipse out;
+				                  transform(obj, out);
+				                  return assets::object_t{out};
+			                  },
+			                  [](const point& obj) {
+				                  assets::point out;
+				                  transform(obj, out);
+				                  return assets::object_t{out};
+			                  },
+			                  [](const polygon& obj) {
+				                  assets::polygon out;
+				                  transform(obj, out);
+				                  return assets::object_t{out};
+			                  },
+			                  [](const polyline& obj) {
+				                  assets::poly_line out;
+				                  transform(obj, out);
+				                  return assets::object_t{out};
+			                  },
+			                  [](const text& obj) {
+				                  assets::text out;
+				                  transform(obj, out);
+				                  return assets::object_t{out};
+			                  }
+		                  )
+		                  , obj);
 	}
 }

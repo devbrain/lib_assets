@@ -2,6 +2,7 @@
 // Created by igor on 06/07/2021.
 //
 
+#include <algorithm>
 #include <assets/resources/world/world.hh>
 #include <bsw/exception.hh>
 
@@ -75,5 +76,13 @@ namespace neutrino::assets {
 			RAISE_EX("Can not find image with id ", image_id);
 		}
 		return i->second;
+	}
+
+	void world::add_tile_set(const tiles_set& ts) {
+		m_tile_sets.insert(std::upper_bound(m_tile_sets.begin(), m_tile_sets.end(), ts), ts);
+	}
+
+	void world::add_animation_sequence(tile_id_t tid, const animation_sequence& aseq) {
+		m_animations[tid] = aseq;
 	}
 }

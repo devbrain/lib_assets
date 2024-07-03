@@ -64,7 +64,7 @@ namespace neutrino::assets::tmx {
 			elt.parse_one_element("grid", [&result](const reader& elt) {
 				result.add_grid(grid::parse(elt));
 			});
-			if (const json_reader* jr = dynamic_cast <const json_reader*>(&elt); jr) {
+			if (const auto* jr = dynamic_cast <const json_reader*>(&elt); jr) {
 				if (jr->has_element("image")) {
 					result.set_image(image::parse(*jr));
 				}

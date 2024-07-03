@@ -33,8 +33,6 @@ namespace neutrino::assets {
 			void set_tile(tile_id_t tid, const sdl::rect& r, const detail::bitmap2d& bm);
 			[[nodiscard]] sdl::rect get_tile(tile_id_t tid) const;
 			[[nodiscard]] std::optional<detail::bitmap2d> get_bitmap(tile_id_t tid) const;
-
-
 		private:
 			sdl::surface m_surface;
 			tiles_map_t m_tiles_map;

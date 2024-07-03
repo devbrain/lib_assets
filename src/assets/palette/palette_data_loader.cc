@@ -55,7 +55,7 @@ static neutrino::sdl::palette from_standard(int colors) {
 }
 
 namespace neutrino::assets {
-    class binary_palette_loader : public abstract_resource_loader<sdl::palette> {
+    class binary_palette_loader final : public abstract_resource_loader<sdl::palette> {
         bool accept(std::istream& is) const override {
             return true;
         }

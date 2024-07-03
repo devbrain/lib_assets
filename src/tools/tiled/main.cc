@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 
 
 		auto w = dm.load<world>(resolver.get_stream(), resolver);
-
+		std::cout << "Map " << argv[1] << " loaded" << std::endl;
 	} catch (const bsw::exception& e) {
 		std::cerr << e.what() << std::endl;
 		e.trace().print(std::cerr, true);
