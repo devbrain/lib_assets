@@ -6,10 +6,13 @@
 #define ASSETS_INCLUDE_ASSETS_RESOURCES_WORLD_WORLD_HH
 
 #include <map>
+
 #include <assets/resources/world/types.hh>
 #include <assets/resources/world/world_tiles_layer.hh>
 #include <assets/resources/world/world_tiles_set.hh>
 #include <assets/resources/world/world_animation_sequence.hh>
+#include <assets/resources/world/world_object_layer.hh>
+#include <assets/resources/world/world_image_layer.hh>
 #include <sdlpp/video/color.hh>
 #include <sdlpp/video/surface.hh>
 #include <assets/assets_export.h>
@@ -17,7 +20,10 @@
 namespace neutrino::assets {
 	class world_builder;
 
-	class ASSETS_EXPORT world {
+	class ASSETS_EXPORT world : public component {
+		public:
+			using layer_t = std::variant <image_layer, object_layer, tiles_layer>;
+
 		public:
 			world(orientation_t orientation,
 			      render_order_t render_order,
@@ -44,6 +50,9 @@ namespace neutrino::assets {
 			template<class Functor>
 			void visit_layers(Functor&& visitor);
 
+			void set_empty_tile_id(tile_id_t e);
+			[[nodiscard]] tile_id_t get_empty_tile_id() const;
+
 			[[nodiscard]] orientation_t get_orientation() const;
 			[[nodiscard]] render_order_t get_render_order() const;
 
@@ -62,8 +71,11 @@ namespace neutrino::assets {
 
 			void add_tile_set(const tiles_set& ts);
 			void add_animation_sequence(tile_id_t tid, const animation_sequence& aseq);
+
+			void add_layer(const object_layer& layer);
+			void add_layer(const image_layer& layer);
+			void add_layer(const tiles_layer& layer);
 		private:
-			std::vector <tiles_layer> m_layers;
 			const orientation_t m_orientation;
 
 			const sdl::area_type m_map_dims;
@@ -79,9 +91,12 @@ namespace neutrino::assets {
 
 			bool m_infinite;
 
+			tile_id_t m_empty_tile_id{0};
+
 			std::map <image_id_t, sdl::surface> m_images;
 			std::vector <tiles_set> m_tile_sets;
 			std::map <tile_id_t, animation_sequence> m_animations;
+			std::vector <layer_t> m_layers;
 	};
 
 	// ==========================================================================

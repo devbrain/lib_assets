@@ -30,6 +30,14 @@ namespace neutrino::assets {
 		  m_axis(stagger_axis_t::X), m_index(stagger_index_t::ODD), m_infinite(false) {
 	}
 
+	void world::set_empty_tile_id(tile_id_t e) {
+		m_empty_tile_id = e;
+	}
+
+	tile_id_t world::get_empty_tile_id() const {
+		return m_empty_tile_id;
+	}
+
 	orientation_t world::get_orientation() const {
 		return m_orientation;
 	}
@@ -84,5 +92,17 @@ namespace neutrino::assets {
 
 	void world::add_animation_sequence(tile_id_t tid, const animation_sequence& aseq) {
 		m_animations[tid] = aseq;
+	}
+
+	void world::add_layer(const object_layer& layer) {
+		m_layers.emplace_back(layer);
+	}
+
+	void world::add_layer(const image_layer& layer) {
+		m_layers.emplace_back(layer);
+	}
+
+	void world::add_layer(const tiles_layer& layer) {
+		m_layers.emplace_back(layer);
 	}
 }

@@ -76,7 +76,7 @@ namespace neutrino::assets::tmx {
 			}
 
 			for (const auto& t : ts) {
-				if (const image* img = t.get_image()) {
+				if (t.get_image()) {
 					EVLOG_TRACE(EVLOG_WARNING, "Per tile images are not supported");
 					break;
 				}
@@ -134,6 +134,60 @@ namespace neutrino::assets::tmx {
 		}
 	}
 
+	static void load_layers(world& out, const map& in) {
+		for (const auto& ol : in.objects()) {
+			assets::object_layer result;
+			ol.assign(result);
+			for (const auto& tmx_obj : ol.objects()) {
+				result.add(transform(tmx_obj));
+			}
+			out.add_layer(result);
+		}
+		for (const auto& tmx_layer : in.layers()) {
+			std::visit(bsw::overload(
+				[&out](const image_layer& tmx_image_layer) {
+					if (tmx_image_layer.visible()) {
+						if (const auto* img = tmx_image_layer.get_image()) {
+							const image_id_t image_id(std::hash <image>{}(*img));
+							const auto offs_x = tmx_image_layer.offset_x();
+							const auto offs_y = tmx_image_layer.offset_y();
+							assets::image_layer result(sdl::point(offs_x, offs_y), image_id);
+							out.add_layer(result);
+						}
+					}
+				},
+				[&out](const tile_layer& tmx_tile_layer) {
+					if (tmx_tile_layer.visible()) {
+						tiles_layer result(tmx_tile_layer.width(), tmx_tile_layer.height(), out.get_empty_tile_id());
+						tmx_tile_layer.assign(result);
+						unsigned x = 0;
+						unsigned y = 0;
+						for (const auto& c : tmx_tile_layer.cells()) {
+							flip_t flp{};
+							if (c.diag_flipped()) {
+								flp |= flip_t::DIAGONAL;
+							}
+							if (c.hor_flipped()) {
+								flp |= flip_t::HORIZONTAL;
+							}
+							if (c.vert_flipped()) {
+								flp |= flip_t::VERTICAL;
+							}
+
+							result.at(x, y) = tile_description(tile_id_t(c.gid()), flp);
+							x++;
+							if (x >= tmx_tile_layer.width()) {
+								x = 0;
+								y++;
+							}
+						}
+						out.add_layer(result);
+					}
+				}
+				), tmx_layer);
+		}
+	}
+
 	static world load(const char* text, std::size_t size, const path_resolver_t& resolver,
 	                  const data_loader <sdl::surface>& image_loader) {
 		const auto raw = load_map(text, size, resolver);
@@ -148,9 +202,11 @@ namespace neutrino::assets::tmx {
 		        raw.stagger_axis(),
 		        raw.stagger_index(),
 		        raw.infinite());
-
+		w.set_empty_tile_id(tile_id_t(0));
+		raw.assign(w);
 		load_images(w, raw, resolver, image_loader);
 		load_tilesets(w, raw);
+		load_layers(w, raw);
 		return w;
 	}
 

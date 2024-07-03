@@ -6,11 +6,11 @@
 #include <bsw/exception.hh>
 
 namespace neutrino::assets {
-	tiles_layer::tiles_layer(unsigned int width, unsigned int height)
-		: m_width(width), m_height(height), m_tiles(width * height) {
+	tiles_layer::tiles_layer(unsigned int width, unsigned int height, tile_id_t empty_id)
+		: m_width(width), m_height(height), m_tiles(width * height, tile_description(empty_id, flip_t{})) {
 	}
 
-	const tile_t& tiles_layer::at(unsigned int x, unsigned int y) const {
+	const tile_description& tiles_layer::at(unsigned int x, unsigned int y) const {
 		try {
 			return m_tiles[get_index(x, y)];
 		} catch (bsw::exception& e) {
@@ -18,7 +18,7 @@ namespace neutrino::assets {
 		}
 	}
 
-	tile_t& tiles_layer::at(unsigned int x, unsigned int y) {
+	tile_description& tiles_layer::at(unsigned int x, unsigned int y) {
 		try {
 			return m_tiles[get_index(x, y)];
 		} catch (bsw::exception& e) {
