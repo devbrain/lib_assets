@@ -19,6 +19,8 @@ namespace neutrino::assets {
 			          const sdl::area_type& tile_dims,
 			          unsigned tilecount);
 
+			[[nodiscard]] image_id_t get_image() const;
+
 			[[nodiscard]] unsigned get_first_gid() const;
 			[[nodiscard]] sdl::area_type get_tile_dims() const;
 			[[nodiscard]] unsigned size() const;
@@ -32,6 +34,7 @@ namespace neutrino::assets {
 			component& get_property(local_tile_id_t tid);
 			[[nodiscard]] const component& get_property(local_tile_id_t tid) const;
 
+			[[nodiscard]] const std::vector <sdl::rect>& get_rects() const;
 		private:
 			image_id_t m_image_id;
 			unsigned m_firstgid;

@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <assets/assets.hh>
+#include <world_renderer/world_loader.hh>
 
 int main(int argc, char* argv[]) {
 
@@ -21,6 +22,7 @@ int main(int argc, char* argv[]) {
 
 		auto w = dm.load<world>(resolver.get_stream(), resolver);
 		std::cout << "Map " << argv[1] << " loaded" << std::endl;
+		neutrino::tiled::world_loader(std::move(w));
 	} catch (const bsw::exception& e) {
 		std::cerr << e.what() << std::endl;
 		e.trace().print(std::cerr, true);

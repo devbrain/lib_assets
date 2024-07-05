@@ -86,12 +86,20 @@ namespace neutrino::assets {
 		return i->second;
 	}
 
+	const std::vector<tiles_set>& world::get_tilesets() const {
+		return m_tile_sets;
+	}
+
 	void world::add_tile_set(const tiles_set& ts) {
 		m_tile_sets.insert(std::upper_bound(m_tile_sets.begin(), m_tile_sets.end(), ts), ts);
 	}
 
 	void world::add_animation_sequence(tile_id_t tid, const animation_sequence& aseq) {
 		m_animations[tid] = aseq;
+	}
+
+	const std::map<tile_id_t, animation_sequence> world::get_animations() const {
+		return m_animations;
 	}
 
 	void world::add_layer(const object_layer& layer) {
@@ -104,5 +112,25 @@ namespace neutrino::assets {
 
 	void world::add_layer(const tiles_layer& layer) {
 		m_layers.emplace_back(layer);
+	}
+
+	std::optional<animation_sequence> world::get_animation_sequence(tile_id_t tid) const {
+		auto i = m_animations.find(tid);
+		if (i != m_animations.end()) {
+			return i->second;
+		}
+		return std::nullopt;
+	}
+
+	bool world::is_inimated(tile_id_t tid) const {
+		return m_animations.find(tid) != m_animations.end();
+	}
+
+	const std::map<image_id_t, sdl::surface>& world::get_images() const {
+		return m_images;
+	}
+
+	std::map<image_id_t, sdl::surface>& world::get_images() {
+		return m_images;
 	}
 }

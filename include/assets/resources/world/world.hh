@@ -48,7 +48,7 @@ namespace neutrino::assets {
 			world(world&&) = default;
 
 			template<class Functor>
-			void visit_layers(Functor&& visitor);
+			void visit_layers(Functor&& visitor) const;
 
 			void set_empty_tile_id(tile_id_t e);
 			[[nodiscard]] tile_id_t get_empty_tile_id() const;
@@ -69,12 +69,20 @@ namespace neutrino::assets {
 			void add_image(image_id_t image_id, sdl::surface image);
 			[[nodiscard]] const sdl::surface& get_image(image_id_t image_id) const;
 
+			[[nodiscard]] const std::vector <tiles_set>& get_tilesets() const;
+
 			void add_tile_set(const tiles_set& ts);
 			void add_animation_sequence(tile_id_t tid, const animation_sequence& aseq);
-
+			[[nodiscard]] const std::map <tile_id_t, animation_sequence> get_animations() const;
 			void add_layer(const object_layer& layer);
 			void add_layer(const image_layer& layer);
 			void add_layer(const tiles_layer& layer);
+
+			[[nodiscard]] std::optional <animation_sequence> get_animation_sequence(tile_id_t tid) const;
+			[[nodiscard]] bool is_inimated(tile_id_t tid) const;
+			[[nodiscard]] const std::map <image_id_t, sdl::surface>& get_images() const;
+			[[nodiscard]] std::map <image_id_t, sdl::surface>& get_images();
+
 		private:
 			const orientation_t m_orientation;
 
@@ -101,7 +109,7 @@ namespace neutrino::assets {
 
 	// ==========================================================================
 	template<class Functor>
-	void world::visit_layers(Functor&& visitor) {
+	void world::visit_layers(Functor&& visitor) const {
 		for (const auto& the_layer : m_layers) {
 			visitor(the_layer);
 		}

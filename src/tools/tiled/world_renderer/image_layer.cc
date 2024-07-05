@@ -1,0 +1,15 @@
+//
+// Created by igor on 7/4/24.
+//
+
+#include "image_layer.hh"
+
+namespace neutrino::tiled {
+	image_layer::image_layer(tiles_texture_id_t tex_id)
+		: m_texture_id(tex_id) {
+	}
+
+	tiles_texture_id_t image_layer::get_texture_id() const {
+		return m_texture_id;
+	}
+}

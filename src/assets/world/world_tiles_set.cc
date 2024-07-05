@@ -18,6 +18,10 @@ namespace neutrino::assets {
 		  m_props(tilecount) {
 	}
 
+	image_id_t tiles_set::get_image() const {
+		return m_image_id;
+	}
+
 	unsigned tiles_set::get_first_gid() const {
 		return m_firstgid;
 	}
@@ -56,5 +60,9 @@ namespace neutrino::assets {
 
 	const component& tiles_set::get_property(local_tile_id_t tid) const {
 		return m_props.at(tid.value_of());
+	}
+
+	const std::vector<sdl::rect>& tiles_set::get_rects() const {
+		return m_rects;
 	}
 }
