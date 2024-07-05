@@ -14,8 +14,7 @@ namespace neutrino::tiled {
 			tiles_layer(tile_coord_t w,
 			            tile_coord_t h,
 			            world_coords_t tile_width,
-			            world_coords_t tile_height,
-			            tile_id_t empty_tile_id);
+			            world_coords_t tile_height);
 
 			[[nodiscard]] tile_coord_t get_width() const;
 			[[nodiscard]] tile_coord_t get_height() const;
@@ -23,7 +22,7 @@ namespace neutrino::tiled {
 			[[nodiscard]] world_coords_t get_tile_height() const;
 
 			tile& at(tile_coord_t x, tile_coord_t y);
-			[[nodiscard]] bool is_empty(const tile& t) const;
+			[[nodiscard]] static bool is_empty(const tile& t) ;
 			void clear(tile_coord_t x, tile_coord_t y);
 
 		private:
@@ -31,7 +30,6 @@ namespace neutrino::tiled {
 			tile_coord_t m_height;
 			world_coords_t m_tile_width;
 			world_coords_t m_tile_height;
-			tile_id_t m_empty_tile_id;
 			std::vector <tile> m_tiles;
 	};
 }

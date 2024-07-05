@@ -42,10 +42,17 @@ namespace neutrino::tiled {
 			}
 
 			void add_animation(const tile& base_tile, const tile& tile_, const std::chrono::milliseconds& duration);
+			[[nodiscard]] const std::map <tile, animation_sequence>& get_animations() const;
+
+			using layer_t = std::variant <color_layer, image_layer, tiles_layer>;
+			using container_t = std::list <layer_t>;
+
+			[[nodiscard]] container_t::const_iterator begin() const;
+			[[nodiscard]] container_t::const_iterator end() const;
 
 		private:
 			texture_atlas m_atlas;
-			using layer_t = std::variant <color_layer, image_layer, tiles_layer>;
+
 			std::list <layer_t> m_layers;
 			std::map <tile, animation_sequence> m_animations;
 	};

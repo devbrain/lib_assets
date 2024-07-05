@@ -19,4 +19,16 @@ namespace neutrino::tiled {
 			itr->second.add_frame(frame);
 		}
 	}
+
+	const std::map<tile, animation_sequence>& world_model::get_animations() const {
+		return m_animations;
+	}
+
+	world_model::container_t::const_iterator world_model::begin() const {
+		return m_layers.begin();
+	}
+
+	world_model::container_t::const_iterator world_model::end() const {
+		return m_layers.end();
+	}
 }

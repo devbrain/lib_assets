@@ -6,14 +6,12 @@
 #include <bsw/exception.hh>
 
 namespace neutrino::tiled {
-	tiles_layer::tiles_layer(tile_coord_t w, tile_coord_t h, world_coords_t tile_width, world_coords_t tile_height,
-	                         tile_id_t empty_tile_id)
+	tiles_layer::tiles_layer(tile_coord_t w, tile_coord_t h, world_coords_t tile_width, world_coords_t tile_height)
 		: m_width(w),
 		  m_height(h),
 		  m_tile_width(tile_width),
 		  m_tile_height(tile_height),
-		  m_empty_tile_id(empty_tile_id),
-		  m_tiles(static_cast<std::size_t>(w.value_of()) * static_cast<std::size_t>(h.value_of()), tile(empty_tile_id)) {
+		  m_tiles(static_cast<std::size_t>(w.value_of()) * static_cast<std::size_t>(h.value_of()), tile(tile_id_t(EMPTY_TILE_VALUE))) {
 	}
 
 	tile_coord_t tiles_layer::get_width() const {
@@ -37,11 +35,11 @@ namespace neutrino::tiled {
 		return m_tiles[static_cast<std::size_t>(y.value_of())*static_cast<std::size_t>(m_width.value_of()) + static_cast<std::size_t>(x.value_of())];
 	}
 
-	bool tiles_layer::is_empty(const tile& t) const {
-		return t.m_id == m_empty_tile_id;
+	bool tiles_layer::is_empty(const tile& t) {
+		return t.m_id.value_of() == EMPTY_TILE_VALUE;
 	}
 
 	void tiles_layer::clear(tile_coord_t x, tile_coord_t y) {
-		at(x, y).m_id = m_empty_tile_id;
+		at(x, y).m_id = tile_id_t(EMPTY_TILE_VALUE);
 	}
 }

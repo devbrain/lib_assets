@@ -20,6 +20,7 @@ add_executable(tiled
         world_renderer/world_loader.hh
         world_renderer/animation_sequence.cc
         world_renderer/animation_sequence.hh
+        world_renderer/atlas_builder.hh
 )
 target_link_libraries(tiled PRIVATE assets ${TEST_IMPL_LIB} thirdparty::sdl2-main)
 target_include_directories(tiled PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
