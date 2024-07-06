@@ -15,12 +15,12 @@ namespace neutrino::tiled {
 		  m_id(tile_id) {
 	}
 
-	tile::tile(tiles_texture_id_t tex_id, tile_id_t tile_id)
+	tile::tile(texture_id_t tex_id, tile_id_t tile_id)
 		: m_texture(tex_id),
 		  m_id(tile_id) {
 	}
 
-	tile::tile(tiles_texture_id_t tex_id, tile_id_t tile_id, bool hor_flip, bool vert_flip, bool diag_flip,
+	tile::tile(texture_id_t tex_id, tile_id_t tile_id, bool hor_flip, bool vert_flip, bool diag_flip,
 	           int animated)
 		: m_texture(tex_id),
 		  m_id(tile_id) {

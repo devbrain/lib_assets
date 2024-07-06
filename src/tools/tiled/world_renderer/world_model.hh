@@ -19,7 +19,7 @@
 namespace neutrino::tiled {
 	class world_model {
 		public:
-			world_model() = default;
+			world_model();
 
 			template<typename T>
 			world_model& append(T&& layer) {
@@ -50,11 +50,23 @@ namespace neutrino::tiled {
 			[[nodiscard]] container_t::const_iterator begin() const;
 			[[nodiscard]] container_t::const_iterator end() const;
 
+			void set_geometry(unsigned tile_width, unsigned tile_height, unsigned num_tiles_x, unsigned num_tiles_y);
+
+			[[nodiscard]] world_coords_t get_world_width() const;
+			[[nodiscard]] world_coords_t get_world_height() const;
+			[[nodiscard]] world_coords_t get_tile_width() const;
+			[[nodiscard]] world_coords_t get_tile_height() const;
+
 		private:
 			texture_atlas m_atlas;
 
 			std::list <layer_t> m_layers;
 			std::map <tile, animation_sequence> m_animations;
+
+			world_coords_t m_world_width;
+			world_coords_t m_world_height;
+			world_coords_t m_tile_width;
+			world_coords_t m_tile_height;
 	};
 }
 

@@ -1,2 +1,4 @@
 add_subdirectory(assets)
-add_subdirectory(tools)
+if (is_top_level)
+    add_subdirectory(tools)
+endif()

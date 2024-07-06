@@ -13,11 +13,11 @@ namespace neutrino::tiled {
 	struct tile {
 		tile();
 		explicit tile(tile_id_t tile_id);
-		tile(tiles_texture_id_t tex_id, tile_id_t tile_id);
-		tile(tiles_texture_id_t tex_id, tile_id_t tile_id, bool hor_flip,
+		tile(texture_id_t tex_id, tile_id_t tile_id);
+		tile(texture_id_t tex_id, tile_id_t tile_id, bool hor_flip,
 		     bool vert_flip, bool diag_flip, int animated);
 
-		tiles_texture_id_t m_texture;
+		texture_id_t m_texture;
 		tile_id_t m_id;
 
 		union {

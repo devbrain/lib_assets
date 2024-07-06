@@ -19,15 +19,15 @@ namespace neutrino::tiled {
 
 			void add(sdl::texture&& texture, std::vector<sdl::rect>&& rects);
 			[[nodiscard]] std::tuple<const sdl::texture*, sdl::rect> get(const tile& tl) const;
+			[[nodiscard]] std::tuple<const sdl::texture*, sdl::rect> get(const texture_id_t& tex_id) const;
 		private:
 			struct tiles_map {
-				tiles_map(std::vector<sdl::rect>&& rects, sdl::texture&& texture)
-					: m_rects(std::move(rects)),
-					  m_texture(std::move(texture)) {
-				}
+				tiles_map(std::vector<sdl::rect>&& rects, sdl::texture&& texture);
+
 
 				std::vector<sdl::rect> m_rects;
 				sdl::texture m_texture;
+				sdl::rect  m_dims;
 			};
 		std::vector<tiles_map> m_textures;
 	};

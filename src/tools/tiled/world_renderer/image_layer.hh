@@ -10,10 +10,10 @@
 namespace neutrino::tiled {
 	class image_layer {
 		public:
-			explicit image_layer(tiles_texture_id_t tex_id);
-			[[nodiscard]] tiles_texture_id_t get_texture_id() const;
+			explicit image_layer(texture_id_t tex_id);
+			[[nodiscard]] texture_id_t get_texture_id() const;
 		private:
-			tiles_texture_id_t m_texture_id;
+			texture_id_t m_texture_id;
 	};
 }
 

@@ -14,17 +14,17 @@
 namespace neutrino::tiled {
 	struct atlas_builder {
 		struct texture_material {
-			texture_material(tiles_texture_id_t tex_id, const std::vector<sdl::rect>& coords,
+			texture_material(texture_id_t tex_id, const std::vector<sdl::rect>& coords,
 				sdl::surface&& image)
 				: m_tex_id(tex_id),
 				  m_coords(coords),
 				  m_image(std::move(image)) {
 			}
-			texture_material(tiles_texture_id_t tex_id, sdl::surface&& image)
+			texture_material(texture_id_t tex_id, sdl::surface&& image)
 				: m_tex_id(tex_id),
 				  m_image(std::move(image)) {
 			}
-			tiles_texture_id_t m_tex_id;
+			texture_id_t m_tex_id;
 			std::vector<sdl::rect> m_coords;
 			sdl::surface m_image;
 		};

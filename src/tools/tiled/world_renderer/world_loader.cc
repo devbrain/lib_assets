@@ -10,23 +10,23 @@
 #include <bsw/exception.hh>
 
 namespace neutrino::tiled {
-	using image2texture_t = std::map <assets::image_id_t, tiles_texture_id_t>;
+	using image2texture_t = std::map <assets::image_id_t, texture_id_t>;
 
 	static image2texture_t create_image_mapping(assets::world& world) {
-		std::map <assets::image_id_t, tiles_texture_id_t> out;
-		tiles_texture_id_t tex_id(0);
+		std::map <assets::image_id_t, texture_id_t> out;
+		texture_id_t tex_id(0);
 		for (const auto& itr : world.get_images()) {
 			out.insert(std::make_pair(itr.first, tex_id++));
 		}
 		return out;
 	}
 
-	using tileset_2_texid_t = std::map <std::size_t, tiles_texture_id_t>;
+	using tileset_2_texid_t = std::map <std::size_t, texture_id_t>;
 
 	static std::tuple <atlas_builder, tileset_2_texid_t> create_atlas_builder(assets::world& world,
 	                                                                          const image2texture_t& image2texture) {
 		// create correct ordering of surfaces
-		std::vector <std::pair <assets::image_id_t, tiles_texture_id_t>> ordering;
+		std::vector <std::pair <assets::image_id_t, texture_id_t>> ordering;
 		for (const auto& itr : image2texture) {
 			ordering.emplace_back(itr);
 		}
@@ -178,6 +178,9 @@ namespace neutrino::tiled {
 		auto image2texture = create_image_mapping(world);
 		auto [atlas, tileset_mapping] = create_atlas_builder(world, image2texture);
 		auto model = create_world_model(world, tileset_mapping, image2texture);
+		auto tile_dims = world.get_tiles_dimension();
+		auto world_dims = world.get_map_dimension();
+		model.set_geometry(tile_dims.w, tile_dims.h, world_dims.w, world_dims.h);
 		return {std::move(atlas), std::move(model)};
 	}
 }

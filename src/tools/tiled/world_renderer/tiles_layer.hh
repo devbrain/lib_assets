@@ -22,6 +22,7 @@ namespace neutrino::tiled {
 			[[nodiscard]] world_coords_t get_tile_height() const;
 
 			tile& at(tile_coord_t x, tile_coord_t y);
+			[[nodiscard]] const tile& at(tile_coord_t x, tile_coord_t y) const;
 			[[nodiscard]] static bool is_empty(const tile& t) ;
 			void clear(tile_coord_t x, tile_coord_t y);
 

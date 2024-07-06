@@ -5,6 +5,7 @@
 #ifndef  WORLD_RENDERER_HH
 #define  WORLD_RENDERER_HH
 
+#include <set>
 #include <sdlpp/video/render.hh>
 #include <sdlpp/video/geometry.hh>
 #include <world_renderer/world_model.hh>
@@ -15,19 +16,22 @@ namespace neutrino::tiled {
 	class world_renderer {
 		public:
 			world_renderer(sdl::renderer& renderer,
-			               sdl::area_type& dimensions,
+			               const sdl::area_type& dimensions,
 			               sdl::pixel_format pixel_format = sdl::pixel_format(sdl::pixel_format::RGBA8888));
+			~world_renderer();
 
 			void init(atlas_builder&& atlas_builder_, const world_model& model);
 			void deinit();
 
 			void update();
 
+			void present(const sdl::rect& dst_rect) const;
+			void set_camera (int& x, int& y);
 		private:
 			void _update();
 			void draw_layer (const image_layer& layer);
 			void draw_layer (const color_layer& layer) const;
-			void draw_layer (const tiles_layer& layer, std::chrono::milliseconds delta_time);
+			void draw_layer (const tiles_layer& layer, std::chrono::milliseconds delta_time, std::set<tile>& updated_animations);
 
 			sdl::renderer& m_renderer;
 			sdl::area_type m_dimension;
@@ -45,6 +49,9 @@ namespace neutrino::tiled {
 
 			std::map <tile, animation_data> m_animations;
 			std::chrono::milliseconds m_last_update_time;
+
+			world_coords_t m_camera_x;
+			world_coords_t m_camera_y;
 	};
 }
 

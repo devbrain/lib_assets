@@ -35,6 +35,11 @@ namespace neutrino::tiled {
 		return m_tiles[static_cast<std::size_t>(y.value_of())*static_cast<std::size_t>(m_width.value_of()) + static_cast<std::size_t>(x.value_of())];
 	}
 
+	const tile& tiles_layer::at(tile_coord_t x, tile_coord_t y) const {
+		ENFORCE(x < m_width && y < m_height);
+		return m_tiles[static_cast<std::size_t>(y.value_of())*static_cast<std::size_t>(m_width.value_of()) + static_cast<std::size_t>(x.value_of())];
+	}
+
 	bool tiles_layer::is_empty(const tile& t) {
 		return t.m_id.value_of() == EMPTY_TILE_VALUE;
 	}
