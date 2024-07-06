@@ -81,7 +81,8 @@ namespace neutrino::assets {
 					try {
 						return i->second->load(is, arg);
 					}
-					catch (...) {
+					catch (bsw::exception& e) {
+						e.trace().print();
 					}
 				}
 			}

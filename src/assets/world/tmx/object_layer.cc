@@ -27,6 +27,7 @@ namespace neutrino::assets::tmx {
 			});
 			return obj;
 		} catch (bsw::exception& e) {
+
 			RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse objectgroup [", name, "]");
 		}
 	}

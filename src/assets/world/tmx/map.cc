@@ -68,6 +68,7 @@ namespace neutrino::assets::tmx {
 
 			return result;
 		} catch (bsw::exception& e) {
+		//	e.trace().print();
 			RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse map");
 		}
 	}

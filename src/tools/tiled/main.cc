@@ -23,13 +23,13 @@ int main(int argc, char* argv[]) {
 		std::cout << "Map " << argv[1] << " loaded" << std::endl;
 
 		sdl::system initializer(sdl::init_flags::VIDEO);
-		int w = 1280;
-		int h = 1024;
+		int w = 800;
+		int h = 600;
 
 		sdl::window window(w, h, sdl::window::flags::SHOWN);
 		sdl::renderer renderer(window, sdl::renderer::flags::ACCELERATED);
-		int vp_w = 28*32;
-		int vp_h = 18*32;
+		int vp_w = 800;
+		int vp_h = 600;
 		tiled::world_renderer wr(renderer, sdl::area_type(vp_w, vp_h));
 		wr.init(std::move(atlas), model);
 
@@ -55,7 +55,6 @@ int main(int argc, char* argv[]) {
 						if (e.scan_code == sdl::DOWN) {
 							camera_y++;
 							wr.set_camera(camera_x, camera_y);
-							std::cout << camera_x << "," << camera_y << std::endl;
 						}
 						if (e.scan_code == sdl::LEFT) {
 							camera_x--;
@@ -68,13 +67,14 @@ int main(int argc, char* argv[]) {
 					}
 				}
 			);
-		//	renderer.set_active_color(sdl::colors::black);
+			renderer.set_active_color(sdl::colors::black);
+			renderer.clear();
 
 			wr.update();
 			sdl::rect dst_rect(10, 10, vp_w, vp_h);
 			wr.present(dst_rect);
 			renderer.present();
-			renderer.clear();
+
 		}
 	} catch (const bsw::exception& e) {
 		std::cerr << e.what() << std::endl;

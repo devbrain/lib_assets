@@ -126,6 +126,7 @@ namespace neutrino::assets::tmx {
 			component::parse(obj, elt);
 			return obj;
 		} catch (bsw::exception& e) {
+			e.trace().print();
 			auto id = elt.get_string_attribute("id", "<missing>");
 			auto name = elt.get_string_attribute("name", "<unknown>");
 			RAISE_EX_WITH_CAUSE(std::move (e), "Failed to parse object [", name, "], id [", id, "]");

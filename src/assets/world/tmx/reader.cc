@@ -2,6 +2,7 @@
 // Created by igor on 06/08/2021.
 //
 
+#include <limits>
 #include "reader.hh"
 #include "json_reader.hh"
 #include <bsw/exception.hh>
@@ -63,7 +64,11 @@ namespace neutrino::assets::tmx {
 		if (!a) {
 			return val;
 		}
-		return bsw::number_parser::parse(*a);
+		auto i64 = bsw::number_parser::parse64(*a);
+		if (i64 > std::numeric_limits<int>::max()) {
+			return std::numeric_limits<int>::max();
+		}
+		return static_cast <int>(i64);
 	}
 
 	double reader::get_double_attribute(const char* name) const {

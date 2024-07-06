@@ -62,6 +62,12 @@ namespace neutrino::assets::tmx {
 					rgb_hex_extractor <T>::parse(color, 3),
 					rgb_hex_extractor <T>::parse(color, 5),
 					rgb_hex_extractor <T>::unit());
+			} else if (color.size() == 6) {
+				return std::make_tuple(
+					rgb_hex_extractor <T>::parse(color, 0),
+					rgb_hex_extractor <T>::parse(color, 2),
+					rgb_hex_extractor <T>::parse(color, 4),
+					rgb_hex_extractor <T>::unit());
 			}
 			RAISE_EX("should not be here");
 		}
