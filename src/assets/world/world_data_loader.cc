@@ -12,13 +12,12 @@
 
 namespace neutrino::assets {
 	class world_loader : public abstract_resource_loader <world, world_fs_resolver> {
-		bool accept([[maybe_unused]] std::istream& is, [[maybe_unused]] const world_fs_resolver& arg) const override {
+		[[nodiscard]] bool accept([[maybe_unused]] const world_fs_resolver& arg) const override {
 			return true;
 		};
 
-		world load(std::istream& is, const world_fs_resolver& arg) const override {
-			sdl::rw_istream rwops(is);
-			return tmx::load(is, [&arg](const std::string& p) {
+		[[nodiscard]] world load(const world_fs_resolver& arg) const override {
+			return tmx::load(arg.get_stream(), [&arg](const std::string& p) {
 				return arg.resolve(p);
 			}, arg.get_image_loader());
 		}

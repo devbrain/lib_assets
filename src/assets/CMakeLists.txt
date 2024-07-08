@@ -78,11 +78,16 @@ set(assets_src
         ${PROJECT_INCLUDE}/assets/assets_export.h
         ${PROJECT_INCLUDE}/assets/init.hh
         init.cc
+        resource_from_stream.cc
         ${PROJECT_INCLUDE}/assets/assets.hh
         ${PROJECT_INCLUDE}/assets/resources/detail/istream_pos_keeper.hh
         ${PROJECT_INCLUDE}/assets/resources/detail/bitmap2d.hh
+        ${PROJECT_INCLUDE}/assets/resources/detail/bitstream.hh
         ${PROJECT_INCLUDE}/assets/resources/abstract_resource_loader.hh
         ${PROJECT_INCLUDE}/assets/resources/data_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/loader_state.hh
+        ${PROJECT_INCLUDE}/assets/resources/resource_from_stream.hh
+        detail/bitstream.cc
         # --------------------------------------------------------
         # EXPLODE
         # --------------------------------------------------------
@@ -147,13 +152,18 @@ set(assets_src
         # ---------------------------------------------------------
         # Image
         # ---------------------------------------------------------
+        ${PROJECT_INCLUDE}/assets/resources/image/ega_image.hh
         ${PROJECT_INCLUDE}/assets/resources/image/image_data_loader.hh
+        ${PROJECT_INCLUDE}/assets/resources/image/pixels.hh
+
 
         image/thirdparty/stb_image.h
         image/stb_wrapper.cc
         image/stb_wrapper.hh
         image/standard_image_resource_loader.hh
         image/image_data_loader.cc
+        image/pixels.cc
+        image/ega_image.cc
 
         # -------------------------------------------------------------
         # PALETTE
@@ -204,6 +214,8 @@ set(assets_src
         tileset/tileset_data_loader.cc
         tileset/win_icon_loader.cc
         tileset/win_icon_loader.hh
+        tileset/prographx_loader.cc
+        tileset/prographx_loader.hh
 
         # ------------------------------------------------------------------
         # WORLD

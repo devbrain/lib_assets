@@ -7,44 +7,34 @@
 
 #include <iosfwd>
 
-
 namespace neutrino::assets {
+
 	namespace detail {
-		struct no_args;
-
-		template<typename Resource, typename AdditionalArg>
-		class abstract_resource_loader_base {
-			public:
-			static constexpr bool has_additional_arg = true;
-			using resource_type_t = Resource;
-			using arg_type_t = AdditionalArg;
-
-			public:
-			virtual ~abstract_resource_loader_base() = default;
-			virtual bool accept(std::istream& is, const AdditionalArg& arg) const = 0;
-
-			virtual Resource load(std::istream& is, const AdditionalArg& arg) const = 0;
+		template <typename ArgType>
+		struct arg_type_traits {
+			using type = const ArgType&;
 		};
 
-		template<typename Resource>
-		class abstract_resource_loader_base<Resource, no_args> {
-			public:
+		template <>
+		struct arg_type_traits<std::istream> {
+			using type = std::istream&;
+		};
+	}
+
+
+	template<typename Resource, typename ArgType = std::istream>
+	class abstract_resource_loader {
+		public:
 			static constexpr bool has_additional_arg = false;
 			using resource_type_t = Resource;
-			using arg_type_t = no_args;
+			using arg_type_t = ArgType;
+			using param_type = typename detail::arg_type_traits<ArgType>::type;
 
-			public:
-			virtual ~abstract_resource_loader_base() = default;
-			virtual bool accept(std::istream& is) const = 0;
 
-			virtual Resource load(std::istream& is) const = 0;
-		};
-	} // ns detail
-	template<typename Resource, typename AdditionalArg = detail::no_args>
-	class abstract_resource_loader : public detail::abstract_resource_loader_base<Resource, AdditionalArg> {
-
+			virtual ~abstract_resource_loader() = default;
+			virtual bool accept(param_type is) const = 0;
+			virtual Resource load(param_type is) const = 0;
 	};
-
 }
 
 #endif //ASSETS_INCLUDE_ASSETS_RESOURCES_RESOURCE_HH_

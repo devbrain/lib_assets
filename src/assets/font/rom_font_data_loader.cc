@@ -602,8 +602,9 @@ namespace {
 }
 
 namespace neutrino::assets {
-	static std::size_t required_data_size(const rom_font_size& sz) {
-		const std::size_t bits = sz.height * sz.width * 256;
+
+	static std::size_t required_data_size(unsigned w, unsigned h) {
+		const std::size_t bits = h * w * 256;
 		std::size_t bytes = bits / 8;
 		if (bits % 8) {
 			bytes++;
@@ -611,14 +612,22 @@ namespace neutrino::assets {
 		return bytes;
 	}
 
-	static bool check_size(std::istream& is, const rom_font_size& sz) {
+	static std::size_t required_data_size(const rom_font_resource& sz) {
+		return required_data_size(sz.width, sz.height);
+	}
+
+	static bool check_size(std::istream& is, unsigned w, unsigned h) {
 		auto curr = is.tellg();
 		is.seekg(0, std::ios::end);
 		auto end = is.tellg();
 		is.seekg(curr, std::ios::beg);
 
 		const std::size_t fsize = end - curr;
-		return required_data_size(sz) <= fsize;
+		return required_data_size(w, h) <= fsize;
+	}
+
+	static bool check_size(const rom_font_resource& sz) {
+		return check_size(sz.get_stream(), sz.width, sz.height);
 	}
 
 	static void create_bitmap(detail::bitmap2d& out, const uint8_t* buffer , std::size_t idx) {
@@ -635,12 +644,13 @@ namespace neutrino::assets {
 		}
 	}
 
-	class rom_font_loader : public abstract_resource_loader <rom_font, rom_font_size> {
-		bool accept(std::istream& is, [[maybe_unused]] const rom_font_size& arg) const override {
-			return check_size(is, arg);
+	class rom_font_loader : public abstract_resource_loader <rom_font, rom_font_resource> {
+		[[nodiscard]] bool accept(const rom_font_resource& arg) const override {
+			return check_size(arg);
 		}
 
-		rom_font load(std::istream& is, const rom_font_size& p) const override {
+		[[nodiscard]] rom_font load(const rom_font_resource& p) const override {
+			auto& is = p.get_stream();
 			std::vector <uint8_t> raw_data(required_data_size(p));
 			is.read(reinterpret_cast <char*>(raw_data.data()), raw_data.size());
 			rom_font f(p.width, p.height);
@@ -693,16 +703,32 @@ namespace neutrino::assets {
 
 	template<unsigned W, unsigned H>
 	class generic_rom_font_loader : public abstract_resource_loader <font_type <W, H>> {
-		bool accept(std::istream& is) const override {
-			return check_size(is, {W, H});
+		[[nodiscard]] bool accept(std::istream& is) const override {
+			return check_size(is, W, H);
 		}
 
-		font_type <W, H> load(std::istream& is) const override {
-			std::vector <uint8_t> raw_data(required_data_size({W, H}));
+		[[nodiscard]] font_type <W, H> load(std::istream& is) const override {
+			std::vector <uint8_t> raw_data(required_data_size(W, H));
 			is.read(reinterpret_cast <char*>(raw_data.data()), raw_data.size());
 			return create_static_font<W, H>(raw_data.data());
 		}
 	};
+
+	rom_font_resource rom_font_resource::make_8x8(std::istream& is) {
+		return {is, 8, 8};
+	}
+
+	rom_font_resource rom_font_resource::make_8x14(std::istream& is) {
+		return {is, 8, 14};
+	}
+
+	rom_font_resource rom_font_resource::make_8x16(std::istream& is) {
+		return {is, 8, 16};
+	}
+
+	std::istream& rom_font_resource::get_stream() const {
+		return m_stream;
+	}
 
 	rom_font_data_loader::rom_font_data_loader() {
 		register_loader("ROM_FONT", std::make_unique <rom_font_loader>());

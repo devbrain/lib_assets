@@ -57,13 +57,8 @@ namespace neutrino::assets {
 			}
 
 			template<typename ResourceType>
-			static constexpr bool has_additional_arg() {
-				return bsw::mp::type_list_at_t <get_index <ResourceType>(), loaders_list_t>::has_additional_arg;
-			}
-
-			template<typename ResourceType>
-			using additional_arg_t = typename bsw::mp::type_list_at_t <
-				get_index <ResourceType>(), loaders_list_t>::additional_arg_t;
+			using param_type_t = typename bsw::mp::type_list_at_t <
+				get_index <ResourceType>(), loaders_list_t>::param_type;
 		};
 	}
 
@@ -80,16 +75,9 @@ namespace neutrino::assets {
 			}
 
 			template<typename ResourceType>
-			std::enable_if_t <!my_traits::template has_additional_arg <ResourceType>(), ResourceType> load(
-				std::istream& is) {
+			ResourceType load(
+				typename my_traits::template param_type_t<ResourceType> is) {
 				return get_data_loader <ResourceType>().load(is);
-			}
-
-			template<typename ResourceType>
-			std::enable_if_t <my_traits::template has_additional_arg <ResourceType>(), ResourceType> load(
-				std::istream& is,
-				const typename my_traits::template additional_arg_t <ResourceType>& arg) {
-				return get_data_loader <ResourceType>().load(is, arg);
 			}
 
 		private:

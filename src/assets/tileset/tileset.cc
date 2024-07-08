@@ -31,9 +31,9 @@ namespace neutrino::assets {
 		m_tiles_map[tid] = std::make_tuple(r, INVALID_IDX);
 	}
 
-	void tileset::set_tile(tile_id_t tid, const sdl::rect& r, const detail::bitmap2d& bm) {
+	void tileset::set_tile(tile_id_t tid, const sdl::rect& r, bitmask&& bm) {
 		auto n = m_bitmaps.size();
-		m_bitmaps.push_back(bm);
+		m_bitmaps.emplace_back(std::move(bm));
 		m_tiles_map[tid] = std::make_tuple(r, n);
 	}
 
@@ -45,15 +45,15 @@ namespace neutrino::assets {
 		return std::get<0>(i->second);
 	}
 
-	std::optional<detail::bitmap2d> tileset::get_bitmap(tile_id_t tid) const {
+	const bitmask* tileset::get_bitmap(tile_id_t tid) const {
 		auto i = m_tiles_map.find(tid);
 		if (i == m_tiles_map.end()) {
 			RAISE_EX("Can not find tile ", tid);
 		}
 		auto idx = std::get<1>(i->second);
 		if (idx != INVALID_IDX) {
-			return std::nullopt;
+			return nullptr;
 		}
-		return m_bitmaps[idx];
+		return &m_bitmaps[idx];
 	}
 }

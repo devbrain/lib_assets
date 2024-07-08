@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
 
 		assets::world_fs_resolver resolver(argv[1], dm.get_data_loader <neutrino::sdl::surface>());
 
-		auto [atlas, model] = tiled::world_loader(dm.load <assets::world>(resolver.get_stream(), resolver));
+		auto [atlas, model] = tiled::world_loader(dm.load <assets::world>(resolver));
 		std::cout << "Map " << argv[1] << " loaded" << std::endl;
 
 		sdl::system initializer(sdl::init_flags::VIDEO);
