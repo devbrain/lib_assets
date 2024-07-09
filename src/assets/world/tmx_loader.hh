@@ -12,7 +12,7 @@
 #include <assets/resources/image/image_data_loader.hh>
 
 namespace neutrino::assets::tmx {
-	world load (std::istream& is, const path_resolver_t& resolver, const data_loader<sdl::surface>& image_loader);
+	world load (std::istream& is, const path_resolver_t& resolver, const data_loader<sdl::surface, image_resource>& image_loader);
 }
 
 

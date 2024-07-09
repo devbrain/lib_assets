@@ -24,7 +24,7 @@ namespace neutrino::assets {
 	};
 
 	world_fs_resolver::world_fs_resolver(const std::filesystem::path& main_tmx_file,
-	                                     const data_loader <sdl::surface>& img_loader)
+	                                     const data_loader <sdl::surface, image_resource>& img_loader)
 		: m_base_path(main_tmx_file.parent_path()),
 		  m_img_loader(img_loader),
 		  m_stream(std::make_unique <std::fstream>(main_tmx_file)) {
@@ -37,7 +37,7 @@ namespace neutrino::assets {
 		return *m_stream;
 	}
 
-	const data_loader<sdl::surface>& world_fs_resolver::get_image_loader() const {
+	const data_loader<sdl::surface, image_resource>& world_fs_resolver::get_image_loader() const {
 		return m_img_loader;
 	}
 

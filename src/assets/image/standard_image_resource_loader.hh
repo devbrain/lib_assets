@@ -6,6 +6,7 @@
 #define ASSETS_SRC_ASSETS_IMAGE_STANDARD_IMAGE_RESOURCE_LOADER_HH_
 
 #include <assets/resources/abstract_resource_loader.hh>
+#include <assets/resources/image/image_data_loader.hh>
 #include "image/stb_wrapper.hh"
 
 namespace neutrino::assets {
@@ -30,14 +31,13 @@ namespace neutrino::assets {
 		};
 
 		template <stb_image_format_t format>
-		class stb_image_resource_loader : public abstract_resource_loader<neutrino::sdl::surface> {
-		 private:
-			bool accept (std::istream& is) const override {
-				return stb_image_format_traits<format>::accept(is);
+		class stb_image_resource_loader : public abstract_resource_loader<sdl::surface, image_resource> {
+			[[nodiscard]] bool accept (const image_resource& is) const override {
+				return stb_image_format_traits<format>::accept(is.get_stream());
 			}
 
-			sdl::surface load (std::istream& is) const override {
-				return stb_image_format_traits<format>::load(is);
+			[[nodiscard]] sdl::surface load (const image_resource& is) const override {
+				return stb_image_format_traits<format>::load(is.get_stream());
 			}
 
 

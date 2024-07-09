@@ -35,7 +35,7 @@ namespace neutrino::assets::tmx {
 	}
 
 	static sdl::surface create_surface(std::istream& is, const image& img,
-	                                   const data_loader <sdl::surface>& image_loader) {
+	                                   const data_loader <sdl::surface, image_resource>& image_loader) {
 		auto s = image_loader.load(is);
 		if (img.transparent()) {
 			colori c(*img.transparent());
@@ -45,7 +45,7 @@ namespace neutrino::assets::tmx {
 	}
 
 	static sdl::surface create_surface(const image& img, const path_resolver_t& resolver,
-	                                   const data_loader <sdl::surface>& image_loader) {
+	                                   const data_loader <sdl::surface, image_resource>& image_loader) {
 		if (!img.data().empty()) {
 			bsw::io::memory_input_stream is(img.data().data(), img.data().size());
 			return create_surface(is, img, image_loader);
@@ -56,7 +56,7 @@ namespace neutrino::assets::tmx {
 	}
 
 	static void load_images(world& out, const map& in, const path_resolver_t& resolver,
-	                        const data_loader <sdl::surface>& image_loader) {
+	                        const data_loader <sdl::surface, image_resource>& image_loader) {
 		for (const auto& layer : in.layers()) {
 			std::visit(bsw::overload(
 				           [&out, &resolver, &image_loader](const image_layer& l) {
@@ -189,7 +189,7 @@ namespace neutrino::assets::tmx {
 	}
 
 	static world load(const char* text, std::size_t size, const path_resolver_t& resolver,
-	                  const data_loader <sdl::surface>& image_loader) {
+	                  const data_loader <sdl::surface, image_resource>& image_loader) {
 		const auto raw = load_map(text, size, resolver);
 		auto icolor = raw.background_color();
 
@@ -210,7 +210,7 @@ namespace neutrino::assets::tmx {
 		return w;
 	}
 
-	world load(std::istream& is, const path_resolver_t& resolver, const data_loader <sdl::surface>& image_loader) {
+	world load(std::istream& is, const path_resolver_t& resolver, const data_loader <sdl::surface, image_resource>& image_loader) {
 		auto txt = std::vector <char>((std::istreambuf_iterator <char>(is)),
 		                              std::istreambuf_iterator <char>());
 		return load(txt.data(), txt.size(), resolver, image_loader);

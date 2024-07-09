@@ -157,6 +157,7 @@ set(assets_src
         ${PROJECT_INCLUDE}/assets/resources/image/pixels.hh
 
 
+
         image/thirdparty/stb_image.h
         image/stb_wrapper.cc
         image/stb_wrapper.hh
@@ -164,6 +165,8 @@ set(assets_src
         image/image_data_loader.cc
         image/pixels.cc
         image/ega_image.cc
+        image/raw_image_loader.cc
+        image/raw_image_loader.hh
 
         # -------------------------------------------------------------
         # PALETTE

@@ -276,19 +276,19 @@ namespace neutrino::assets {
 		: m_exe_loader(std::make_unique <windows_resources_loader>()) {
 	}
 
-	bool win_icon_loader::accept(std::istream& is) const {
-		if (!m_exe_loader->accept(is)) {
+	bool win_icon_loader::accept(const tileset_resource& arg) const {
+		if (!m_exe_loader->accept(arg.get_stream())) {
 			return false;
 		}
-		auto rd = m_exe_loader->load(is);
+		auto rd = m_exe_loader->load(arg.get_stream());
 		return rd.exists <windows_rs_icon_info>();
 	}
 
-	tileset win_icon_loader::load(std::istream& is) const {
-		auto rd = m_exe_loader->load(is);
+	tileset win_icon_loader::load(const tileset_resource& arg) const {
+		auto rd = m_exe_loader->load(arg.get_stream());
 		auto icons = rd.load <windows_rs_icon_info>();
-		auto dims = get_dimensions(icons, is);
+		auto dims = get_dimensions(icons, arg.get_stream());
 
-		return create_tileset(dims, icons, is);
+		return create_tileset(dims, icons, arg.get_stream());
 	}
 }

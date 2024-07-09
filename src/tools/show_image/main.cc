@@ -37,8 +37,8 @@ int main(int argc, char* argv[]) {
 		sdl::system initializer (sdl::init_flags::VIDEO);
 
 		assets::image_data_loader dm;
-
-		auto image = dm.load (ifs);
+		assets::raw_image_resource rs(ifs, assets::raw_image_resource::EGA, assets::raw_image_resource::NO_PALETTE);
+		auto image = dm.load (rs);
 		auto [pixels, pitch, w, h] = image.pixels_data();
 		bsw::md5_engine md5;
 		md5.update (image->pixels, image->pitch*image->h);

@@ -85,9 +85,26 @@ namespace neutrino::assets {
         register_loader("BINPAL", std::make_unique<binary_palette_loader>());
     }
 
+    static sdl::palette create_ega_palette() {
+        sdl::palette pal(64);
+
+        uint8_t low = 0x55;
+
+        for (int i = 0; i < 64; i++) {
+            const uint8_t red   = ((i & 4) ? ~low : 0) | ((i & 32) ? low : 0);
+            const uint8_t green = ((i & 2) ? ~low : 0) | ((i & 16) ? low : 0);
+            const uint8_t blue  = ((i & 1) ? ~low : 0) | ((i & 8) ? low : 0);
+            const uint8_t alpha = 255;
+
+            pal[i] = sdl::color(red, green, blue, alpha);
+        }
+
+        return pal;
+    }
+
     const sdl::palette& load_standard_ega_palette() {
-        static auto p = from_standard(16);
-        return p;
+        static sdl::palette pal = create_ega_palette();
+        return pal;
     }
 
     const sdl::palette& load_standard_vga_palette() {

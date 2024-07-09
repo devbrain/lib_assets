@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
 		while (!done) {
 			// Handle Input
-			neutrino::sdl::handle_input (
+			sdl::handle_input (
 				[&done] (neutrino::sdl::events::quit &) {
 				  done = true;
 				},
