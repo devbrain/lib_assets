@@ -77,7 +77,7 @@ std::vector<raw_map> extract_maps(const std::filesystem::path& path_to_exe, exe_
 		}
 
 		for (uint8_t i = 0; i < len; i++) {
-			char ch;
+			uint8_t ch;
 			rdr >> ch;
 			maps.back().add(ch);
 		}

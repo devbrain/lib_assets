@@ -85,6 +85,7 @@ typedef struct {
 	int tileIndexFG;
 } TILE_REVMAP_BLOCKS;
 
+static
 TILE_MAP tileMap[] = {
 	{0x21, {CCT(13,  0), ___________, ___________, ___________}, ___________, CCTF_MV_NONE}, // blue dripping pipe
 	{0x22, {CCT(12, 30), ___________, ___________, ___________}, ___________, CCTF_MV_NONE}, // green stuff hanging down from block 2
@@ -311,10 +312,12 @@ TILE_MAP tileMap[] = {
 // 0xFF invalid
 };
 
+static
 TILE_MAP tileMap4x1[] = {
 	{0x8F, {CCT(14, 12), CCT(14, 13), CCT(14, 14), CCT(14, 15)}, ___________, CCTF_MV_NONE}, // volcano bottom
 };
 
+static
 TILE_MAP_VINE tileMapVine[] = {
 	{0x85, CCT( 8, 27), CCT( 8, 31), CCTF_MV_NONE}, // hanging single-chain with hook
 	{0x86, CCT( 8, 22), CCT( 8, 23), CCTF_MV_NONE}, // hanging double-chain
@@ -322,6 +325,7 @@ TILE_MAP_VINE tileMapVine[] = {
 	{0x88, CCT( 0,  1), CCT( 0,  5), CCTF_MV_NONE}, // green vine
 };
 
+static
 TILE_MAP_SIGN tileMapSign[] = {
 	// Exhaust suckers
 	{0x57, 0x4C, {CCT( 3, 29), CCT( 3,  2), ___________, ___________,
@@ -544,6 +548,7 @@ TILE_MAP_SIGN tileMapSign[] = {
 
 /// Reverse mapping just for blocks (since many different tiles will
 /// map back to the same codes, depending on the level tileset)
+static
 TILE_REVMAP_BLOCKS tileRevMapBlocks[] = {
 	SOLID_TILESET(15, 24) // black solid
 	SOLID_TILESET(19, 20) // blue rock

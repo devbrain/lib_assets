@@ -33,7 +33,7 @@ raw_map::data_t::iterator raw_map::end() {
 	return m_data.end();
 }
 
-void raw_map::add(char ch) {
+void raw_map::add(uint8_t ch) {
 	m_data.push_back(ch);
 }
 
