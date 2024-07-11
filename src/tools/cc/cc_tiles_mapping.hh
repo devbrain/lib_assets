@@ -30,28 +30,28 @@
 #include <cstdint>
 
 /// Create a tile number from a tileset number and an index into the tileset.
-#define CCT(tileset, tile) (((tileset) << 8) | (tile))
-
-#define ___________     -1 ///< No tile here
-#define IBEAM_L         -9 ///< I-beam left end
-#define IBEAM_M         -8 ///< I-beam left end
-#define IBEAM_R         -7 ///< I-beam left end
+// #define CCT(tileset, tile) (((tileset) << 8) | (tile))
+#define CCT(tileset, tile) (50*tileset + tile)
+#define ___________     (-1) ///< No tile here
+#define IBEAM_L         (-9) ///< I-beam left end
+#define IBEAM_M         (-8) ///< I-beam left end
+#define IBEAM_R         (-7) ///< I-beam left end
 #define IS_IBEAM(x)     (((x) >= IBEAM_L) && ((x) <= IBEAM_R)) ///< Is this an i-beam tile?
 #define CCT_IBEAM(b, x) ((b) + ((x) - IBEAM_L)) ///< Get i-beam tile index from base (ibeam colour) and position flag (IBEAM_*)
 
-#define BLOCK_TL        -20 ///< solid block top-left (0)
-#define BLOCK_TM        -19 ///< solid block top-mid (1)
-#define BLOCK_TR        -18 ///< solid block top-right (2)
-#define BLOCK_BL        -16 ///< solid block bottom-left (4)
-#define BLOCK_BM        -15 ///< solid block bottom-mid (5)
-#define BLOCK_BR        -14 ///< solid block bottom-right (6)
-#define BLOCK_ML        -12 ///< solid block mid-left (8)
-#define BLOCK_MM        -11 ///< solid block mid-mid (9)
-#define BLOCK_MR        -10 ///< solid block mid-right (10)
+#define BLOCK_TL        (-20) ///< solid block top-left (0)
+#define BLOCK_TM        (-19) ///< solid block top-mid (1)
+#define BLOCK_TR        (-18) ///< solid block top-right (2)
+#define BLOCK_BL        (-16) ///< solid block bottom-left (4)
+#define BLOCK_BM        (-15) ///< solid block bottom-mid (5)
+#define BLOCK_BR        (-14) ///< solid block bottom-right (6)
+#define BLOCK_ML        (-12) ///< solid block mid-left (8)
+#define BLOCK_MM        (-11) ///< solid block mid-mid (9)
+#define BLOCK_MR        (-10) ///< solid block mid-right (10)
 #define IS_BLOCK(x)     (((x) >= BLOCK_TL) && ((x) <= BLOCK_MR)) ///< Is this a block tile?
 #define CCT_BLOCK(b, x) ((b) + ((x) - BLOCK_TL)) ///< Get block tile index from base (block colour) and position flag (BLOCK_*)
 
-#define CCT_USCORE      -30 ///< underscore
+#define CCT_USCORE      (-30) ///< underscore
 
 #define CCTF_MV_NONE  0 ///< No special flags
 #define CCTF_MV_VERT  1 ///< This block moves up and down (e.g. wall lasers)

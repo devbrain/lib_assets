@@ -2,14 +2,18 @@
 // Created by igor on 7/10/24.
 //
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <filesystem>
 #include <map>
 #include <assets/assets.hh>
+
+#include <sdlpp/video/surface.hh>
 #include <bsw/io/memory_stream_buf.hh>
 #include <bsw/io/binary_reader.hh>
 
-#include "cc_tiles_mapping.hh"
+#include "raw_map.hh"
+#include "cc_decode.hh"
 
 using namespace neutrino;
 
@@ -51,7 +55,7 @@ class exe_map_props {
 		std::map <int, int> lvl_rows;
 };
 
-std::vector<std::vector<std::string>> extract_maps(const std::filesystem::path& path_to_exe, exe_map_props& props) {
+std::vector<raw_map> extract_maps(const std::filesystem::path& path_to_exe, exe_map_props& props) {
 	std::ifstream ifs(path_to_exe, std::ios::binary | std::ios::in);
 	auto unpacked = dm.load <assets::unpacked_exe>(ifs);
 
@@ -60,7 +64,7 @@ std::vector<std::vector<std::string>> extract_maps(const std::filesystem::path& 
 	bsw::io::binary_reader rdr(exe_stream);
 	int level = 0;
 	int rows = 0;
-	std::vector<std::vector<std::string>> maps;
+	std::vector<raw_map> maps;
 	while (true) {
 		uint8_t len;
 		rdr >> len;
@@ -69,16 +73,15 @@ std::vector<std::vector<std::string>> extract_maps(const std::filesystem::path& 
 		}
 
 		if (rows == 0) {
-			maps.emplace_back();
+			maps.emplace_back(props.get_columns(), props.get_rows(level));
 		}
 
-		std::string row;
 		for (uint8_t i = 0; i < len; i++) {
 			char ch;
 			rdr >> ch;
-			row += ch;
+			maps.back().add(ch);
 		}
-		maps.back().emplace_back(row);
+
 		rows++;
 		if (rows >= props.get_rows(level)) {
 			level++;
@@ -88,18 +91,40 @@ std::vector<std::vector<std::string>> extract_maps(const std::filesystem::path& 
 	return maps;
 }
 
-void print_maps(const std::vector<std::vector<std::string>>& maps) {
+void print_maps(const std::vector<raw_map>& maps) {
 	for (const auto& lvl : maps) {
-		std::cout << "------------------------------" << std::endl;
-		for (const auto& row : lvl) {
-			std::cout << row << std::endl;
-		}
+		std::cout << "===========================================" << std::endl;
+		std::cout << lvl << std::endl;
 	}
+}
+
+assets::tileset load_tileset(const std::filesystem::path& pth) {
+	std::ifstream ifs(pth, std::ios::in | std::ios::binary);
+	assets::prographx_resource rc(ifs, true, 0);
+	return dm.load<assets::tileset>(rc);
+}
+
+void draw_layer(sdl::surface& srf, const std::vector<map_tile>& m, const assets::tileset& ts) {
+	const auto& tiles = ts.get_surface();
+	for (const auto& tile : m) {
+		auto src_rect = ts.get_tile(assets::tile_id_t(tile.code));
+
+		sdl::rect dst_rect(tile.posx*16, tile.posy*16, src_rect.w, src_rect.h);
+		tiles.blit(src_rect, srf, dst_rect);
+	}
+}
+
+sdl::surface draw_map(std::tuple <bg_map_t, fg_map_t>& mp, const assets::tileset& ts, int w, int h) {
+	sdl::surface srf = sdl::surface::make_8bit(w*16, h*16);
+	srf.set_palette(assets::load_standard_vga_palette());
+	draw_layer(srf, std::get<0>(mp), ts);
+	draw_layer(srf, std::get<1>(mp), ts);
+	return srf;
 }
 
 int main(int argc, char* argv[]) {
 	std::filesystem::path root = "/home/igor/proj/ares/games/CAVES";
-	auto path_to_exe = root / "CC3.EXE";
+	auto path_to_exe = root / "CC1.EXE";
 
 	exe_map_props cc1(0x8CE0, 40, 24, {
 		                  {INTRO, 5},
@@ -119,8 +144,19 @@ int main(int argc, char* argv[]) {
 						  {LEVEL(14), 23}
 					  });
 
-	auto maps = extract_maps(path_to_exe, cc3);
-	const auto* tlm = &tileMap;
+	auto maps = extract_maps(path_to_exe, cc1);
 	print_maps(maps);
 	std::cout << "Maps extracted" << std::endl;
+
+	auto ts = load_tileset(root / "CC1.GFX");
+	ts.get_surface().save_bmp("ts.bmp");
+	for (int i=7; i<maps.size(); i++) {
+		raw_map map = maps[i];
+		auto mp = cc_decode(map);
+		auto srf = draw_map(mp, ts, map.get_width(), map.get_height());
+		std::ostringstream os;
+		os << "zopa-" << i << ".bmp";
+		srf.save_bmp(os.str());
+		std::cout << "Map " << i << " decoded" << std::endl;
+	}
 }
