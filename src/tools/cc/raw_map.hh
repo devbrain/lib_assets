@@ -27,6 +27,9 @@ class raw_map {
 
 		void add(uint8_t ch);
 
+		uint8_t* data();
+		[[nodiscard]] const uint8_t* data() const;
+
 		[[nodiscard]] const uint8_t& get_relative(const data_t::const_iterator& itr, int dx, int dy) const;
 		[[nodiscard]] const uint8_t& get_relative(const data_t::iterator& itr, int dx, int dy) const;
 		[[nodiscard]] uint8_t& get_relative(const data_t::iterator& itr, int dx, int dy);

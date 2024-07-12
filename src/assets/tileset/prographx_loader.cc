@@ -2,6 +2,7 @@
 // Created by igor on 7/7/24.
 //
 
+#include <iostream>
 #include "prographx_loader.hh"
 #include <sdlpp/video/color_names.hh>
 #include <assets/resources/image/ega_image.hh>
@@ -34,6 +35,8 @@ namespace neutrino::assets {
 
 	tileset prographx_loader::load(const tileset_resource& arg) const {
 		if (const auto* res = dynamic_cast <const prographx_resource*>(&arg)) {
+
+
 			tileset ts;
 			ega_byte_description descr{
 				res->is_masked() ? ega_bit_purpose::opaque1 : ega_bit_purpose::unused,
@@ -43,14 +46,17 @@ namespace neutrino::assets {
 				ega_bit_purpose::intensity1
 			};
 			std::istream& is = res->get_stream();
+
 			std::vector <pixels> tiles;
 			std::vector <pixels> masks;
 			bsw::io::binary_reader rdr(is, bsw::io::binary_reader::LITTLE_ENDIAN_BYTE_ORDER);
 			std::size_t tiles_total = 0;
 			bool done = false;
 			while (!done) {
+				auto tileset_start = is.tellg();
 				uint8_t num_tiles, width_bytes, height;
 				rdr >> num_tiles >> width_bytes >> height;
+
 				if (is.eof()) {
 					break;
 				}
@@ -68,8 +74,17 @@ namespace neutrino::assets {
 				if (done) {
 					break;
 				}
-				auto padding = static_cast <std::streamoff>(res->get_padding());
-				is.seekg(padding, std::ios::cur);
+				if (auto padding = res->get_padding()) {
+					auto tileset_end = is.tellg();
+					std::size_t has_bytes = tileset_end - tileset_start;
+					if (has_bytes < padding) {
+						std::size_t padding_offs = padding - has_bytes;
+						is.seekg(padding_offs, std::ios::cur);
+						if (!is || is.eof()) {
+							break;
+						}
+					}
+				}
 			}
 			auto [srf, rects] = render_pixels_to_surface(tiles, sdl::colors::white, sdl::colors::black);
 			ts.set_surface(std::move(srf));

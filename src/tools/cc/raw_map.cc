@@ -37,6 +37,14 @@ void raw_map::add(uint8_t ch) {
 	m_data.push_back(ch);
 }
 
+uint8_t* raw_map::data() {
+	return m_data.data();
+}
+
+const uint8_t* raw_map::data() const {
+	return m_data.data();
+}
+
 const uint8_t& raw_map::get_relative(const data_t::const_iterator& itr, int dx, int dy) const {
 	return m_data[get_offset(itr, dx, dy)];
 }
@@ -51,7 +59,12 @@ uint8_t& raw_map::get_relative(const data_t::iterator& itr, int dx, int dy) {
 
 std::ostream& operator<<(std::ostream& os, const raw_map& m) {
 	unsigned r = 0;
+	unsigned c = 0;
 	for (const auto ch : m) {
+		if (r == 0) {
+			std::cout << c << " ::: " ;
+			c++;
+		}
 		os << ch;
 		r++;
 		if (r >= m.get_width()) {
