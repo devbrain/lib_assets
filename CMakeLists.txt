@@ -4,7 +4,7 @@ project(assets VERSION 1.0.0)
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_level)
 option(assets_INCLUDE_PACKAGING "Include packaging rules for assets" "${is_top_level}")
-option(assets_ENABLE_TESTING "Enable testing for assets" TRUE)
+option(assets_ENABLE_TESTING "Enable testing for assets" "${is_top_level}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR};${CMAKE_SOURCE_DIR}/cmake")
 
