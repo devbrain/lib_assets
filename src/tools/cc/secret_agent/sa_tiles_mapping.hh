@@ -30,7 +30,7 @@
 // These mappings were taken from Frenkel's SAMLEV level viewer. Thanks Frenkel!
 
 #include "crystal_caves/cc_tiles_mapping.hh"
-
+#define __________     (-1) ///< No tile here
 static TILE_MAP worldMap[] = {
 	{ 48, {__________, __________, __________, __________,  __________, __________, __________, __________,  __________, __________, __________, ST( 1, 24)}},
 	{ 66, {__________, __________, __________, __________,  __________, __________, __________, __________,  __________, __________, __________, ST( 1,  1)}},

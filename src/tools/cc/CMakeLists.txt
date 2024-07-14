@@ -15,13 +15,13 @@ add_executable(cc
         crystal_caves/crystal_caves.cc
         crystal_caves/crystal_caves.hh
 
-        secret_agent/sa_key.cc
-        secret_agent/sa_key.hh
-        secret_agent/secret_agent.cc
-        secret_agent/secret_agent.hh
-        secret_agent/sa_tiles_mapping.hh
-        secret_agent/sa_decode.cc
-        secret_agent/sa_decode.hh
+#        secret_agent/sa_key.cc
+#        secret_agent/sa_key.hh
+#        secret_agent/secret_agent.cc
+#        secret_agent/secret_agent.hh
+#        secret_agent/sa_tiles_mapping.hh
+#        secret_agent/sa_decode.cc
+#        secret_agent/sa_decode.hh
         )
 
 target_link_libraries(cc PRIVATE assets ${TEST_IMPL_LIB} thirdparty::sdl2-main)

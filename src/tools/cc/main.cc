@@ -43,12 +43,13 @@ void load_cc() {
 
 
 int main(int argc, char* argv[]) {
-	std::filesystem::path root = "/home/igor/proj/ares/games/Sagent";
-	auto path_to_exe = root / "SAM103.GFX";
-
-	auto sa_maps = extract_sa_maps(path_to_exe);
-	auto ts = extract_sa_mini_tileset(root / "SAM102.GFX");
-	ts.get_surface().save_bmp("zopa_sa_mini.bmp");
+	// std::filesystem::path root = "/home/igor/proj/ares/games/Sagent";
+	// auto path_to_exe = root / "SAM103.GFX";
+	//
+	// auto sa_maps = extract_sa_maps(path_to_exe);
+	// auto ts = extract_sa_mini_tileset(root / "SAM102.GFX");
+	// ts.get_surface().save_bmp("zopa_sa_mini.bmp");
+	load_cc();
 	return 0;
 
 }
