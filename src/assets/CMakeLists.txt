@@ -291,7 +291,7 @@ set(assets_src
 
 if (assets_ENABLE_TESTING)
     set (assets_test_src ${tmx_test_src})
-    set (test_lib thirdparty::doctest)
+    set (test_libs doctest_runner thirdparty::doctest)
     set (test_include ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -315,11 +315,12 @@ target_compile_features(assets PUBLIC cxx_std_17)
 
 include(GenerateExportHeader)
 generate_export_header(assets EXPORT_FILE_NAME ${PROJECT_CONFIG_INCLUDE}/assets/assets_export_def.h)
+target_compile_definitions(assets PRIVATE LOGGER_MODULE_NAME=neutrino::assets)
 if (assets_ENABLE_TESTING)
-    target_compile_definitions(assets PRIVATE ASSETS_BUILD_FOR_TESTING LOGGER_MODULE_NAME=neutrino::assets)
+    target_compile_definitions(assets PRIVATE ASSETS_BUILD_FOR_TESTING)
 endif()
 target_link_libraries(assets
-        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer thirdparty::dynamic_bitset doctest_runner
+        PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer thirdparty::dynamic_bitset ${test_libs}
         PRIVATE thirdparty::json thirdparty::pugixml
 )
 
