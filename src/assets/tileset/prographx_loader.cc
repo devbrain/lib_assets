@@ -41,8 +41,8 @@ namespace neutrino::assets {
 			ega_byte_description descr{
 				res->is_masked() ? ega_bit_purpose::opaque1 : ega_bit_purpose::unused,
 				ega_bit_purpose::red1,
-				ega_bit_purpose::blue1,
 				ega_bit_purpose::green1,
+				ega_bit_purpose::blue1,
 				ega_bit_purpose::intensity1
 			};
 			std::istream& is = res->get_stream();
