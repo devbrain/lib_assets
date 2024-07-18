@@ -27,6 +27,8 @@ namespace neutrino::assets {
 			[[nodiscard]] tiles_map_t::const_iterator end();
 
 			[[nodiscard]] const sdl::surface& get_surface() const;
+			[[nodiscard]] sdl::surface& get_surface();
+
 			void set_surface(sdl::surface&& s);
 
 			void set_tile(tile_id_t tid, const sdl::rect& r);

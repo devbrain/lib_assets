@@ -23,6 +23,10 @@ namespace neutrino::assets {
 		return m_surface;
 	}
 
+	sdl::surface& tileset::get_surface() {
+		return m_surface;
+	}
+
 	void tileset::set_surface(sdl::surface&& s) {
 		m_surface = std::move(s);
 	}
