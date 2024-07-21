@@ -15,7 +15,7 @@ namespace neutrino::assets {
 		return m_tiles_map.begin();
 	}
 
-	tileset::tiles_map_t::const_iterator tileset::end() {
+	tileset::tiles_map_t::const_iterator tileset::end() const {
 		return m_tiles_map.end();
 	}
 
