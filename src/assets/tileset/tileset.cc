@@ -55,7 +55,7 @@ namespace neutrino::assets {
 			RAISE_EX("Can not find tile ", tid);
 		}
 		auto idx = std::get<1>(i->second);
-		if (idx != INVALID_IDX) {
+		if (idx == INVALID_IDX) {
 			return nullptr;
 		}
 		return &m_bitmaps[idx];
