@@ -250,12 +250,12 @@ namespace neutrino::assets {
 								if (delta < tn.cbNode) {
 									max_key_len = tn.cbNode - delta;
 								}
-								if (max_key_len > stream.size_to_end()) {
+								if (max_key_len > static_cast<std::size_t>(stream.size_to_end())) {
 									max_key_len = static_cast <std::size_t>(stream.size_to_end());
 								}
 								stream.read_string(value, max_key_len, false);
 
-								if (tn.pos + tn.cbNode >= stream.size()) {
+								if (tn.pos + tn.cbNode >= static_cast<uint64_t>(stream.size())) {
 									break;
 								}
 								stream.seek(tn.pos + tn.cbNode);
@@ -286,7 +286,7 @@ namespace neutrino::assets {
 			out.m_fields[windows_rs_version::dwFileType] = h.flags_type;
 			out.m_fields[windows_rs_version::dwFileSubtype] = h.flags_subtype;
 
-			int z = 0;
+
 		}
 	}
 } // ns pefile

@@ -68,7 +68,7 @@ namespace neutrino::assets::mz {
 	// --------------------------------------------------------
 	bool input_exe_file::is_exepack () const {
 		const io::offset_type exe_data_start = m_header[HEADER_SIZE_PARA] * 16L;
-		io::offset_type extra_data_start = m_header[NUM_OF_PAGES] * 512L;
+		[[maybe_unused]] io::offset_type extra_data_start = m_header[NUM_OF_PAGES] * 512L;
 		if (m_header[NUM_OF_BYTES_IN_LAST_PAGE]) {
 			extra_data_start -= (512 - m_header[NUM_OF_BYTES_IN_LAST_PAGE]);
 		}

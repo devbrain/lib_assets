@@ -4,9 +4,9 @@
 #include "bsw/exception.hh"
 
 namespace neutrino::assets::mz {
-	static const int unpackerDataLen = 0x12;
-	static const int unpackerLen = 0x105; /* size of unpacker code */
-	static const int errLen = 0x16;
+	[[maybe_unused]] static const int unpackerDataLen = 0x12;
+	[[maybe_unused]] static const int unpackerLen = 0x105; /* size of unpacker code */
+	[[maybe_unused]] static const int errLen = 0x16;
 
 	// ----------------------------------------------------------------------------------------
 	unexepack::unexepack (input_exe_file& inp)
@@ -38,7 +38,7 @@ namespace neutrino::assets::mz {
 
 		if (signature == 0x4252) {
 			uint32_t len = 0;
-			uint32_t var_36 = 0;
+			[[maybe_unused]] uint32_t var_36 = 0;
 			// 10729
 			if (inp[exe_file::INITIAL_IP] == 0x10) {
 				// 10733

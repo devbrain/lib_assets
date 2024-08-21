@@ -184,7 +184,7 @@ namespace neutrino::assets {
 		stream >> lfanew;
 		const auto fsize = file_size();
 
-		if (lfanew < 0 || lfanew > fsize ) {
+		if (lfanew < 0 || static_cast<std::size_t>(lfanew) > fsize ) {
 			RAISE_EX ("Not a PE file");
 		}
 		// read coff magic
@@ -385,7 +385,7 @@ namespace neutrino::assets {
 	}
 
 	// --------------------------------------------------------------------------------
-	void windows_pe_file::_load_sections (bsw::istream_wrapper& stream, abstract_reporter& reporter) {
+	void windows_pe_file::_load_sections (bsw::istream_wrapper& stream, [[maybe_unused]] abstract_reporter& reporter) {
 		for (u2 i = 0; i < m_coff_header.NumberOfSections; i++) {
 			SECTION s;
 			stream >> s;

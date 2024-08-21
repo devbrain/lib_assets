@@ -18,7 +18,17 @@
 #define   STBI_NO_HDR
 #define   STBI_NO_PIC
 #define   STBI_NO_PNM   //(.ppm and .pgm)
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#endif
+
 #include "thirdparty/stb_image.h"
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 namespace {
 	int istream_read (void* user, char* data, int size) {

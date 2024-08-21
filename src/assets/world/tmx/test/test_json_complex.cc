@@ -186,7 +186,7 @@ TEST_CASE("Parse an Object from Tiled's documentation - read simple values") {
 		REQUIRE(obj.visible ());
 		REQUIRE(obj.width () == 0);
 		REQUIRE(obj.height () == 0);
-		REQUIRE(obj.origin () == neutrino::sdl::point2f (32, 32));
+		REQUIRE_EQ(obj.origin (), neutrino::sdl::point2f (32, 32));
 		REQUIRE(obj.get ("hp") == test::to_prop (12));
 	}
 
@@ -213,7 +213,7 @@ TEST_CASE("Parse an Object from Tiled's documentation - read simple values") {
 		REQUIRE(obj.visible ());
 		REQUIRE(obj.width () == 248);
 		REQUIRE(obj.height () == 152);
-		REQUIRE(obj.origin () == neutrino::sdl::point2f{560, 808});
+		REQUIRE_EQ(obj.origin (), neutrino::sdl::point2f{560, 808});
 	}
 
 	SUBCASE("Object - point") {
@@ -238,7 +238,7 @@ TEST_CASE("Parse an Object from Tiled's documentation - read simple values") {
 		REQUIRE(obj.visible ());
 		REQUIRE(obj.width () == 0);
 		REQUIRE(obj.height () == 0);
-		REQUIRE(obj.origin () == neutrino::sdl::point2f{220, 350});
+		REQUIRE_EQ(obj.origin (), neutrino::sdl::point2f{220, 350});
 	}
 
 	SUBCASE("Object - polygon") {
@@ -286,9 +286,9 @@ TEST_CASE("Parse an Object from Tiled's documentation - read simple values") {
 		REQUIRE(obj.visible ());
 		REQUIRE(obj.width () == 0);
 		REQUIRE(obj.height () == 0);
-		REQUIRE(obj.origin () == neutrino::sdl::point2f{-176, 432});
+		REQUIRE_EQ(obj.origin (), neutrino::sdl::point2f{-176, 432});
 		REQUIRE(obj.points ().size () == 5);
-		REQUIRE(obj.points ()[2] == neutrino::sdl::point2f{136, -128});
+		REQUIRE_EQ(obj.points ()[2], neutrino::sdl::point2f{136, -128});
 	}
 
 	SUBCASE("Object - polyline") {
@@ -338,9 +338,9 @@ TEST_CASE("Parse an Object from Tiled's documentation - read simple values") {
 		REQUIRE(obj.visible ());
 		REQUIRE(obj.width () == 0);
 		REQUIRE(obj.height () == 0);
-		REQUIRE(obj.origin () == neutrino::sdl::point2f{240, 88});
+		REQUIRE_EQ(obj.origin (), neutrino::sdl::point2f{240, 88});
 		REQUIRE(obj.points ().size () == 6);
-		REQUIRE(obj.points ()[4] == neutrino::sdl::point2f{656, 120});
+		REQUIRE_EQ(obj.points ()[4], neutrino::sdl::point2f{656, 120});
 	}
 
 	SUBCASE("Object - text") {
@@ -369,7 +369,7 @@ TEST_CASE("Parse an Object from Tiled's documentation - read simple values") {
 		REQUIRE(obj.visible ());
 		REQUIRE(obj.width () == 248);
 		REQUIRE(obj.height () == 19);
-		REQUIRE(obj.origin () == neutrino::sdl::point2f{48, 136});
+		REQUIRE_EQ(obj.origin (), neutrino::sdl::point2f{48, 136});
 		REQUIRE(obj.wrap ());
 		REQUIRE(obj.data () == "Hello World");
 	}

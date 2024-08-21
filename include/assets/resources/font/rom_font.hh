@@ -63,7 +63,7 @@ namespace neutrino::assets {
 		template<>
 		class generic_romfont <rom_font_glyph> {
 			public:
-				generic_romfont(unsigned w, unsigned h)
+				generic_romfont([[maybe_unused]] unsigned w, [[maybe_unused]] unsigned h)
 					: m_width(), m_height() {
 				}
 

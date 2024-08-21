@@ -37,8 +37,8 @@ namespace neutrino::assets::tmx {
 
 		unsigned du = m_margin + tu * m_spacing + m_x;
 		unsigned dv = m_margin + tv * m_spacing + m_y;
-		ENFORCE((int) ((tu + 1) * m_tilewidth + du) <= size.w);
-		ENFORCE((int) ((tv + 1) * m_tileheight + dv) <= size.h);
+		ENFORCE((static_cast <int>((tu + 1) * m_tilewidth + du) <= (int)size.w));
+		ENFORCE((static_cast <int>((tv + 1) * m_tileheight + dv) <= (int)size.h));
 
 		return {(int)(tu * m_tilewidth + du), (int)(tv * m_tileheight + dv), (int)m_tilewidth, (int)m_tileheight};
 	}

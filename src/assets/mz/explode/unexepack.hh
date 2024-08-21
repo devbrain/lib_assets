@@ -30,14 +30,14 @@ namespace neutrino::assets::mz {
 		};
 	 private:
 		io::input& m_file;
-		input_exe_file& m_exe_file;
+		[[maybe_unused]] input_exe_file& m_exe_file;
 
 		uint16_t m_header[eMAX_HEADER_VAL];
 
 		uint32_t m_exe_data_start;
-		uint32_t m_extra_data_start;
-		uint32_t m_packed_data_len;
-		uint32_t m_rellocs_start;
+		[[maybe_unused]] uint32_t m_extra_data_start;
+		[[maybe_unused]] uint32_t m_packed_data_len;
+		[[maybe_unused]] uint32_t m_rellocs_start;
 	};
 } // ns explode
 

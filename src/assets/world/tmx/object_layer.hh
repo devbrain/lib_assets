@@ -76,8 +76,8 @@ namespace neutrino::assets::tmx {
 			}
 
 		private:
-			int m_offsetx;
-			int m_offsety;
+			[[maybe_unused]] int m_offsetx;
+			[[maybe_unused]] int m_offsety;
 			colori m_tint;
 			colori m_color;
 			draw_order_t m_order;

@@ -218,7 +218,7 @@ namespace {
 						std::vector<neutrino::assets::mz::rellocation>& rellocs) {
 
 		neutrino::assets::mz::struct_reader<uint16_t> f (fr.input ());
-		uint32_t relocs_count = 0;
+		[[maybe_unused]] uint32_t relocs_count = 0;
 		uint16_t var_counter = 0;
 		uint32_t length_code = 0;
 		uint32_t has_bytes = 0;

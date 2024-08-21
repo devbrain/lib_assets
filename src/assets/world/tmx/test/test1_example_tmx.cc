@@ -97,7 +97,7 @@ TEST_CASE("test1/example/test map attribs") {
 	const auto* o1 = std::get_if <object>(&objects[0]);
 	REQUIRE(o1 != nullptr);
 	REQUIRE(o1->id () == 1);
-	REQUIRE(o1->origin () == neutrino::sdl::point2f{7, 11});
+	REQUIRE_EQ(o1->origin (),  neutrino::sdl::point2f{7, 11});
 	REQUIRE(o1->width () == 51);
 	REQUIRE(o1->height () == 51);
 	REQUIRE(test::check_properties (*o1, {{"asquare", std::string ("test")}}));
@@ -111,5 +111,5 @@ TEST_CASE("test1/example/test map attribs") {
 		{-355, 137}, {-266, -87}, {-228, -145}, {-72, -170},
 		{103, -156}, {149, -137}, {702, 101}
 	};
-	REQUIRE(o2->points () == pts);
+	REQUIRE_EQ(o2->points (), pts);
 }

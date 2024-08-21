@@ -26,20 +26,25 @@ namespace neutrino::assets::tmx {
 		}
 		return i->second;
 	}
-
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++20-extensions"
+#endif
 	void component::assign(assets::component& out) const {
 		for (const auto& [k, v] : m_prop) {
 			std::visit(bsw::overload(
-					[&k, &out] (const colori& ci) {
+					[&] (const colori& ci) {
 						out.add(k, sdl::color(ci.r, ci.g, ci.b, ci.a));
 					},
-					[&k, &out] (const auto& x) {
+					[&] (const auto& x) {
 						out.add(k, x);
 					}
 				), v);
 		}
 	}
-
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 	static void add_propery(component& obj, const std::string& name, const std::string& type,
 	                        const std::string& value) {
 		try {

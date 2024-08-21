@@ -25,7 +25,7 @@ static void test_inifinite(const map& the_map) {
 }
 
 TEST_CASE("test tmx infinite") {
-	static auto resolver = [](const std::string& p) -> std::string {
+	static auto resolver = []([[maybe_unused]] const std::string& p) -> std::string {
 		return {(char*)tilesheet, tilesheet_length};
 	};
 

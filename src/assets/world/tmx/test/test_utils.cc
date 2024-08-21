@@ -43,12 +43,12 @@ namespace neutrino::assets::tmx::test {
 
 	// ---------------------------------------------------------------------------------
 	bool test_tiles(const tile_layer& tl, const std::vector <int>& expected) {
-		int k = 0;
+		std::size_t k = 0;
 		for (const auto c : tl.cells()) {
 			if (k >= expected.size()) {
 				return false;
 			}
-			if (c.gid() != expected[k++]) {
+			if (c.gid() != (unsigned int)expected[k++]) {
 				return false;
 			}
 		}
