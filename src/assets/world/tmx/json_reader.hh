@@ -13,7 +13,7 @@
 #include "world/tmx/reader.hh"
 #include <bsw/spimpl.h>
 #include <sdlpp/video/geometry.hh>
-#include <nlohmann/json_fwd.hpp>
+#include <bsw/json/json_fwd.hh>
 
 namespace neutrino::assets::tmx {
 	class json_reader : public reader {

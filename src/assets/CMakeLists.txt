@@ -321,7 +321,7 @@ if (assets_ENABLE_TESTING)
 endif()
 target_link_libraries(assets
         PUBLIC neutrino::sdlpp thirdparty::sdl2_ttf thirdparty::sdl2_image thirdparty::sdl2_mixer thirdparty::dynamic_bitset ${test_libs}
-               thirdparty::json thirdparty::pugixml
+
 )
 
 if (MSVC)

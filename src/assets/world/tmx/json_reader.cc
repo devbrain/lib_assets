@@ -6,7 +6,7 @@
 #include "json_reader.hh"
 
 #define INCLUDE_NLOHMANN_JSON_FWD_HPP_
-#include <nlohmann/json.hpp>
+#include <bsw/json/json.hh>
 #include <bsw/exception.hh>
 
 namespace neutrino::assets::tmx {
