@@ -125,7 +125,7 @@ namespace neutrino::assets {
 		const auto fg = srf.map_color(fg_color);
 		const auto bg = srf.map_color(bg_color);
 		for (std::size_t i=0; i<str.size(); i++) {
-			const auto ch = str[i];
+			const int ch = static_cast<uint8_t>(str[i]);
 			const auto& glyph = glyphs.get_glyph(ch);
 			const auto w = glyph.get_width();
 			const auto h = glyph.get_height();
