@@ -195,8 +195,8 @@ namespace neutrino::assets::tmx {
 
 		world w(raw.orientation(),
 		        raw.render_order(),
-		        sdl::area_type{static_cast <int>(raw.width()), static_cast <int>(raw.height())},
-		        sdl::area_type{static_cast <int>(raw.tile_width()), static_cast <int>(raw.tile_height())},
+		        sdl::area_type{raw.width(), raw.height()},
+		        sdl::area_type{raw.tile_width(), raw.tile_height()},
 		        sdl::color{icolor.r, icolor.g, icolor.b, icolor.a},
 		        raw.hex_side_length(),
 		        raw.stagger_axis(),

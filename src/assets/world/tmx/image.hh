@@ -98,7 +98,7 @@ namespace neutrino::assets::tmx {
 			 */
 			[[nodiscard]] std::optional <sdl::area_type> size() const noexcept {
 				if (m_width > 0 && m_height > 0) {
-					return sdl::area_type{m_width, m_height};
+					return sdl::area_type{static_cast<unsigned int>(m_width), static_cast<unsigned int>(m_height)};
 				}
 				return std::nullopt;
 			}

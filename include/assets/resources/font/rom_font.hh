@@ -110,7 +110,7 @@ namespace neutrino::assets {
 		const unsigned int w = glyphs.get_width();
 		const unsigned int len = str.size();
 		unsigned int h = glyphs.get_height();
-		return {static_cast <int>(w * len), static_cast <int>(h)};
+		return {w * len, h};
 	}
 
 	template <typename Glyph>
